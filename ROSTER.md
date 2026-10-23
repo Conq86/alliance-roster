@@ -55,7 +55,7 @@ Muse updates this file in the same commit as any art change.
 |---|---|---|---|
 | x Q x (#52) | Google Drive `Alliance Roster Finals/x-q-x.png` | `characters/x-q-x.png` | Approved and staged; GitHub binary transfer pending |
 
-- Q: **Shawn-approved surfer version** (not either earlier desert-commander draft), approved 2026-10-22. Exact asset: tactical vest, blue/white board shorts, straw hat, sunglasses, Q-shaped surfboard shield, camel companion. Do not regenerate or change. Source file in Drive: `15j1z-qnn5RfjMCb7HwmFOYgeQlrO5HpW` (image/png, 2,159,458 bytes).
+- Q: **CURRENT CANON: Shawn-approved keffiyeh revision** (2026-10-22). Exact approved image has a black-and-white keffiyeh around Q's neck, plus tactical vest, blue/white board shorts, straw hat, sunglasses, Q-shaped surfboard shield, and camel companion. Preserve this exact image; do not regenerate. Google Drive canonical file: `Alliance Roster Finals/x-q-x.png`, ID `1Gp_ThNByIpGouykWNfomxHb66GFlLlrq`, verified `image/png`, 1,941,373 bytes, 1024x1536. SHA-256 `a1377a2a7178b79c1befdd6b8964bd45390ba2d3ba610c06c190f583347ee243`. Previous surfer draft: Drive ID `15j1z-qnn5RfjMCb7HwmFOYgeQlrO5HpW`, renamed `x-q-x_SUPERSEDED_pre-keffiyeh.png`; NOT CANON and must not be uploaded. Awaiting binary transfer from Drive to `characters/x-q-x.png` and subsequent repo/showcase verification.
 - Q was completed out of sequential order. Next sequential unfinished member remains #35 Syd Smith II.
 - Previous 35 finals were transferred and committed 2026-10-22.
 
