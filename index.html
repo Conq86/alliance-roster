@@ -21,11 +21,9 @@
   }
   .ring {
     position: relative; width: 190px; height: 330px;
-    transform-style: preserve-3d; animation: spin 110s linear infinite;
+    transform-style: preserve-3d;
     --r: 860px;
   }
-  .stage:hover .ring { animation-play-state: paused; }
-  @keyframes spin { from { transform: rotateY(0deg); } to { transform: rotateY(-360deg); } }
   .card {
     position: absolute; inset: 0;
     transform: rotateY(var(--a)) translateZ(var(--r));
@@ -34,6 +32,10 @@
     border-radius: 14px; overflow: hidden;
     box-shadow: 0 14px 34px rgba(0,0,0,.5);
     display: flex; flex-direction: column;
+  }
+  .card.active {
+    border-color: #ffd27a;
+    box-shadow: 0 0 0 3px rgba(255,210,122,.65), 0 18px 44px rgba(0,0,0,.6);
   }
   .card img {
     display: block; width: 100%; height: 282px; object-fit: contain;
@@ -50,28 +52,37 @@
     background: radial-gradient(ellipse, rgba(255,120,40,.35), rgba(255,120,40,0) 70%);
     pointer-events: none;
   }
+  .directory { width: min(1060px, 94vw); margin: 4px auto 8px; z-index: 2; }
+  .directory h2 { text-align: center; font-size: 15px; letter-spacing: 3px; font-weight: 700; opacity: .9; margin-bottom: 12px; }
+  .dir-controls { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 14px; }
+  .dir-controls input {
+    background: rgba(0,0,0,.4); color: #fff; border: 1px solid rgba(255,170,80,.55);
+    border-radius: 999px; padding: 10px 16px; font-size: 15px; min-width: min(280px, 78vw);
+    outline: none;
+  }
+  .dir-controls input::placeholder { color: rgba(255,255,255,.55); }
+  .dir-controls input:focus { border-color: #ffd27a; }
+  #resumeBtn {
+    background: rgba(255,154,61,.9); color: #1c0f2e; border: none; border-radius: 999px;
+    padding: 10px 18px; font-size: 15px; font-weight: 700; cursor: pointer;
+  }
+  .member-list { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+  .member-list button {
+    background: rgba(0,0,0,.35); color: #fff; border: 1px solid rgba(255,170,80,.45);
+    border-radius: 999px; padding: 7px 13px; font-size: 14px; cursor: pointer; font-family: inherit;
+  }
+  .member-list button:hover { border-color: #ffd27a; }
+  .member-list button.active { background: rgba(255,154,61,.9); color: #1c0f2e; font-weight: 700; border-color: transparent; }
+  .no-match { text-align: center; opacity: .85; padding: 8px 0 2px; }
   footer { padding: 10px 16px 20px; opacity: .75; font-size: 13px; letter-spacing: 1px; z-index: 2; text-align: center; }
   .hint-swipe { display: none; }
   @media (max-width: 1200px) and (min-width: 761px) { .ring { --r: 700px; } }
   @media (max-width: 760px) {
-    .stage { perspective: none; display: block; min-height: 0; padding: 8px 0 4px; }
-    .ring {
-      position: relative; width: 100%; height: auto; --r: 0px;
-      transform: none; animation: none; transform-style: flat;
-      display: flex; flex-direction: row; overflow-x: auto;
-      scroll-snap-type: x mandatory; gap: 14px; padding: 8px 13vw 18px;
-      -webkit-overflow-scrolling: touch;
-    }
-    .card {
-      position: relative; inset: auto; transform: none;
-      flex: 0 0 74vw; max-width: 330px; height: 68vh; max-height: 540px;
-      scroll-snap-align: center;
-    }
-    .card img { flex: 1 1 auto; height: auto; min-height: 0; }
-    .card figcaption { height: 52px; font-size: 18px; flex: 0 0 auto; }
+    .stage { perspective: 1000px; perspective-origin: 50% 50%; min-height: 520px; touch-action: pan-y; }
+    .ring { --r: 290px; }
+    .glow { display: none; }
     .hint-hover { display: none; }
     .hint-swipe { display: inline; }
-    .glow { display: none; }
   }
 </style>
 </head>
@@ -224,7 +235,154 @@
       </figure>
     </div>
   </div>
+  <section class="directory">
+    <h2>MEMBER DIRECTORY</h2>
+    <div class="dir-controls">
+      <input id="memberSearch" type="search" placeholder="Search members..." aria-label="Search members" autocomplete="off">
+      <button id="resumeBtn" type="button" hidden>Resume rotation</button>
+    </div>
+    <div id="memberList" class="member-list">
+      <button type="button" data-i="0" data-search="allfatherfalcon allfatherfalcon">AllFatherFalcon</button>
+      <button type="button" data-i="1" data-search="arkyngl arkyngl">Arkyngl</button>
+      <button type="button" data-i="12" data-search="仈仟 baqian">仈仟</button>
+      <button type="button" data-i="9" data-search="conq86 conq86">Conq86</button>
+      <button type="button" data-i="2" data-search="crazy fewl crazyfewl">Crazy Fewl</button>
+      <button type="button" data-i="14" data-search="creeping-death creepingdeath">Creeping-Death</button>
+      <button type="button" data-i="3" data-search="dawg dawg">DaWG</button>
+      <button type="button" data-i="13" data-search="db66 db66">Db66</button>
+      <button type="button" data-i="21" data-search="d-day01 dday01">D-DAY01</button>
+      <button type="button" data-i="24" data-search="drvenkmanog drvenkmanog">DrVenkmanOG</button>
+      <button type="button" data-i="11" data-search="guardianx91 guardianx91">guardianx91</button>
+      <button type="button" data-i="19" data-search="hd4u hd4u">HD4U</button>
+      <button type="button" data-i="17" data-search="hotchoclat hotchoclat">Hotchoclat</button>
+      <button type="button" data-i="34" data-search="jurassic69 jurassic69">Jurassic69</button>
+      <button type="button" data-i="16" data-search="kelgris kelgris">KelGris</button>
+      <button type="button" data-i="15" data-search="kumud kumud">Kumud</button>
+      <button type="button" data-i="18" data-search="łiøn lion">ŁIØN</button>
+      <button type="button" data-i="33" data-search="m0rax m0rax">M0rax</button>
+      <button type="button" data-i="23" data-search="med med">MED</button>
+      <button type="button" data-i="31" data-search="milman29 milman29">Milman29</button>
+      <button type="button" data-i="4" data-search="mrstealyagrl mrstealyagrl">MrStealYaGrl</button>
+      <button type="button" data-i="28" data-search="mtk1928 mtk1928">MTK1928</button>
+      <button type="button" data-i="29" data-search="nez1234 nez1234">Nez1234</button>
+      <button type="button" data-i="26" data-search="-ninefingers- ninefingers">-Ninefingers-</button>
+      <button type="button" data-i="5" data-search="ninja chicken z ninjachickenz">Ninja Chicken Z</button>
+      <button type="button" data-i="30" data-search="pigroastking pigroastking">PigRoastKing</button>
+      <button type="button" data-i="10" data-search="pixelwarlord pixelwarlord">PixelWarlord</button>
+      <button type="button" data-i="27" data-search="rooks rooks">ROoKs</button>
+      <button type="button" data-i="6" data-search="ruthlessx ruthlessx">RuthlessX</button>
+      <button type="button" data-i="22" data-search="salem232 salem232">salem232</button>
+      <button type="button" data-i="25" data-search="sarah86 sarah86">Sarah86</button>
+      <button type="button" data-i="32" data-search="scatcat scatcat">ScatCat</button>
+      <button type="button" data-i="20" data-search="sofakingfast sofakingfast">SofaKingFast</button>
+      <button type="button" data-i="7" data-search="wildfg wildfg">WildFG</button>
+      <button type="button" data-i="8" data-search="xnanox xnanox">xNanoX</button>
+    </div>
+    <p id="noMatch" class="no-match" hidden>No member matches that search.</p>
+  </section>
   <div class="glow"></div>
-  <footer><span class="hint-hover">Hover to pause</span><span class="hint-swipe">Swipe to browse all 35</span> &middot; Art set in the alliance house style</footer>
+  <footer><span class="hint-hover">Hover to pause &middot; click a name below to jump to them</span><span class="hint-swipe">Auto-rotating &middot; tap a name below to jump to them</span> &middot; Art set in the alliance house style</footer>
+<script>
+(function () {
+  var ring = document.querySelector('.ring');
+  var stage = document.querySelector('.stage');
+  var cards = ring.children;
+  var total = cards.length;
+  var step = 360 / total;
+  var speed = 360 / 110; // degrees per second, matches the old CSS spin
+  var current = 0;
+  var mode = 'spin'; // 'spin' | 'focus' | 'hold'
+  var focusTarget = 0;
+  var holdPause = false;
+  var resumeTimer = null;
+  var resumeBtn = document.getElementById('resumeBtn');
+  var list = document.getElementById('memberList');
+  var search = document.getElementById('memberSearch');
+  var noMatch = document.getElementById('noMatch');
+  var activeBtn = null, activeCard = null;
+
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    mode = 'hold';
+  }
+
+  function norm(a) { a = a % 360; if (a > 180) a -= 360; if (a < -180) a += 360; return a; }
+
+  function setActive(i, btn) {
+    if (activeCard) activeCard.classList.remove('active');
+    if (activeBtn) activeBtn.classList.remove('active');
+    activeCard = cards[i]; activeCard.classList.add('active');
+    activeBtn = btn || null;
+    if (activeBtn) activeBtn.classList.add('active');
+  }
+
+  function goTo(i, btn) {
+    var targetMod = norm(-i * step);
+    focusTarget = current + norm(targetMod - norm(current));
+    mode = 'focus';
+    setActive(i, btn);
+    resumeBtn.hidden = false;
+    clearTimeout(resumeTimer);
+    resumeTimer = setTimeout(resume, 25000);
+  }
+
+  function resume() {
+    clearTimeout(resumeTimer);
+    mode = 'spin';
+    if (activeCard) activeCard.classList.remove('active');
+    if (activeBtn) activeBtn.classList.remove('active');
+    activeCard = null; activeBtn = null;
+    resumeBtn.hidden = true;
+  }
+
+  var last = null;
+  function tick(ts) {
+    if (last === null) last = ts;
+    var dt = Math.min(0.05, (ts - last) / 1000); last = ts;
+    if (!holdPause) {
+      if (mode === 'spin') {
+        current -= speed * dt;
+      } else if (mode === 'focus') {
+        var delta = focusTarget - current;
+        current += delta * Math.min(1, dt * 2.4);
+        if (Math.abs(delta) < 0.05) current = focusTarget;
+      }
+    }
+    ring.style.transform = 'rotateY(' + current + 'deg)';
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  stage.addEventListener('mouseenter', function () { holdPause = true; });
+  stage.addEventListener('mouseleave', function () { holdPause = false; });
+  stage.addEventListener('touchstart', function () { holdPause = true; }, { passive: true });
+  stage.addEventListener('touchend', function () { setTimeout(function () { holdPause = false; }, 600); }, { passive: true });
+
+  list.addEventListener('click', function (e) {
+    var btn = e.target.closest('button[data-i]');
+    if (btn) goTo(parseInt(btn.getAttribute('data-i'), 10), btn);
+  });
+  resumeBtn.addEventListener('click', resume);
+
+  function applyFilter() {
+    var q = search.value.trim().toLowerCase();
+    var visible = 0, first = null;
+    var btns = list.querySelectorAll('button[data-i]');
+    btns.forEach(function (b) {
+      var hit = !q || b.getAttribute('data-search').indexOf(q) !== -1;
+      b.style.display = hit ? '' : 'none';
+      if (hit) { visible++; if (!first) first = b; }
+    });
+    noMatch.hidden = visible !== 0;
+    return first;
+  }
+  search.addEventListener('input', applyFilter);
+  search.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') {
+      var first = applyFilter();
+      if (first) first.click();
+    }
+  });
+})();
+</script>
 </body>
 </html>
