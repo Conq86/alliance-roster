@@ -51,22 +51,24 @@ Muse updates this file in the same commit as any art change.
 | Jurassic69 | characters/jurassic69.png |
 | x Q x | characters/x-q-x.png |
 
-## Approved, awaiting GitHub transfer (2)
+## Approved, awaiting GitHub transfer (3)
 | Member | Approved staged image | Target path | Status |
 |---|---|---|---|
 | Syd Smith II (#35) | Google Drive `Alliance Roster Finals/syd-smith-ii.png` | `characters/syd-smith-ii.png` | Approved and staged, not yet committed |
 | zombie slayer1 (#36) | Google Drive `Alliance Roster Finals/zombie-slayer1.png` | `characters/zombie-slayer1.png` | Approved and staged, not yet committed |
+| PRIDE9 (#37) | Google Drive `Alliance Roster Finals/pride9.png` | `characters/pride9.png` | Approved and staged, not yet committed |
 
 - **Syd Smith II canon:** Shawn approved the lone full-body Australian gentleman-blacksmith, human male with sunglasses, purple tie, leather apron, 713/POW and Australian insignia, oversized ram-head forging war hammer. NO goat companion, anvil, barrels, scenery, or other background props. Exact final is the third, isolated solo revision, not either earlier goat/forge draft. Google Drive file ID `1DDpu4ErkUbhhHPMyAtG_IpyG3xR_2Jq6`, `image/png`, 1,979,337 bytes, 1024×1536. SHA-256 `bf447c3ba3d03b37b85b63e1a327e2ce0e33761e627cf1742f19ff97adc88500`. Preserve exact bytes. Muse to upload the binary to `characters/syd-smith-ii.png`, verify artwork and update this section to committed; update showcase page as appropriate.
 - **Next sequential member after Syd is #36 zombie slayer1**. Do not change the roster order; Q #52 was created out of order.
 - **zombie slayer1 canon (approved 2026-10-23):** Exact full-body UK masked zombie-hunter in black/red tactical armour, sunglasses over skull mask, barbed heavy club, POW/713, from Shawn-approved last version. No regeneration. Google Drive `Alliance Roster Finals/zombie-slayer1.png`, file ID `1Ig2yZdFXMH2wrsUQqAQ2qm2LXvrTRGfM`, verified `image/png`, 2,194,720 bytes, 1024×1536. SHA-256 `0e52de1b680bff9c4dcdebc0121fbb661d35dc7094452fbd5e1caf644552ffca`. Muse to transfer exact approved PNG to `characters/zombie-slayer1.png`, verify GitHub file/showcase, and change status to committed.
-- **Next sequential member:** #37 PRIDE9, first draft generated but not yet approved or staged.
+- **Next sequential member:** #38 Ace ¥, initial artwork drafted but not yet approved.
+- **PRIDE9 canon (approved 2026-10-23):** Exact full-body isolated red-eyed hooded figure with gloved hand covering lower face, black/red tactical armour, distinctive ornate red-black scythe, Australian flag, POW/#713/PRIDE9 patches. Preserve this specific generated image; no regeneration. Google Drive `Alliance Roster Finals/pride9.png`, file ID `1Wc1YEZdqBoFBiXzCOXK3p6Xoa5nc84Wt`, verified `image/png`, 2,180,801 bytes, 1024×1536. SHA-256 `4baf566c9cc0710d7c363211656c5d6dbe3a0d1a84003ff4902b62f695b072d6`. Muse to transfer exact approved PNG to `characters/pride9.png`, verify binary and showcase, then update committed status.
 ## Completed replacements
 - **ŁIØN current canon (approved 2026-10-23):** Exact isolated full-body black-and-gold hooded lion-armour warrior with rifle and armoured lion companion approved by Shawn after ŁIØN requested that design. Do not regenerate. Source image: Google Drive `lion_REPLACEMENT_APPROVED_2026-10-23.png`, file ID `1uvJXFTs9pBMuSdNx34NMPvrVzlOa2ejL`, PNG 1024×1536 RGB, 2,573,646 bytes, SHA-256 `4225366ac8cfaae198bce9e5555c47ea4a6d4602f1ff31e7c33d124e238061cd`. REPLACED 2026-10-23: downloaded from Drive, byte-verified against the recorded size and SHA-256, committed over `characters/lion.png` via the GitHub web upload, and the live showcase verified serving the new file. The GitHub filename remains `lion.png`; the member display name remains `ŁIØN`.
 - **Superseded ŁIØN:** The previous design (Drive `ŁIØN.png`, 1,607,086 bytes) was replaced in `characters/lion.png` on 2026-10-23; the old version remains in the repo commit history.
 ## Notes on recent additions
 - Q: **CURRENT CANON: Shawn-approved keffiyeh revision** (2026-10-22). Exact approved image has a black-and-white keffiyeh around Q's neck, plus tactical vest, blue/white board shorts, straw hat, sunglasses, Q-shaped surfboard shield, and camel companion. Preserve this exact image; do not regenerate. Google Drive canonical file: `Alliance Roster Finals/x-q-x.png`, ID `1Gp_ThNByIpGouykWNfomxHb66GFlLlrq`, verified `image/png`, 1,941,373 bytes, 1024x1536. SHA-256 `a1377a2a7178b79c1befdd6b8964bd45390ba2d3ba610c06c190f583347ee243`. Previous surfer draft: Drive ID `15j1z-qnn5RfjMCb7HwmFOYgeQlrO5HpW`, renamed `x-q-x_SUPERSEDED_pre-keffiyeh.png`; NOT CANON and was not uploaded. TRANSFERRED 2026-10-22: downloaded from Drive, byte-verified against the recorded size and SHA-256, uploaded to `characters/x-q-x.png` via the GitHub web upload, and added to the showcase page (36 members).
-- Q was completed out of sequential order. Syd Smith II (#35) is approved and staged; #36 zombie slayer1 is also approved and staged; next sequential member is #37 PRIDE9.
+- Q was completed out of sequential order. Syd Smith II (#35) is approved and staged; #36 zombie slayer1 is also approved and staged; #37 PRIDE9 is now approved and staged; next sequential member is #38 Ace ¥.
 - Previous 35 finals were transferred and committed 2026-10-22.
 
 - ScatCat: the committed final is an EARLIER version, chosen over later attempts (per GPT, 2026-10-22).
