@@ -19,14 +19,9 @@
     flex: 1; width: 100%; display: flex; align-items: center; justify-content: center;
     perspective: 1900px; perspective-origin: 50% 46%; min-height: 600px;
   }
-  .ring {
-    position: relative; width: 190px; height: 330px;
-    transform-style: preserve-3d;
-    --r: 860px;
-  }
+  .deck { position: relative; width: 190px; height: 330px; }
   .card {
-    position: absolute; inset: 0;
-    transform: rotateY(var(--a)) translateZ(var(--r));
+    position: absolute; inset: 0; will-change: transform;
     background: linear-gradient(180deg, #241839, #120a24);
     border: 2px solid rgba(255, 170, 80, .55);
     border-radius: 14px; overflow: hidden;
@@ -76,10 +71,8 @@
   .no-match { text-align: center; opacity: .85; padding: 8px 0 2px; }
   footer { padding: 10px 16px 20px; opacity: .75; font-size: 13px; letter-spacing: 1px; z-index: 2; text-align: center; }
   .hint-swipe { display: none; }
-  @media (max-width: 1200px) and (min-width: 761px) { .ring { --r: 700px; } }
   @media (max-width: 760px) {
     .stage { perspective: 1000px; perspective-origin: 50% 50%; min-height: 520px; touch-action: pan-y; }
-    .ring { --r: 290px; }
     .glow { display: none; }
     .hint-hover { display: none; }
     .hint-swipe { display: inline; }
@@ -92,144 +85,144 @@
     <p>MEMBER SHOWCASE &middot; 35 STRONG</p>
   </header>
   <div class="stage">
-    <div class="ring">
-      <figure class="card" style="--a: 0.0000deg">
+    <div class="deck">
+      <figure class="card">
         <img src="characters/allfatherfalcon.png" alt="AllFatherFalcon" loading="lazy" decoding="async">
         <figcaption>AllFatherFalcon</figcaption>
       </figure>
-      <figure class="card" style="--a: 10.2857deg">
+      <figure class="card">
         <img src="characters/arkyngl.png" alt="Arkyngl" loading="lazy" decoding="async">
         <figcaption>Arkyngl</figcaption>
       </figure>
-      <figure class="card" style="--a: 20.5714deg">
+      <figure class="card">
         <img src="characters/crazy-fewl.png" alt="Crazy Fewl" loading="lazy" decoding="async">
         <figcaption>Crazy Fewl</figcaption>
       </figure>
-      <figure class="card" style="--a: 30.8571deg">
+      <figure class="card">
         <img src="characters/dawg.png" alt="DaWG" loading="lazy" decoding="async">
         <figcaption>DaWG</figcaption>
       </figure>
-      <figure class="card" style="--a: 41.1429deg">
+      <figure class="card">
         <img src="characters/mrstealyagrl.png" alt="MrStealYaGrl" loading="lazy" decoding="async">
         <figcaption>MrStealYaGrl</figcaption>
       </figure>
-      <figure class="card" style="--a: 51.4286deg">
+      <figure class="card">
         <img src="characters/ninja-chicken-z.png" alt="Ninja Chicken Z" loading="lazy" decoding="async">
         <figcaption>Ninja Chicken Z</figcaption>
       </figure>
-      <figure class="card" style="--a: 61.7143deg">
+      <figure class="card">
         <img src="characters/ruthlessx.png" alt="RuthlessX" loading="lazy" decoding="async">
         <figcaption>RuthlessX</figcaption>
       </figure>
-      <figure class="card" style="--a: 72.0000deg">
+      <figure class="card">
         <img src="characters/wildfg.png" alt="WildFG" loading="lazy" decoding="async">
         <figcaption>WildFG</figcaption>
       </figure>
-      <figure class="card" style="--a: 82.2857deg">
+      <figure class="card">
         <img src="characters/xnanox.png" alt="xNanoX" loading="lazy" decoding="async">
         <figcaption>xNanoX</figcaption>
       </figure>
-      <figure class="card" style="--a: 92.5714deg">
+      <figure class="card">
         <img src="characters/conq86.png" alt="Conq86" loading="lazy" decoding="async">
         <figcaption>Conq86</figcaption>
       </figure>
-      <figure class="card" style="--a: 102.8571deg">
+      <figure class="card">
         <img src="characters/pixelwarlord.png" alt="PixelWarlord" loading="lazy" decoding="async">
         <figcaption>PixelWarlord</figcaption>
       </figure>
-      <figure class="card" style="--a: 113.1429deg">
+      <figure class="card">
         <img src="characters/guardianx91.png" alt="guardianx91" loading="lazy" decoding="async">
         <figcaption>guardianx91</figcaption>
       </figure>
-      <figure class="card" style="--a: 123.4286deg">
+      <figure class="card">
         <img src="characters/baqian.png" alt="仈仟" loading="lazy" decoding="async">
         <figcaption>仈仟</figcaption>
       </figure>
-      <figure class="card" style="--a: 133.7143deg">
+      <figure class="card">
         <img src="characters/db66.png" alt="Db66" loading="lazy" decoding="async">
         <figcaption>Db66</figcaption>
       </figure>
-      <figure class="card" style="--a: 144.0000deg">
+      <figure class="card">
         <img src="characters/creeping-death.png" alt="Creeping-Death" loading="lazy" decoding="async">
         <figcaption>Creeping-Death</figcaption>
       </figure>
-      <figure class="card" style="--a: 154.2857deg">
+      <figure class="card">
         <img src="characters/kumud.png" alt="Kumud" loading="lazy" decoding="async">
         <figcaption>Kumud</figcaption>
       </figure>
-      <figure class="card" style="--a: 164.5714deg">
+      <figure class="card">
         <img src="characters/kelgris.png" alt="KelGris" loading="lazy" decoding="async">
         <figcaption>KelGris</figcaption>
       </figure>
-      <figure class="card" style="--a: 174.8571deg">
+      <figure class="card">
         <img src="characters/hotchoclat.png" alt="Hotchoclat" loading="lazy" decoding="async">
         <figcaption>Hotchoclat</figcaption>
       </figure>
-      <figure class="card" style="--a: 185.1429deg">
+      <figure class="card">
         <img src="characters/lion.png" alt="ŁIØN" loading="lazy" decoding="async">
         <figcaption>ŁIØN</figcaption>
       </figure>
-      <figure class="card" style="--a: 195.4286deg">
+      <figure class="card">
         <img src="characters/hd4u.png" alt="HD4U" loading="lazy" decoding="async">
         <figcaption>HD4U</figcaption>
       </figure>
-      <figure class="card" style="--a: 205.7143deg">
+      <figure class="card">
         <img src="characters/sofakingfast.png" alt="SofaKingFast" loading="lazy" decoding="async">
         <figcaption>SofaKingFast</figcaption>
       </figure>
-      <figure class="card" style="--a: 216.0000deg">
+      <figure class="card">
         <img src="characters/d-day01.png" alt="D-DAY01" loading="lazy" decoding="async">
         <figcaption>D-DAY01</figcaption>
       </figure>
-      <figure class="card" style="--a: 226.2857deg">
+      <figure class="card">
         <img src="characters/salem232.png" alt="salem232" loading="lazy" decoding="async">
         <figcaption>salem232</figcaption>
       </figure>
-      <figure class="card" style="--a: 236.5714deg">
+      <figure class="card">
         <img src="characters/med.png" alt="MED" loading="lazy" decoding="async">
         <figcaption>MED</figcaption>
       </figure>
-      <figure class="card" style="--a: 246.8571deg">
+      <figure class="card">
         <img src="characters/drvenkmanog.png" alt="DrVenkmanOG" loading="lazy" decoding="async">
         <figcaption>DrVenkmanOG</figcaption>
       </figure>
-      <figure class="card" style="--a: 257.1429deg">
+      <figure class="card">
         <img src="characters/sarah86.png" alt="Sarah86" loading="lazy" decoding="async">
         <figcaption>Sarah86</figcaption>
       </figure>
-      <figure class="card" style="--a: 267.4286deg">
+      <figure class="card">
         <img src="characters/-ninefingers-.png" alt="-Ninefingers-" loading="lazy" decoding="async">
         <figcaption>-Ninefingers-</figcaption>
       </figure>
-      <figure class="card" style="--a: 277.7143deg">
+      <figure class="card">
         <img src="characters/rooks.png" alt="ROoKs" loading="lazy" decoding="async">
         <figcaption>ROoKs</figcaption>
       </figure>
-      <figure class="card" style="--a: 288.0000deg">
+      <figure class="card">
         <img src="characters/mtk1928.png" alt="MTK1928" loading="lazy" decoding="async">
         <figcaption>MTK1928</figcaption>
       </figure>
-      <figure class="card" style="--a: 298.2857deg">
+      <figure class="card">
         <img src="characters/nez1234.png" alt="Nez1234" loading="lazy" decoding="async">
         <figcaption>Nez1234</figcaption>
       </figure>
-      <figure class="card" style="--a: 308.5714deg">
+      <figure class="card">
         <img src="characters/pigroastking.png" alt="PigRoastKing" loading="lazy" decoding="async">
         <figcaption>PigRoastKing</figcaption>
       </figure>
-      <figure class="card" style="--a: 318.8571deg">
+      <figure class="card">
         <img src="characters/milman29.png" alt="Milman29" loading="lazy" decoding="async">
         <figcaption>Milman29</figcaption>
       </figure>
-      <figure class="card" style="--a: 329.1429deg">
+      <figure class="card">
         <img src="characters/scatcat.png" alt="ScatCat" loading="lazy" decoding="async">
         <figcaption>ScatCat</figcaption>
       </figure>
-      <figure class="card" style="--a: 339.4286deg">
+      <figure class="card">
         <img src="characters/m0rax.png" alt="M0rax" loading="lazy" decoding="async">
         <figcaption>M0rax</figcaption>
       </figure>
-      <figure class="card" style="--a: 349.7143deg">
+      <figure class="card">
         <img src="characters/jurassic69.png" alt="Jurassic69" loading="lazy" decoding="async">
         <figcaption>Jurassic69</figcaption>
       </figure>
@@ -284,12 +277,12 @@
   <footer><span class="hint-hover">Hover to pause &middot; click a name below to jump to them</span><span class="hint-swipe">Auto-rotating &middot; tap a name below to jump to them</span> &middot; Art set in the alliance house style</footer>
 <script>
 (function () {
-  var ring = document.querySelector('.ring');
+  var deck = document.querySelector('.deck');
   var stage = document.querySelector('.stage');
-  var cards = ring.children;
+  var cards = Array.prototype.slice.call(deck.children);
   var total = cards.length;
   var step = 360 / total;
-  var speed = 360 / 110; // degrees per second, matches the old CSS spin
+  var speed = 360 / 110; // degrees per second
   var current = 0;
   var mode = 'spin'; // 'spin' | 'focus' | 'hold'
   var focusTarget = 0;
@@ -300,12 +293,30 @@
   var search = document.getElementById('memberSearch');
   var noMatch = document.getElementById('noMatch');
   var activeBtn = null, activeCard = null;
+  var lastZ = new Array(total).fill(null);
+
+  function radius() {
+    var w = window.innerWidth;
+    if (w <= 760) return 290;
+    if (w <= 1200) return 700;
+    return 860;
+  }
 
   if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     mode = 'hold';
   }
 
   function norm(a) { a = a % 360; if (a > 180) a -= 360; if (a < -180) a += 360; return a; }
+
+  function render() {
+    var r = radius();
+    for (var i = 0; i < total; i++) {
+      var ang = current + i * step;
+      cards[i].style.transform = 'rotateY(' + ang + 'deg) translateZ(' + r + 'px)';
+      var z = 1000 + Math.round(Math.cos(ang * Math.PI / 180) * 1000);
+      if (lastZ[i] !== z) { cards[i].style.zIndex = z; lastZ[i] = z; }
+    }
+  }
 
   function setActive(i, btn) {
     if (activeCard) activeCard.classList.remove('active');
@@ -347,7 +358,7 @@
         if (Math.abs(delta) < 0.05) current = focusTarget;
       }
     }
-    ring.style.transform = 'rotateY(' + current + 'deg)';
+    render();
     requestAnimationFrame(tick);
   }
   requestAnimationFrame(tick);
