@@ -1,1 +1,68 @@
-IyBBbGxpYW5jZSBSb3N0ZXI6IE1hc3RlciBUcmFja2VyCgoqKlRoaXMgZmlsZSBpcyB0aGUgc2luZ2xlIHNvdXJjZSBvZiB0cnV0aCBmb3IgY2hhcmFjdGVyIHN0YXR1cy4qKgpDaGF0IGhpc3RvcnkgaXMgbm90IHN0YXRlLiBJZiBpdCBpcyBub3QgcmVjb3JkZWQgaGVyZSwgaXQgaXMgbm90IGNvbmZpcm1lZC4KTXVzZSB1cGRhdGVzIHRoaXMgZmlsZSBpbiB0aGUgc2FtZSBjb21taXQgYXMgYW55IGFydCBjaGFuZ2UuCgojIyBSdWxlcwotIE9uZSBmaWxlIHBlciBtZW1iZXIgaW4gYGNoYXJhY3RlcnMvYCwgbmFtZWQgYWZ0ZXIgdGhlIG1lbWJlcidzIGdhbWUgbmFtZSAobG93ZXJjYXNlKS4KLSBTdGF0dXNlczogYGNvbW1pdHRlZGAgPSBmaW5hbCBhcnQgaW4gdGhpcyByZXBvLiBgYXBwcm92ZWRgID0gZmluYWwgdmVyc2lvbiBjaG9zZW4sIGltYWdlIG5vdCB5ZXQgdHJhbnNmZXJyZWQuIGBpbi1wcm9ncmVzc2AsIGBjb25jZXB0LW9ubHlgLgotIFdoZW4gYSBtZW1iZXIgaGFzIHNldmVyYWwgdmVyc2lvbnMsIHRoaXMgdHJhY2tlciByZWNvcmRzIFdISUNIIHZlcnNpb24gaXMgZmluYWwuCi0gVHJhbnNmZXIgbWV0aG9kIChwcm92ZW4gMjAyNi0xMC0yMik6IEdQVCBzdGFnZXMgZWFjaCBhcHByb3ZlZCBQTkcgYXMgYSByZWFsIGZpbGUgaW4gU2hhd24ncyBHb29nbGUgRHJpdmUgKCJBbGxpYW5jZSBSb3N0ZXIgRmluYWxzIiBmb2xkZXIpLiBNdXNlIGRvd25sb2FkcyBmcm9tIERyaXZlLCB2ZXJpZmllcyB0aGUgUE5HLCBhbmQgdXBsb2FkcyBpdCB0byBgY2hhcmFjdGVycy9gIHRocm91Z2ggdGhlIEdpdEh1YiB3ZWIgdXBsb2FkIChicm93c2VyIHNpZ25lZCBpbiBhcyBDb25xODY7IGxvZ2luIHNhdmVkIGluIHRoZSBTZWN1cmUgVmF1bHQpLiBHUFQncyBvd24gR2l0SHViIHRvb2wgaXMgdGV4dC1vbmx5IGFuZCBjYW5ub3QgcHVzaCBiaW5hcnk7IE11c2UncyBHaXRIdWIgY29ubmVjdG9yIGNhbm5vdCBjYXJyeSBNQi1zaXplZCBmaWxlcyBlaXRoZXIuIE5vIGhhbmQtY2FycnlpbmcgYnkgU2hhd24uCi0gRmlsZW5hbWUgbm90ZTogYm90aCBHaXRIdWIgd2ViIHVwbG9hZCByb3V0ZXMgKHRoZSByZXBvIHVwbG9hZCBwYWdlIGFuZCB0aGUgZ2l0aHViLmRldiBlZGl0b3IpIHNpbGVudGx5IHJlZnVzZSBub24tQVNDSUkgZmlsZW5hbWVzLCB2ZXJpZmllZCAyMDI2LTEwLTIyLiBUd28gbWVtYmVycyB0aGVyZWZvcmUgbGl2ZSB1bmRlciB3ZWItc2FmZSBmaWxlIG5hbWVzOyB0aGVpciBleGFjdCBnYW1lIG5hbWVzIHN0YXkgaW4gdGhlIE1lbWJlciBjb2x1bW4gaGVyZSBhbmQgaW4gdGhlIHNob3djYXNlIHBhZ2UgY2FwdGlvbnMuCgojIyBDb21taXR0ZWQ6IGZpbmFsIGFydCBpbiByZXBvICgzNSkKfCBNZW1iZXIgfCBGaWxlIHwKfC0tLXwtLS18CnwgQWxsRmF0aGVyRmFsY29uIHwgY2hhcmFjdGVycy9hbGxmYXRoZXJmYWxjb24ucG5nIHwKfCBBcmt5bmdsIHwgY2hhcmFjdGVycy9hcmt5bmdsLnBuZyB8CnwgQ3JhenkgRmV3bCB8IGNoYXJhY3RlcnMvY3JhenktZmV3bC5wbmcgfAp8IERhV0cgfCBjaGFyYWN0ZXJzL2Rhd2cucG5nIHwKfCBNclN0ZWFsWWFHcmwgfCBjaGFyYWN0ZXJzL21yc3RlYWx5YWdybC5wbmcgfAp8IE5pbmphIENoaWNrZW4gWiB8IGNoYXJhY3RlcnMvbmluamEtY2hpY2tlbi16LnBuZyB8CnwgUnV0aGxlc3NYIHwgY2hhcmFjdGVycy9ydXRobGVzc3gucG5nIHwKfCBXaWxkRkcgfCBjaGFyYWN0ZXJzL3dpbGRmZy5wbmcgfAp8IHhOYW5vWCB8IGNoYXJhY3RlcnMveG5hbm94LnBuZyB8CnwgQ29ucTg2IHwgY2hhcmFjdGVycy9jb25xODYucG5nIHwKfCBQaXhlbFdhcmxvcmQgfCBjaGFyYWN0ZXJzL3BpeGVsd2FybG9yZC5wbmcgfAp8IGd1YXJkaWFueDkxIHwgY2hhcmFjdGVycy9ndWFyZGlhbng5MS5wbmcgfAp8IOS7iOS7nyB8IGNoYXJhY3RlcnMvYmFxaWFuLnBuZyB8CnwgRGI2NiB8IGNoYXJhY3RlcnMvZGI2Ni5wbmcgfAp8IENyZWVwaW5nLURlYXRoIHwgY2hhcmFjdGVycy9jcmVlcGluZy1kZWF0aC5wbmcgfAp8IEt1bXVkIHwgY2hhcmFjdGVycy9rdW11ZC5wbmcgfAp8IEtlbEdyaXMgfCBjaGFyYWN0ZXJzL2tlbGdyaXMucG5nIHwKfCBIb3RjaG9jbGF0IHwgY2hhcmFjdGVycy9ob3RjaG9jbGF0LnBuZyB8CnwgxYFJw5hOIHwgY2hhcmFjdGVycy9saW9uLnBuZyB8CnwgSEQ0VSB8IGNoYXJhY3RlcnMvaGQ0dS5wbmcgfAp8IFNvZmFLaW5nRmFzdCB8IGNoYXJhY3RlcnMvc29mYWtpbmdmYXN0LnBuZyB8CnwgRC1EQVkwMSB8IGNoYXJhY3RlcnMvZC1kYXkwMS5wbmcgfAp8IHNhbGVtMjMyIHwgY2hhcmFjdGVycy9zYWxlbTIzMi5wbmcgfAp8IE1FRCB8IGNoYXJhY3RlcnMvbWVkLnBuZyB8CnwgRHJWZW5rbWFuT0cgfCBjaGFyYWN0ZXJzL2RydmVua21hbm9nLnBuZyB8CnwgU2FyYWg4NiB8IGNoYXJhY3RlcnMvc2FyYWg4Ni5wbmcgfAp8IC1OaW5lZmluZ2Vycy0gfCBjaGFyYWN0ZXJzLy1uaW5lZmluZ2Vycy0ucG5nIHwKfCBST29LcyB8IGNoYXJhY3RlcnMvcm9va3MucG5nIHwKfCBNVEsxOTI4IHwgY2hhcmFjdGVycy9tdGsxOTI4LnBuZyB8CnwgTmV6MTIzNCB8IGNoYXJhY3RlcnMvbmV6MTIzNC5wbmcgfAp8IFBpZ1JvYXN0S2luZyB8IGNoYXJhY3RlcnMvcGlncm9hc3RraW5nLnBuZyB8CnwgTWlsbWFuMjkgfCBjaGFyYWN0ZXJzL21pbG1hbjI5LnBuZyB8CnwgU2NhdENhdCB8IGNoYXJhY3RlcnMvc2NhdGNhdC5wbmcgfAp8IE0wcmF4IHwgY2hhcmFjdGVycy9tMHJheC5wbmcgfAp8IEp1cmFzc2ljNjkgfCBjaGFyYWN0ZXJzL2p1cmFzc2ljNjkucG5nIHwKCiMjIEFwcHJvdmVkLCBhd2FpdGluZyB0cmFuc2ZlciAoMCkKQWxsIDM1IGFwcHJvdmVkIGZpbmFscyBhcmUgY29tbWl0dGVkLiBUcmFuc2ZlciBjb21wbGV0ZWQgMjAyNi0xMC0yMi4KCi0gU2NhdENhdDogdGhlIGNvbW1pdHRlZCBmaW5hbCBpcyBhbiBFQVJMSUVSIHZlcnNpb24sIGNob3NlbiBvdmVyIGxhdGVyIGF0dGVtcHRzIChwZXIgR1BULCAyMDI2LTEwLTIyKS4KLSDku4jku58gPSBjaGFyYWN0ZXJzL2JhcWlhbi5wbmcgYW5kIMWBScOYTiA9IGNoYXJhY3RlcnMvbGlvbi5wbmcgKHdlYi1zYWZlIG5hbWVzOyBzZWUgUnVsZXMpLgoKIyMgQ2Fub24gbm90ZXMKLSBSdXRobGVzc1g6IHRoZSBhcHByb3ZlZCBQTkcgaXMgY2Fub24uIE5vIHJlbWFrZS4KLSBTeWc6IHN0YXlzIGh1bWFuIGFkdWx0IG1hbGUuCi0gTmFubzogZmFjdHVhbCBJUkdDIHVuaWZvcm0uCg==
+# Alliance Roster: Master Tracker
+
+**This file is the single source of truth for character status.**
+Chat history is not state. If it is not recorded here, it is not confirmed.
+Muse updates this file in the same commit as any art change.
+
+## Rules
+- One file per member in `characters/`, named after the member's game name (lowercase).
+- Statuses: `committed` = final art in this repo. `approved` = final version chosen, image not yet transferred. `in-progress`, `concept-only`.
+- When a member has several versions, this tracker records WHICH version is final.
+- Transfer method (proven 2026-10-22): GPT stages each approved PNG as a real file in Shawn's Google Drive ("Alliance Roster Finals" folder). Muse downloads from Drive, verifies the PNG, and uploads it to `characters/` through the GitHub web upload (browser signed in as Conq86; login saved in the Secure Vault). GPT's own GitHub tool is text-only and cannot push binary; Muse's GitHub connector cannot carry MB-sized files either. No hand-carrying by Shawn.
+- Filename note: both GitHub web upload routes (the repo upload page and the github.dev editor) silently refuse non-ASCII filenames, verified 2026-10-22. Two members therefore live under web-safe file names; their exact game names stay in the Member column here and in the showcase page captions.
+
+## Committed: final art in repo (35)
+| Member | File |
+|---|---|
+| AllFatherFalcon | characters/allfatherfalcon.png |
+| Arkyngl | characters/arkyngl.png |
+| Crazy Fewl | characters/crazy-fewl.png |
+| DaWG | characters/dawg.png |
+| MrStealYaGrl | characters/mrstealyagrl.png |
+| Ninja Chicken Z | characters/ninja-chicken-z.png |
+| RuthlessX | characters/ruthlessx.png |
+| WildFG | characters/wildfg.png |
+| xNanoX | characters/xnanox.png |
+| Conq86 | characters/conq86.png |
+| PixelWarlord | characters/pixelwarlord.png |
+| guardianx91 | characters/guardianx91.png |
+| 仈仟 | characters/baqian.png |
+| Db66 | characters/db66.png |
+| Creeping-Death | characters/creeping-death.png |
+| Kumud | characters/kumud.png |
+| KelGris | characters/kelgris.png |
+| Hotchoclat | characters/hotchoclat.png |
+| ŁIØN | characters/lion.png |
+| HD4U | characters/hd4u.png |
+| SofaKingFast | characters/sofakingfast.png |
+| D-DAY01 | characters/d-day01.png |
+| salem232 | characters/salem232.png |
+| MED | characters/med.png |
+| DrVenkmanOG | characters/drvenkmanog.png |
+| Sarah86 | characters/sarah86.png |
+| -Ninefingers- | characters/-ninefingers-.png |
+| ROoKs | characters/rooks.png |
+| MTK1928 | characters/mtk1928.png |
+| Nez1234 | characters/nez1234.png |
+| PigRoastKing | characters/pigroastking.png |
+| Milman29 | characters/milman29.png |
+| ScatCat | characters/scatcat.png |
+| M0rax | characters/m0rax.png |
+| Jurassic69 | characters/jurassic69.png |
+
+## Approved, awaiting transfer (1)
+| Member | Staged final | GitHub destination | Status |
+|---|---|---|---|
+| x Q x (#52) | Google Drive `Alliance Roster Finals/x-q-x.png` | `characters/x-q-x.png` | Approved and staged; GitHub binary transfer pending |
+
+- Q: **Shawn-approved surfer version** (not either earlier desert-commander draft), approved 2026-10-22. Exact asset: tactical vest, blue/white board shorts, straw hat, sunglasses, Q-shaped surfboard shield, camel companion. Do not regenerate or change. Source file in Drive: `15j1z-qnn5RfjMCb7HwmFOYgeQlrO5HpW` (image/png, 2,159,458 bytes).
+- Q was completed out of sequential order. Next sequential unfinished member remains #35 Syd Smith II.
+- Previous 35 finals were transferred and committed 2026-10-22.
+
+- ScatCat: the committed final is an EARLIER version, chosen over later attempts (per GPT, 2026-10-22).
+- 仈仟 = characters/baqian.png and ŁIØN = characters/lion.png (web-safe names; see Rules).
+
+## Canon notes
+- RuthlessX: the approved PNG is canon. No remake.
+- Syg: stays human adult male.
+- Nano: factual IRGC uniform.
