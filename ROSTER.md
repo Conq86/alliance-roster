@@ -51,6 +51,14 @@ Muse updates this file in the same commit as any art change.
 | Jurassic69 | characters/jurassic69.png |
 | x Q x | characters/x-q-x.png |
 
+## Pending approved replacements (1)
+| Member | Current live file | New approved final | State |
+|---|---|---|---|
+| ŁIØN | `characters/lion.png` (older art) | `Alliance Roster Finals/lion_REPLACEMENT_APPROVED_2026-10-23.png` | New final approved and staged; GitHub replacement pending |
+
+- **ŁIØN current canon (approved 2026-10-23):** Exact isolated full-body black-and-gold hooded lion-armour warrior with rifle and armoured lion companion approved by Shawn after ŁIØN requested that design. Do not regenerate. Source image: Google Drive `lion_REPLACEMENT_APPROVED_2026-10-23.png`, file ID `1uvJXFTs9pBMuSdNx34NMPvrVzlOa2ejL`, PNG 1024×1536 RGB, 2,573,646 bytes, SHA-256 `4225366ac8cfaae198bce9e5555c47ea4a6d4602f1ff31e7c33d124e238061cd`.
+- **Superseded ŁIØN:** Existing Drive `ŁIØN.png` (1,607,086 bytes) and current GitHub `characters/lion.png` are the older design, not the approved replacement. Keep old GitHub version in commit history.
+- **Transfer instruction for Muse:** Fetch the exact approved Drive PNG, verify PNG/size/SHA-256, replace `characters/lion.png` through the working GitHub browser binary-upload method, then verify the committed file and website, and update this pending-replacement status to completed. The GitHub filename remains `lion.png` while member display name remains `ŁIØN`.
 ## Notes on recent additions
 - Q: **CURRENT CANON: Shawn-approved keffiyeh revision** (2026-10-22). Exact approved image has a black-and-white keffiyeh around Q's neck, plus tactical vest, blue/white board shorts, straw hat, sunglasses, Q-shaped surfboard shield, and camel companion. Preserve this exact image; do not regenerate. Google Drive canonical file: `Alliance Roster Finals/x-q-x.png`, ID `1Gp_ThNByIpGouykWNfomxHb66GFlLlrq`, verified `image/png`, 1,941,373 bytes, 1024x1536. SHA-256 `a1377a2a7178b79c1befdd6b8964bd45390ba2d3ba610c06c190f583347ee243`. Previous surfer draft: Drive ID `15j1z-qnn5RfjMCb7HwmFOYgeQlrO5HpW`, renamed `x-q-x_SUPERSEDED_pre-keffiyeh.png`; NOT CANON and was not uploaded. TRANSFERRED 2026-10-22: downloaded from Drive, byte-verified against the recorded size and SHA-256, uploaded to `characters/x-q-x.png` via the GitHub web upload, and added to the showcase page (36 members).
 - Q was completed out of sequential order. Next sequential unfinished member remains #35 Syd Smith II.
