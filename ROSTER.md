@@ -99,7 +99,35 @@ Muse updates this file in the same commit as any art change.
 
 ## Badge-first members
 
-Members without completed characters may be registered here using their exact game name and an explicitly confirmed `badges/<filename>.png` path. Do not infer unusual handles. The gallery combines this table with Committed above; a filename identifies one member in both views. When their character is committed, move the row to Committed with its `characters/` path (same filename). No badge artwork has been uploaded yet.
+Members without completed characters may be registered here using their exact game name and an explicitly confirmed `badges/<filename>.png` path. Do not infer unusual handles. The gallery combines this table with Committed above; a filename identifies one member in both views. When their character is committed, move the row to Committed with its `characters/` path (same filename). First badge batch complete: 62 member badges uploaded byte-for-byte to `badges/` (34 Committed members plus the 28 badge-first members below), for 76 registered members total. 14 Committed members have no badge supplied yet and show the placeholder. The source folder also held one general POW 713 alliance badge, stored as a non-member file and deliberately not listed in either table.
 
 | Member | File |
 |---|---|
+| Sugar Bugga | badges/sugar-bugga.png |
+| Racheengel | badges/racheengel.png |
+| StetsonSuave | badges/stetsonsuave.png |
+| Honeybee | badges/honeybee.png |
+| Kickers7 | badges/kickers7.png |
+| VaLLewyN | badges/vallewyn.png |
+| Ceinna | badges/ceinna.png |
+| Mandelmasse | badges/mandelmasse.png |
+| MrAli | badges/mrali.png |
+| MF RaZoR | badges/mf-razor.png |
+| NILY | badges/nily.png |
+| NIN89 | badges/nin89.png |
+| Nixiaa | badges/nixiaa.png |
+| Juana de Arco | badges/juana-de-arco.png |
+| Soyi | badges/soyi.png |
+| Panda | badges/panda.png |
+| Nite Nite | badges/nite-nite.png |
+| Longoak | badges/longoak.png |
+| Kunfayakun | badges/kunfayakun.png |
+| Ezzzgii | badges/ezzzgii.png |
+| TheDuckCH | badges/theduckch.png |
+| Nüffel | badges/nuffel.png |
+| JessyIvs | badges/jessyivs.png |
+| Queen Bee | badges/queen-bee.png |
+| Radi DE | badges/radi-de.png |
+| MOSA | badges/mosa.png |
+| BiggJohn | badges/biggjohn.png |
+| D3V3L0P3R | badges/d3v3l0p3r.png |
