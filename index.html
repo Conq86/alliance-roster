@@ -6,6 +6,7 @@
 <title>Alliance Roster Showcase</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { background: #160b2e; }
   body {
     font-family: "Segoe UI", Arial, Helvetica, sans-serif;
     background: linear-gradient(180deg, #160b2e 0%, #3c1650 34%, #8e2f56 62%, #e2603f 82%, #ff9a3d 100%);
@@ -19,9 +20,10 @@
     flex: 1; width: 100%; display: flex; align-items: center; justify-content: center;
     perspective: 1900px; perspective-origin: 50% 46%; min-height: 600px;
   }
-  .deck { position: relative; width: 190px; height: 330px; }
+  .deck { position: relative; width: 190px; height: 330px; transform-style: preserve-3d; -webkit-transform-style: preserve-3d; }
   .card {
-    position: absolute; inset: 0; will-change: transform;
+    position: absolute; inset: 0;
+    backface-visibility: hidden; -webkit-backface-visibility: hidden;
     background: linear-gradient(180deg, #241839, #120a24);
     border: 2px solid rgba(255, 170, 80, .55);
     border-radius: 14px; overflow: hidden;
@@ -34,6 +36,7 @@
   }
   .card img {
     display: block; width: 100%; height: 282px; object-fit: contain;
+    background-color: #160b2e;
     background: radial-gradient(ellipse at 50% 88%, rgba(255,140,60,.28), rgba(0,0,0,0) 62%);
   }
   .card figcaption {
@@ -72,11 +75,14 @@
   footer { padding: 10px 16px 20px; opacity: .75; font-size: 13px; letter-spacing: 1px; z-index: 2; text-align: center; }
 
   .showcase-tabs {
+    position: sticky; top: 0; z-index: 100;
     display: flex; justify-content: center; align-items: center; gap: 10px;
-    width: min(480px, 94vw); z-index: 3; padding: 10px 0 0;
+    width: 100%; padding: 12px 12px;
+    background: rgba(22, 11, 46, .97);
+    border-bottom: 1px solid rgba(255, 170, 80, .35);
   }
   .showcase-tabs button {
-    flex: 1; background: rgba(0, 0, 0, .35); color: #fff;
+    flex: 1; max-width: 235px; background: rgba(0, 0, 0, .35); color: #fff;
     border: 1px solid rgba(255, 170, 80, .55); border-radius: 999px;
     padding: 11px 16px; font: 700 15px "Segoe UI", Arial, sans-serif;
     cursor: pointer; transition: background .18s ease, border-color .18s ease;
@@ -86,6 +92,8 @@
   .showcase-tabs button[aria-pressed="true"] {
     background: #ff9a3d; border-color: #ffd27a; color: #1c0f2e;
   }
+  .card img:not([data-ready="true"]) { visibility: hidden; }
+  .card.badge-loading::before { content: "LOADING BADGE"; }
   .card.badge-missing::before {
     content: "BADGE\A COMING SOON"; white-space: pre-line;
     position: absolute; inset: 0 0 48px; z-index: 1;
@@ -94,8 +102,14 @@
     color: #ffd27a; text-align: center; font-weight: 800;
     font-size: 16px; letter-spacing: 2px; pointer-events: none;
   }
-  .card.badge-missing img { visibility: hidden; }
-  .card.badge-missing figcaption { position: relative; z-index: 2; }
+  .card.badge-missing img, .card.badge-loading img { visibility: hidden; }
+  .card.badge-missing figcaption, .card.badge-loading figcaption { position: relative; z-index: 2; }
+  .card.badge-loading::before {
+    position: absolute; inset: 0 0 48px; z-index: 1;
+    display: grid; place-items: center; padding: 20px;
+    color: #ffd27a; text-align: center; font-weight: 800;
+    font-size: 14px; letter-spacing: 1px;
+  }
   .hint-swipe { display: none; }
   @media (max-width: 760px) {
     .stage { perspective: 1000px; perspective-origin: 50% 50%; min-height: 520px; touch-action: pan-y; }
@@ -410,15 +424,35 @@
   });
 
   galleryItems.forEach(function (item) {
+    // Never show a half-loaded image on a rotating 3D surface.
+    if (item.img.complete && item.img.naturalWidth > 0) {
+      item.img.dataset.ready = 'true';
+    }
     item.img.addEventListener('error', function () {
+      item.img.removeAttribute('data-ready');
+      item.img.parentElement.classList.remove('badge-loading');
       if (galleryMode === 'badges' && item.img.getAttribute('src') === item.badgeSrc) {
         item.img.parentElement.classList.add('badge-missing');
       }
     });
     item.img.addEventListener('load', function () {
-      item.img.parentElement.classList.remove('badge-missing');
+      if (item.img.naturalWidth > 0) item.img.dataset.ready = 'true';
+      item.img.parentElement.classList.remove('badge-missing', 'badge-loading');
     });
   });
+
+  // Cards already on the front half and those approaching it are fetched ahead.
+  // Avoid eager-loading 48 high-resolution images at once on mobile.
+  var lastWarmIndex = -1;
+  function warmNearFront() {
+    if (!total) return;
+    var center = ((Math.round(-current / step) % total) + total) % total;
+    if (center === lastWarmIndex) return;
+    lastWarmIndex = center;
+    for (var offset = -4; offset <= 9; offset++) {
+      galleryItems[(center + offset + total) % total].img.loading = 'eager';
+    }
+  }
 
   function selectGallery(next, syncUrl) {
     if (next !== 'characters' && next !== 'badges') return;
@@ -436,10 +470,19 @@
       : 'Art set in the alliance house style';
     document.title = showingBadges ? 'Alliance Badges | Alliance Roster Showcase' : 'Alliance Roster Showcase';
     galleryItems.forEach(function (item) {
-      item.img.parentElement.classList.remove('badge-missing');
+      item.img.parentElement.classList.remove('badge-missing', 'badge-loading');
+      if (showingBadges) item.img.parentElement.classList.add('badge-loading');
+      item.img.removeAttribute('data-ready');
+      item.img.loading = 'lazy';
       item.img.setAttribute('src', showingBadges ? item.badgeSrc : item.characterSrc);
       item.img.alt = (showingBadges ? 'Badge for ' : 'Character for ') + item.name;
+      if (item.img.complete && item.img.naturalWidth > 0) {
+        item.img.dataset.ready = 'true';
+        item.img.parentElement.classList.remove('badge-loading');
+      }
     });
+    lastWarmIndex = -1;
+    warmNearFront();
     // Switching views does not alter the rotating wheel or focused member.
     if (syncUrl && window.history && window.history.replaceState) {
       var url = new URL(window.location.href);
@@ -506,7 +549,7 @@
     resumeBtn.hidden = true;
   }
 
-  var last = null;
+  var last = null, lastPaint = -Infinity;
   function tick(ts) {
     if (last === null) last = ts;
     var dt = Math.min(0.05, (ts - last) / 1000); last = ts;
@@ -519,9 +562,17 @@
         if (Math.abs(delta) < 0.05) current = focusTarget;
       }
     }
-    render();
+    // 30fps is ample for this slow carousel on phones; fewer 3D redraws
+    // reduce GPU pressure and flashing on memory-constrained browsers.
+    var minFrameMs = window.innerWidth <= 760 ? 32 : 16;
+    if (ts - lastPaint >= minFrameMs) {
+      warmNearFront();
+      render();
+      lastPaint = ts;
+    }
     requestAnimationFrame(tick);
   }
+  warmNearFront();
   requestAnimationFrame(tick);
 
   stage.addEventListener('mouseenter', function () { holdPause = true; });
