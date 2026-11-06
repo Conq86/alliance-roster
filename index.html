@@ -402,7 +402,7 @@
   var search = document.getElementById('memberSearch');
   var noMatch = document.getElementById('noMatch');
   var activeBtn = null, activeCard = null;
-  var lastZ = new Array(total).fill(null);
+  var lastVisible = new Array(total).fill(null);
 
   // Both views reuse the same cards, directory, wheel animation, and roster order.
   // Badge files use the SAME filename as their approved character in /badges/.
@@ -514,11 +514,20 @@
 
   function render() {
     var r = radius();
+    // The phone video shows one white repaint every ~2.3s, matching the
+    // 110-second / 48-member front-card interval. Avoid per-frame z-index
+    // mutations of every 3D card: CSS preserve-3d handles depth sorting.
+    // Cards beyond the visible arc do not need a GPU layer or a repaint.
+    var arc = window.innerWidth <= 480 ? 67 : 89;
     for (var i = 0; i < total; i++) {
-      var ang = current + i * step;
+      var ang = norm(current + i * step);
+      var show = Math.abs(ang) <= arc;
+      if (lastVisible[i] !== show) {
+        cards[i].style.display = show ? 'flex' : 'none';
+        lastVisible[i] = show;
+      }
+      if (!show) continue;
       cards[i].style.transform = 'rotateY(' + ang + 'deg) translateZ(' + r + 'px)';
-      var z = 1000 + Math.round(Math.cos(ang * Math.PI / 180) * 1000);
-      if (lastZ[i] !== z) { cards[i].style.zIndex = z; lastZ[i] = z; }
     }
   }
 
