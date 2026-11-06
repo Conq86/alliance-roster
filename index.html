@@ -20,7 +20,7 @@
     flex: 1; width: 100%; display: flex; align-items: center; justify-content: center;
     perspective: 1900px; perspective-origin: 50% 46%; min-height: 600px;
   }
-  .deck { position: relative; width: 190px; height: 330px; transform-style: preserve-3d; -webkit-transform-style: preserve-3d; }
+  .deck { position: relative; width: 190px; height: 330px; }
   .card {
     position: absolute; inset: 0;
     backface-visibility: hidden; -webkit-backface-visibility: hidden;
@@ -403,6 +403,7 @@
   var noMatch = document.getElementById('noMatch');
   var activeBtn = null, activeCard = null;
   var lastVisible = new Array(total).fill(null);
+  var lastRank = new Array(total).fill(null);
 
   // Both views reuse the same cards, directory, wheel animation, and roster order.
   // Badge files use the SAME filename as their approved character in /badges/.
@@ -516,7 +517,7 @@
     var r = radius();
     // The phone video shows one white repaint every ~2.3s, matching the
     // 110-second / 48-member front-card interval. Avoid per-frame z-index
-    // mutations of every 3D card: CSS preserve-3d handles depth sorting.
+    // mutations of every 3D card: discrete stacking ranks handle overlap.
     // Cards beyond the visible arc do not need a GPU layer or a repaint.
     var arc = window.innerWidth <= 480 ? 67 : 89;
     for (var i = 0; i < total; i++) {
@@ -527,6 +528,14 @@
         lastVisible[i] = show;
       }
       if (!show) continue;
+      // Rank changes only as a card moves between member positions,
+      // not on every animation frame. This preserves the front overlap
+      // without continually rebuilding dozens of GPU stacking layers.
+      var rank = 100 - Math.round(Math.abs(ang) / step);
+      if (lastRank[i] !== rank) {
+        cards[i].style.zIndex = rank;
+        lastRank[i] = rank;
+      }
       cards[i].style.transform = 'rotateY(' + ang + 'deg) translateZ(' + r + 'px)';
     }
   }
