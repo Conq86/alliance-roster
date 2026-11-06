@@ -70,6 +70,32 @@
   .member-list button.active { background: rgba(255,154,61,.9); color: #1c0f2e; font-weight: 700; border-color: transparent; }
   .no-match { text-align: center; opacity: .85; padding: 8px 0 2px; }
   footer { padding: 10px 16px 20px; opacity: .75; font-size: 13px; letter-spacing: 1px; z-index: 2; text-align: center; }
+
+  .showcase-tabs {
+    display: flex; justify-content: center; align-items: center; gap: 10px;
+    width: min(480px, 94vw); z-index: 3; padding: 10px 0 0;
+  }
+  .showcase-tabs button {
+    flex: 1; background: rgba(0, 0, 0, .35); color: #fff;
+    border: 1px solid rgba(255, 170, 80, .55); border-radius: 999px;
+    padding: 11px 16px; font: 700 15px "Segoe UI", Arial, sans-serif;
+    cursor: pointer; transition: background .18s ease, border-color .18s ease;
+  }
+  .showcase-tabs button:hover,
+  .showcase-tabs button:focus-visible { border-color: #ffd27a; outline-offset: 2px; }
+  .showcase-tabs button[aria-pressed="true"] {
+    background: #ff9a3d; border-color: #ffd27a; color: #1c0f2e;
+  }
+  .card.badge-missing::before {
+    content: "BADGE\A COMING SOON"; white-space: pre-line;
+    position: absolute; inset: 0 0 48px; z-index: 1;
+    display: grid; place-items: center; padding: 20px;
+    background: radial-gradient(circle at center, rgba(255, 170, 80, .18), rgba(0, 0, 0, .18) 65%);
+    color: #ffd27a; text-align: center; font-weight: 800;
+    font-size: 16px; letter-spacing: 2px; pointer-events: none;
+  }
+  .card.badge-missing img { visibility: hidden; }
+  .card.badge-missing figcaption { position: relative; z-index: 2; }
   .hint-swipe { display: none; }
   @media (max-width: 760px) {
     .stage { perspective: 1000px; perspective-origin: 50% 50%; min-height: 520px; touch-action: pan-y; }
@@ -82,8 +108,12 @@
 <body>
   <header>
     <h1>ALLIANCE ROSTER</h1>
-    <p>MEMBER SHOWCASE &middot; 48 STRONG</p>
+    <p id="gallerySubtitle">MEMBER SHOWCASE &middot; 48 STRONG</p>
   </header>
+  <nav class="showcase-tabs" aria-label="Showcase views">
+    <button id="charactersTab" type="button" aria-pressed="true">Characters</button>
+    <button id="badgesTab" type="button" aria-pressed="false">Badges</button>
+  </nav>
   <div class="stage">
     <div class="deck">
       <figure class="card">
@@ -281,7 +311,7 @@
     </div>
   </div>
   <section class="directory">
-    <h2>MEMBER DIRECTORY</h2>
+    <h2 id="directoryHeading">MEMBER DIRECTORY</h2>
     <div class="dir-controls">
       <input id="memberSearch" type="search" placeholder="Search members..." aria-label="Search members" autocomplete="off">
       <button id="resumeBtn" type="button" hidden>Resume rotation</button>
@@ -339,7 +369,7 @@
     <p id="noMatch" class="no-match" hidden>No member matches that search.</p>
   </section>
   <div class="glow"></div>
-  <footer><span class="hint-hover">Hover to pause &middot; click a name below to jump to them</span><span class="hint-swipe">Auto-rotating &middot; tap a name below to jump to them</span> &middot; Art set in the alliance house style</footer>
+  <footer><span class="hint-hover">Hover to pause &middot; click a name below to jump to them</span><span class="hint-swipe">Auto-rotating &middot; tap a name below to jump to them</span> &middot; <span id="galleryArtNote">Art set in the alliance house style</span></footer>
 <script>
 (function () {
   var deck = document.querySelector('.deck');
@@ -359,6 +389,72 @@
   var noMatch = document.getElementById('noMatch');
   var activeBtn = null, activeCard = null;
   var lastZ = new Array(total).fill(null);
+
+  // Both views reuse the same cards, directory, wheel animation, and roster order.
+  // Badge files use the SAME filename as their approved character in /badges/.
+  var galleryMode = 'characters';
+  var charactersTab = document.getElementById('charactersTab');
+  var badgesTab = document.getElementById('badgesTab');
+  var subtitle = document.getElementById('gallerySubtitle');
+  var directoryHeading = document.getElementById('directoryHeading');
+  var galleryArtNote = document.getElementById('galleryArtNote');
+  var galleryItems = cards.map(function (card) {
+    var img = card.querySelector('img');
+    var original = img.getAttribute('src');
+    return {
+      img: img,
+      name: card.querySelector('figcaption').textContent.trim(),
+      characterSrc: original,
+      badgeSrc: original.replace(/^characters\//, 'badges/')
+    };
+  });
+
+  galleryItems.forEach(function (item) {
+    item.img.addEventListener('error', function () {
+      if (galleryMode === 'badges' && item.img.getAttribute('src') === item.badgeSrc) {
+        item.img.parentElement.classList.add('badge-missing');
+      }
+    });
+    item.img.addEventListener('load', function () {
+      item.img.parentElement.classList.remove('badge-missing');
+    });
+  });
+
+  function selectGallery(next, syncUrl) {
+    if (next !== 'characters' && next !== 'badges') return;
+    if (next === galleryMode) return;
+    galleryMode = next;
+    var showingBadges = next === 'badges';
+    charactersTab.setAttribute('aria-pressed', String(!showingBadges));
+    badgesTab.setAttribute('aria-pressed', String(showingBadges));
+    subtitle.textContent = showingBadges
+      ? 'MEMBER BADGES · ' + total + ' MEMBERS'
+      : 'MEMBER SHOWCASE · ' + total + ' STRONG';
+    directoryHeading.textContent = showingBadges ? 'BADGE DIRECTORY' : 'MEMBER DIRECTORY';
+    galleryArtNote.textContent = showingBadges
+      ? 'Member-created badge artwork'
+      : 'Art set in the alliance house style';
+    document.title = showingBadges ? 'Alliance Badges | Alliance Roster Showcase' : 'Alliance Roster Showcase';
+    galleryItems.forEach(function (item) {
+      item.img.parentElement.classList.remove('badge-missing');
+      item.img.setAttribute('src', showingBadges ? item.badgeSrc : item.characterSrc);
+      item.img.alt = (showingBadges ? 'Badge for ' : 'Character for ') + item.name;
+    });
+    // Switching views does not alter the rotating wheel or focused member.
+    if (syncUrl && window.history && window.history.replaceState) {
+      var url = new URL(window.location.href);
+      if (showingBadges) url.searchParams.set('view', 'badges');
+      else url.searchParams.delete('view');
+      window.history.replaceState(null, '', url.pathname + url.search + url.hash);
+    }
+  }
+
+  charactersTab.addEventListener('click', function () { selectGallery('characters', true); });
+  badgesTab.addEventListener('click', function () { selectGallery('badges', true); });
+  if (new URLSearchParams(window.location.search).get('view') === 'badges') {
+    selectGallery('badges', false);
+  }
+
 
   function radius() {
     var w = window.innerWidth;
