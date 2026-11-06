@@ -96,3 +96,10 @@ Muse updates this file in the same commit as any art change.
 - RuthlessX: the approved PNG is canon. No remake.
 - Syg: stays human adult male.
 - Nano: factual IRGC uniform.
+
+## Badge-first members
+
+Members without completed characters may be registered here using their exact game name and an explicitly confirmed `badges/<filename>.png` path. Do not infer unusual handles. The gallery combines this table with Committed above; a filename identifies one member in both views. When their character is committed, move the row to Committed with its `characters/` path (same filename). No badge artwork has been uploaded yet.
+
+| Member | File |
+|---|---|

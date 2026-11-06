@@ -1,0 +1,27 @@
+---
+layout: null
+---
+{%- capture tracker -%}{%- include_relative ROSTER.md -%}{%- endcapture -%}
+{%- assign lines = tracker | newline_to_br | split: '<br />' -%}
+{"members":[
+{%- assign comma = '' -%}
+{%- for line in lines -%}
+  {%- assign cells = line | split: '|' -%}
+  {%- assign name = cells[1] | strip -%}
+  {%- assign path = cells[2] | strip -%}
+  {%- assign folder = path | split: '/' | first -%}
+  {%- if folder == 'characters' or folder == 'badges' -%}
+    {{- comma -}}{"name":{{ name | jsonify }},"path":{{ path | jsonify }}}
+    {%- assign comma = ',' -%}
+  {%- endif -%}
+{%- endfor -%}
+],"assets":[
+{%- assign comma = '' -%}
+{%- for file in site.static_files -%}
+  {%- assign folder = file.path | split: '/' -%}
+  {%- if folder[1] == 'characters' or folder[1] == 'badges' -%}
+    {{- comma -}}{{ file.path | remove_first: '/' | jsonify }}
+    {%- assign comma = ',' -%}
+  {%- endif -%}
+{%- endfor -%}
+]}

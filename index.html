@@ -6,6 +6,8 @@
 <title>Alliance Roster Showcase</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { background: #160b2e; }
+  [hidden] { display: none !important; }
   body {
     font-family: "Segoe UI", Arial, Helvetica, sans-serif;
     background: linear-gradient(180deg, #160b2e 0%, #3c1650 34%, #8e2f56 62%, #e2603f 82%, #ff9a3d 100%);
@@ -17,11 +19,11 @@
   header p { opacity: .85; letter-spacing: 2px; margin-top: 6px; font-size: clamp(11px, 2vw, 16px); }
   .stage {
     flex: 1; width: 100%; display: flex; align-items: center; justify-content: center;
-    perspective: 1900px; perspective-origin: 50% 46%; min-height: 600px;
+    min-height: 600px;
   }
-  .deck { position: relative; width: 190px; height: 330px; }
+  .deck { isolation: isolate; position: relative; width: 190px; height: 330px; }
   .card {
-    position: absolute; inset: 0; will-change: transform;
+    position: absolute; inset: 0;
     background: linear-gradient(180deg, #241839, #120a24);
     border: 2px solid rgba(255, 170, 80, .55);
     border-radius: 14px; overflow: hidden;
@@ -34,7 +36,7 @@
   }
   .card img {
     display: block; width: 100%; height: 282px; object-fit: contain;
-    background: radial-gradient(ellipse at 50% 88%, rgba(255,140,60,.28), rgba(0,0,0,0) 62%);
+    background: #160b2e radial-gradient(ellipse at 50% 88%, rgba(255,140,60,.28), transparent 62%);
   }
   .card figcaption {
     height: 48px; display: flex; align-items: center; justify-content: center;
@@ -73,10 +75,11 @@
 
   .showcase-tabs {
     display: flex; justify-content: center; align-items: center; gap: 10px;
-    width: min(480px, 94vw); z-index: 3; padding: 10px 0 0;
+    position: sticky; top: 0; width: 100%; z-index: 100; padding: 12px;
+    background: #160b2e; border-bottom: 1px solid rgba(255,170,80,.35);
   }
   .showcase-tabs button {
-    flex: 1; background: rgba(0, 0, 0, .35); color: #fff;
+    flex: 1; max-width: 235px; background: rgba(0, 0, 0, .35); color: #fff;
     border: 1px solid rgba(255, 170, 80, .55); border-radius: 999px;
     padding: 11px 16px; font: 700 15px "Segoe UI", Arial, sans-serif;
     cursor: pointer; transition: background .18s ease, border-color .18s ease;
@@ -86,19 +89,20 @@
   .showcase-tabs button[aria-pressed="true"] {
     background: #ff9a3d; border-color: #ffd27a; color: #1c0f2e;
   }
-  .card.badge-missing::before {
-    content: "BADGE\A COMING SOON"; white-space: pre-line;
+  .card:not([data-state="ready"])::before {
+    content: attr(data-message);
     position: absolute; inset: 0 0 48px; z-index: 1;
     display: grid; place-items: center; padding: 20px;
     background: radial-gradient(circle at center, rgba(255, 170, 80, .18), rgba(0, 0, 0, .18) 65%);
     color: #ffd27a; text-align: center; font-weight: 800;
     font-size: 16px; letter-spacing: 2px; pointer-events: none;
   }
-  .card.badge-missing img { visibility: hidden; }
-  .card.badge-missing figcaption { position: relative; z-index: 2; }
+  .card:not([data-state="ready"]) img { visibility: hidden; }
+  .card:not([data-state="ready"]) figcaption { position: relative; z-index: 2; }
+  #viewArt { color: #ffd27a; align-self: center; padding: 10px; }
   .hint-swipe { display: none; }
   @media (max-width: 760px) {
-    .stage { perspective: 1000px; perspective-origin: 50% 50%; min-height: 520px; touch-action: pan-y; }
+    .stage { min-height: 520px; touch-action: pan-y; }
     .glow { display: none; }
     .hint-hover { display: none; }
     .hint-swipe { display: inline; }
@@ -117,195 +121,195 @@
   <div class="stage">
     <div class="deck">
       <figure class="card">
-        <img src="characters/allfatherfalcon.png" alt="AllFatherFalcon" loading="lazy" decoding="async">
+        <img data-src="characters/allfatherfalcon.png" alt="AllFatherFalcon" loading="lazy" decoding="async">
         <figcaption>AllFatherFalcon</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/arkyngl.png" alt="Arkyngl" loading="lazy" decoding="async">
+        <img data-src="characters/arkyngl.png" alt="Arkyngl" loading="lazy" decoding="async">
         <figcaption>Arkyngl</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/crazy-fewl.png" alt="Crazy Fewl" loading="lazy" decoding="async">
+        <img data-src="characters/crazy-fewl.png" alt="Crazy Fewl" loading="lazy" decoding="async">
         <figcaption>Crazy Fewl</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/dawg.png" alt="DaWG" loading="lazy" decoding="async">
+        <img data-src="characters/dawg.png" alt="DaWG" loading="lazy" decoding="async">
         <figcaption>DaWG</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/mrstealyagrl.png" alt="MrStealYaGrl" loading="lazy" decoding="async">
+        <img data-src="characters/mrstealyagrl.png" alt="MrStealYaGrl" loading="lazy" decoding="async">
         <figcaption>MrStealYaGrl</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/ninja-chicken-z.png" alt="Ninja Chicken Z" loading="lazy" decoding="async">
+        <img data-src="characters/ninja-chicken-z.png" alt="Ninja Chicken Z" loading="lazy" decoding="async">
         <figcaption>Ninja Chicken Z</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/ruthlessx.png" alt="RuthlessX" loading="lazy" decoding="async">
+        <img data-src="characters/ruthlessx.png" alt="RuthlessX" loading="lazy" decoding="async">
         <figcaption>RuthlessX</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/wildfg.png" alt="WildFG" loading="lazy" decoding="async">
+        <img data-src="characters/wildfg.png" alt="WildFG" loading="lazy" decoding="async">
         <figcaption>WildFG</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/xnanox.png" alt="xNanoX" loading="lazy" decoding="async">
+        <img data-src="characters/xnanox.png" alt="xNanoX" loading="lazy" decoding="async">
         <figcaption>xNanoX</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/conq86.png" alt="Conq86" loading="lazy" decoding="async">
+        <img data-src="characters/conq86.png" alt="Conq86" loading="lazy" decoding="async">
         <figcaption>Conq86</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/pixelwarlord.png" alt="PixelWarlord" loading="lazy" decoding="async">
+        <img data-src="characters/pixelwarlord.png" alt="PixelWarlord" loading="lazy" decoding="async">
         <figcaption>PixelWarlord</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/guardianx91.png" alt="guardianx91" loading="lazy" decoding="async">
+        <img data-src="characters/guardianx91.png" alt="guardianx91" loading="lazy" decoding="async">
         <figcaption>guardianx91</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/baqian.png" alt="仈仟" loading="lazy" decoding="async">
+        <img data-src="characters/baqian.png" alt="仈仟" loading="lazy" decoding="async">
         <figcaption>仈仟</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/db66.png" alt="Db66" loading="lazy" decoding="async">
+        <img data-src="characters/db66.png" alt="Db66" loading="lazy" decoding="async">
         <figcaption>Db66</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/creeping-death.png" alt="Creeping-Death" loading="lazy" decoding="async">
+        <img data-src="characters/creeping-death.png" alt="Creeping-Death" loading="lazy" decoding="async">
         <figcaption>Creeping-Death</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/kumud.png" alt="Kumud" loading="lazy" decoding="async">
+        <img data-src="characters/kumud.png" alt="Kumud" loading="lazy" decoding="async">
         <figcaption>Kumud</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/kelgris.png" alt="KelGris" loading="lazy" decoding="async">
+        <img data-src="characters/kelgris.png" alt="KelGris" loading="lazy" decoding="async">
         <figcaption>KelGris</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/hotchoclat.png" alt="Hotchoclat" loading="lazy" decoding="async">
+        <img data-src="characters/hotchoclat.png" alt="Hotchoclat" loading="lazy" decoding="async">
         <figcaption>Hotchoclat</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/lion.png" alt="ŁIØN" loading="lazy" decoding="async">
+        <img data-src="characters/lion.png" alt="ŁIØN" loading="lazy" decoding="async">
         <figcaption>ŁIØN</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/hd4u.png" alt="HD4U" loading="lazy" decoding="async">
+        <img data-src="characters/hd4u.png" alt="HD4U" loading="lazy" decoding="async">
         <figcaption>HD4U</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/sofakingfast.png" alt="SofaKingFast" loading="lazy" decoding="async">
+        <img data-src="characters/sofakingfast.png" alt="SofaKingFast" loading="lazy" decoding="async">
         <figcaption>SofaKingFast</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/d-day01.png" alt="D-DAY01" loading="lazy" decoding="async">
+        <img data-src="characters/d-day01.png" alt="D-DAY01" loading="lazy" decoding="async">
         <figcaption>D-DAY01</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/salem232.png" alt="salem232" loading="lazy" decoding="async">
+        <img data-src="characters/salem232.png" alt="salem232" loading="lazy" decoding="async">
         <figcaption>salem232</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/med.png" alt="MED" loading="lazy" decoding="async">
+        <img data-src="characters/med.png" alt="MED" loading="lazy" decoding="async">
         <figcaption>MED</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/drvenkmanog.png" alt="DrVenkmanOG" loading="lazy" decoding="async">
+        <img data-src="characters/drvenkmanog.png" alt="DrVenkmanOG" loading="lazy" decoding="async">
         <figcaption>DrVenkmanOG</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/sarah86.png" alt="Sarah86" loading="lazy" decoding="async">
+        <img data-src="characters/sarah86.png" alt="Sarah86" loading="lazy" decoding="async">
         <figcaption>Sarah86</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/-ninefingers-.png" alt="-Ninefingers-" loading="lazy" decoding="async">
+        <img data-src="characters/-ninefingers-.png" alt="-Ninefingers-" loading="lazy" decoding="async">
         <figcaption>-Ninefingers-</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/rooks.png" alt="ROoKs" loading="lazy" decoding="async">
+        <img data-src="characters/rooks.png" alt="ROoKs" loading="lazy" decoding="async">
         <figcaption>ROoKs</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/mtk1928.png" alt="MTK1928" loading="lazy" decoding="async">
+        <img data-src="characters/mtk1928.png" alt="MTK1928" loading="lazy" decoding="async">
         <figcaption>MTK1928</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/nez1234.png" alt="Nez1234" loading="lazy" decoding="async">
+        <img data-src="characters/nez1234.png" alt="Nez1234" loading="lazy" decoding="async">
         <figcaption>Nez1234</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/pigroastking.png" alt="PigRoastKing" loading="lazy" decoding="async">
+        <img data-src="characters/pigroastking.png" alt="PigRoastKing" loading="lazy" decoding="async">
         <figcaption>PigRoastKing</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/milman29.png" alt="Milman29" loading="lazy" decoding="async">
+        <img data-src="characters/milman29.png" alt="Milman29" loading="lazy" decoding="async">
         <figcaption>Milman29</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/scatcat.png" alt="ScatCat" loading="lazy" decoding="async">
+        <img data-src="characters/scatcat.png" alt="ScatCat" loading="lazy" decoding="async">
         <figcaption>ScatCat</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/m0rax.png" alt="M0rax" loading="lazy" decoding="async">
+        <img data-src="characters/m0rax.png" alt="M0rax" loading="lazy" decoding="async">
         <figcaption>M0rax</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/jurassic69.png" alt="Jurassic69" loading="lazy" decoding="async">
+        <img data-src="characters/jurassic69.png" alt="Jurassic69" loading="lazy" decoding="async">
         <figcaption>Jurassic69</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/x-q-x.png" alt="x Q x" loading="lazy" decoding="async">
+        <img data-src="characters/x-q-x.png" alt="x Q x" loading="lazy" decoding="async">
         <figcaption>x Q x</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/syd-smith-ii.png" alt="Syd Smith II" loading="lazy" decoding="async">
+        <img data-src="characters/syd-smith-ii.png" alt="Syd Smith II" loading="lazy" decoding="async">
         <figcaption>Syd Smith II</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/zombie-slayer1.png" alt="zombie slayer1" loading="lazy" decoding="async">
+        <img data-src="characters/zombie-slayer1.png" alt="zombie slayer1" loading="lazy" decoding="async">
         <figcaption>zombie slayer1</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/pride9.png" alt="PRIDE9" loading="lazy" decoding="async">
+        <img data-src="characters/pride9.png" alt="PRIDE9" loading="lazy" decoding="async">
         <figcaption>PRIDE9</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/ace-yen.png" alt="Ace ¥" loading="lazy" decoding="async">
+        <img data-src="characters/ace-yen.png" alt="Ace ¥" loading="lazy" decoding="async">
         <figcaption>Ace ¥</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/speedb.png" alt="SpeedB" loading="lazy" decoding="async">
+        <img data-src="characters/speedb.png" alt="SpeedB" loading="lazy" decoding="async">
         <figcaption>SpeedB</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/wot.png" alt="WoT" loading="lazy" decoding="async">
+        <img data-src="characters/wot.png" alt="WoT" loading="lazy" decoding="async">
         <figcaption>WoT</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/staton.png" alt="Staton" loading="lazy" decoding="async">
+        <img data-src="characters/staton.png" alt="Staton" loading="lazy" decoding="async">
         <figcaption>Staton</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/dontbotherme.png" alt="Dontbotherme" loading="lazy" decoding="async">
+        <img data-src="characters/dontbotherme.png" alt="Dontbotherme" loading="lazy" decoding="async">
         <figcaption>Dontbotherme</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/jessiebug1986.png" alt="Jessiebug1986" loading="lazy" decoding="async">
+        <img data-src="characters/jessiebug1986.png" alt="Jessiebug1986" loading="lazy" decoding="async">
         <figcaption>Jessiebug1986</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/rd5002.png" alt="RD5002" loading="lazy" decoding="async">
+        <img data-src="characters/rd5002.png" alt="RD5002" loading="lazy" decoding="async">
         <figcaption>RD5002</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/ahmad-mag.png" alt="Ahmad mag" loading="lazy" decoding="async">
+        <img data-src="characters/ahmad-mag.png" alt="Ahmad mag" loading="lazy" decoding="async">
         <figcaption>Ahmad mag</figcaption>
       </figure>
       <figure class="card">
-        <img src="characters/rodxoxd.png" alt="RODxOxD" loading="lazy" decoding="async">
+        <img data-src="characters/rodxoxd.png" alt="RODxOxD" loading="lazy" decoding="async">
         <figcaption>RODxOxD</figcaption>
       </figure>
     </div>
@@ -315,6 +319,7 @@
     <div class="dir-controls">
       <input id="memberSearch" type="search" placeholder="Search members..." aria-label="Search members" autocomplete="off">
       <button id="resumeBtn" type="button" hidden>Resume rotation</button>
+      <a id="viewArt" target="_blank" rel="noopener" hidden>View full artwork</a>
     </div>
     <div id="memberList" class="member-list">
       <button type="button" data-i="39" data-search="ace ¥ ace yen aceyen">Ace ¥</button>
@@ -370,191 +375,6 @@
   </section>
   <div class="glow"></div>
   <footer><span class="hint-hover">Hover to pause &middot; click a name below to jump to them</span><span class="hint-swipe">Auto-rotating &middot; tap a name below to jump to them</span> &middot; <span id="galleryArtNote">Art set in the alliance house style</span></footer>
-<script>
-(function () {
-  var deck = document.querySelector('.deck');
-  var stage = document.querySelector('.stage');
-  var cards = Array.prototype.slice.call(deck.children);
-  var total = cards.length;
-  var step = 360 / total;
-  var speed = 360 / 110; // degrees per second
-  var current = 0;
-  var mode = 'spin'; // 'spin' | 'focus' | 'hold'
-  var focusTarget = 0;
-  var holdPause = false;
-  var resumeTimer = null;
-  var resumeBtn = document.getElementById('resumeBtn');
-  var list = document.getElementById('memberList');
-  var search = document.getElementById('memberSearch');
-  var noMatch = document.getElementById('noMatch');
-  var activeBtn = null, activeCard = null;
-  var lastZ = new Array(total).fill(null);
-
-  // Both views reuse the same cards, directory, wheel animation, and roster order.
-  // Badge files use the SAME filename as their approved character in /badges/.
-  var galleryMode = 'characters';
-  var charactersTab = document.getElementById('charactersTab');
-  var badgesTab = document.getElementById('badgesTab');
-  var subtitle = document.getElementById('gallerySubtitle');
-  var directoryHeading = document.getElementById('directoryHeading');
-  var galleryArtNote = document.getElementById('galleryArtNote');
-  var galleryItems = cards.map(function (card) {
-    var img = card.querySelector('img');
-    var original = img.getAttribute('src');
-    return {
-      img: img,
-      name: card.querySelector('figcaption').textContent.trim(),
-      characterSrc: original,
-      badgeSrc: original.replace(/^characters\//, 'badges/')
-    };
-  });
-
-  galleryItems.forEach(function (item) {
-    item.img.addEventListener('error', function () {
-      if (galleryMode === 'badges' && item.img.getAttribute('src') === item.badgeSrc) {
-        item.img.parentElement.classList.add('badge-missing');
-      }
-    });
-    item.img.addEventListener('load', function () {
-      item.img.parentElement.classList.remove('badge-missing');
-    });
-  });
-
-  function selectGallery(next, syncUrl) {
-    if (next !== 'characters' && next !== 'badges') return;
-    if (next === galleryMode) return;
-    galleryMode = next;
-    var showingBadges = next === 'badges';
-    charactersTab.setAttribute('aria-pressed', String(!showingBadges));
-    badgesTab.setAttribute('aria-pressed', String(showingBadges));
-    subtitle.textContent = showingBadges
-      ? 'MEMBER BADGES · ' + total + ' MEMBERS'
-      : 'MEMBER SHOWCASE · ' + total + ' STRONG';
-    directoryHeading.textContent = showingBadges ? 'BADGE DIRECTORY' : 'MEMBER DIRECTORY';
-    galleryArtNote.textContent = showingBadges
-      ? 'Member-created badge artwork'
-      : 'Art set in the alliance house style';
-    document.title = showingBadges ? 'Alliance Badges | Alliance Roster Showcase' : 'Alliance Roster Showcase';
-    galleryItems.forEach(function (item) {
-      item.img.parentElement.classList.remove('badge-missing');
-      item.img.setAttribute('src', showingBadges ? item.badgeSrc : item.characterSrc);
-      item.img.alt = (showingBadges ? 'Badge for ' : 'Character for ') + item.name;
-    });
-    // Switching views does not alter the rotating wheel or focused member.
-    if (syncUrl && window.history && window.history.replaceState) {
-      var url = new URL(window.location.href);
-      if (showingBadges) url.searchParams.set('view', 'badges');
-      else url.searchParams.delete('view');
-      window.history.replaceState(null, '', url.pathname + url.search + url.hash);
-    }
-  }
-
-  charactersTab.addEventListener('click', function () { selectGallery('characters', true); });
-  badgesTab.addEventListener('click', function () { selectGallery('badges', true); });
-  if (new URLSearchParams(window.location.search).get('view') === 'badges') {
-    selectGallery('badges', false);
-  }
-
-
-  function radius() {
-    var w = window.innerWidth;
-    if (w <= 760) return 290;
-    if (w <= 1200) return 700;
-    return 860;
-  }
-
-  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    mode = 'hold';
-  }
-
-  function norm(a) { a = a % 360; if (a > 180) a -= 360; if (a < -180) a += 360; return a; }
-
-  function render() {
-    var r = radius();
-    for (var i = 0; i < total; i++) {
-      var ang = current + i * step;
-      cards[i].style.transform = 'rotateY(' + ang + 'deg) translateZ(' + r + 'px)';
-      var z = 1000 + Math.round(Math.cos(ang * Math.PI / 180) * 1000);
-      if (lastZ[i] !== z) { cards[i].style.zIndex = z; lastZ[i] = z; }
-    }
-  }
-
-  function setActive(i, btn) {
-    if (activeCard) activeCard.classList.remove('active');
-    if (activeBtn) activeBtn.classList.remove('active');
-    activeCard = cards[i]; activeCard.classList.add('active');
-    activeBtn = btn || null;
-    if (activeBtn) activeBtn.classList.add('active');
-  }
-
-  function goTo(i, btn) {
-    var targetMod = norm(-i * step);
-    focusTarget = current + norm(targetMod - norm(current));
-    mode = 'focus';
-    setActive(i, btn);
-    resumeBtn.hidden = false;
-    clearTimeout(resumeTimer);
-    resumeTimer = setTimeout(resume, 25000);
-  }
-
-  function resume() {
-    clearTimeout(resumeTimer);
-    mode = 'spin';
-    if (activeCard) activeCard.classList.remove('active');
-    if (activeBtn) activeBtn.classList.remove('active');
-    activeCard = null; activeBtn = null;
-    resumeBtn.hidden = true;
-  }
-
-  var last = null;
-  function tick(ts) {
-    if (last === null) last = ts;
-    var dt = Math.min(0.05, (ts - last) / 1000); last = ts;
-    if (!holdPause) {
-      if (mode === 'spin') {
-        current -= speed * dt;
-      } else if (mode === 'focus') {
-        var delta = focusTarget - current;
-        current += delta * Math.min(1, dt * 2.4);
-        if (Math.abs(delta) < 0.05) current = focusTarget;
-      }
-    }
-    render();
-    requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
-
-  stage.addEventListener('mouseenter', function () { holdPause = true; });
-  stage.addEventListener('mouseleave', function () { holdPause = false; });
-  stage.addEventListener('touchstart', function () { holdPause = true; }, { passive: true });
-  stage.addEventListener('touchend', function () { setTimeout(function () { holdPause = false; }, 600); }, { passive: true });
-
-  list.addEventListener('click', function (e) {
-    var btn = e.target.closest('button[data-i]');
-    if (btn) goTo(parseInt(btn.getAttribute('data-i'), 10), btn);
-  });
-  resumeBtn.addEventListener('click', resume);
-
-  function applyFilter() {
-    var q = search.value.trim().toLowerCase();
-    var visible = 0, first = null;
-    var btns = list.querySelectorAll('button[data-i]');
-    btns.forEach(function (b) {
-      var hit = !q || b.getAttribute('data-search').indexOf(q) !== -1;
-      b.style.display = hit ? '' : 'none';
-      if (hit) { visible++; if (!first) first = b; }
-    });
-    noMatch.hidden = visible !== 0;
-    return first;
-  }
-  search.addEventListener('input', applyFilter);
-  search.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') {
-      var first = applyFilter();
-      if (first) first.click();
-    }
-  });
-})();
-</script>
+<script src="gallery.js"></script>
 </body>
 </html>
