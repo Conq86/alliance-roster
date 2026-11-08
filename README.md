@@ -1,11 +1,12 @@
 # alliance-roster
 
-Alliance character roster: full-body character art for all ~100 members, plus the showcase page.
+Alliance character roster: full-body character art for all ~100 members, plus the showcase page and the members' Music & Videos hub.
 
 ## Layout
 - `characters/` — one file per member, named after the member (e.g. `characters/scatcat.png`). Every edit is a new commit, so the full revision history of each character is kept here.
 - `badges/` — original member-created PNG badges. Use the same filename as the member's character: `badges/scatcat.png`, `badges/lion.png` for ŁIØN, `badges/baqian.png` for 仈仟, or `badges/ace-yen.png` for Ace ¥.
-- `index.html` — a shared 3D carousel with **Characters** and **Badges** tabs. Both use the same rotating wheel, member directory, search, hover pause, and name-jump controls. Direct-link to badges with `?view=badges`.
+- `index.html` — a shared 3D carousel with **Characters** and **Badges** tabs. Both use the same rotating wheel, member directory, search, hover pause, and name-jump controls. Direct-link to badges with `?view=badges`. A third **Music & Videos** tab (`?view=media`) replaces the wheel and directory while it is open; the wheel pauses and resumes where it left off.
+- `media.json` and `media/`: the Music & Videos list and the approved member MP3/MP4 files it points to (see below). `media.js` renders it.
 
 ## Uploading badges
 1. Find the member's exact name and filename in `ROSTER.md`. Upload the approved original PNG to `badges/` with that filename, preserving the image bytes and artist credit. Do not regenerate or recompress it.
@@ -20,11 +21,63 @@ When a badge-first member's character is completed, upload `characters/<same-fil
 
 Pages must continue to build with Jekyll from `main` at `/`; do not add `.nojekyll`. The roster JSON is generated at deployment, so uploads become available after the next successful Pages build.
 
+## Music & Videos
+The third tab (`?view=media`) has **Music** and **Videos** sections. Everything in it comes from `media.json`; adding a creator, track or video is a manifest edit only. No layout, HTML, CSS or JS changes.
+
+- **Music**: one playlist per creator. DaWG and KelGris (Kels) playlists exist and are empty until their approved files arrive. The page uses one native audio player with Previous/Next and a track list. Selecting a playlist cues its first track without downloading it (`preload="none"`). Playback starts only when someone presses play or picks a track. After that, the next track in the same playlist plays when one ends. If the browser blocks playback, the player says "Press play to start".
+- **Videos**: grouped by creator, newest first, with a creator filter. YouTube entries show a play poster. Pressing it loads a `youtube-nocookie.com` embed (nothing is requested from YouTube before then), and every entry has a **Watch on YouTube** link. Shorts switch to a portrait frame when playing. Local MP4s use the native video player.
+- Only one item plays at a time. Starting a track or video stops the others. Changing Music/Videos, playlist or creator filter, or leaving the tab, stops playback and unloads any YouTube embed.
+- The initial videos are all 18 owner-approved MED uploads from the month before 2026-11-08 (published 2026-10-10 to 2026-11-07) (channel MED LAST Z) and every public POW Ruthless upload (30). Titles, video IDs, publish dates and durations come from the public channel listings. Nothing syncs automatically. New uploads are added only when approved.
+- If no music has been added, the tab opens on Videos. Once any track exists it opens on Music.
+
+### `media.json` schema
+```json
+{
+  "music": [
+    { "creatorId": "dawg", "creator": "DaWG", "member": "dawg", "tracks": [ TRACK, ... ] }
+  ],
+  "videos": [
+    { "creatorId": "med", "creator": "MED", "member": "med",
+      "channel": "MED LAST Z", "channelUrl": "https://www.youtube.com/@med.713",
+      "items": [ VIDEO, ... ] }
+  ]
+}
+```
+- `creatorId` (required): a stable lowercase id (`a-z 0-9 - _`), unique within `music` and within `videos`. Use the member's roster filename where there is one (`dawg`, `kelgris`, `med`). POW Ruthless uses `ruthless` and links to the existing RuthlessX roster identity through `member`. `ROSTER.md` stays the identity authority; do not add members here.
+- `creator` (required): the credit shown on the page, i.e. the creator's game name.
+- `member` (optional): roster filename without `.png`. That member's existing badge is shown as the creator avatar (the original file is displayed, never edited).
+- `channel` and `channelUrl` (optional, videos only): the YouTube channel name and its `https://www.youtube.com/@handle` URL.
+- Array order is display order: playlists and creators appear as listed, tracks play top to bottom, and videos should be listed newest first.
+
+A TRACK (music) is:
+```json
+{ "type": "audio", "title": "Song title", "src": "media/dawg/Song title.mp3", "duration": "3:12" }
+```
+A VIDEO is either a YouTube entry or a local MP4:
+```json
+{ "type": "youtube", "youtubeId": "AbCdEfGhIjK", "title": "Video title", "format": "video", "published": "2026-11-07", "duration": 286 }
+{ "type": "video", "src": "media/med/Raid recap.mp4", "title": "Raid recap", "format": "short" }
+```
+(These are illustrations only. They are not in the live list.)
+- `title` (required): exact title as supplied by the creator. Unicode and emoji are fine.
+- `src` (local files): must start with `media/`, end in `.mp3` (tracks) or `.mp4` (videos), and must not contain `..`, `\`, `%`, `?`, `#` or `:`. Write the real filename, spaces included. Do not URL-encode it; the page encodes it, and it works under the `/alliance-roster/` Pages path.
+- `youtubeId`: the 11-character id from `youtube.com/watch?v=<id>` or `youtube.com/shorts/<id>`.
+- `format` (optional): `"short"` for portrait/Shorts, otherwise `"video"`.
+- `duration` (optional): seconds (`286`) or `"m:ss"` / `"h:mm:ss"`. `published` (optional): `YYYY-MM-DD`. Only fill these in from real data. Leave them out if unknown.
+- Invalid entries are skipped and reported in the browser console. The rest of the list still shows.
+
+### Adding approved uploads (Google Drive intake)
+Each artist's Google Drive folder (DaWG's and KelGris's are separate) is an **intake source only**. It is not a streaming URL and does not sync. Do not put Drive links in `media.json`.
+1. Confirm the owner approved the file and get its title and the creator's game name from the submission.
+2. Download it from Drive. MP3 goes in `media/<creatorId>/` (e.g. `media/dawg/`), MP4 in `media/<creatorId>/` as well. Keep files modest: a few MB per track. Large videos should be uploaded to YouTube and added as a `youtube` entry instead. GitHub rejects files over 100 MB, and Pages sites should stay small. No paid hosting is needed.
+3. Add one TRACK or VIDEO object to that creator's `tracks`/`items` array in the position it should appear. A new creator is one new object in `music` or `videos`.
+4. Commit to `main`. The Pages build deploys it. Reload `?view=media` once Pages succeeds.
+
 ## Rendering
 The shared wheel uses a flat projection of its circular rotation, hides rear cards, and changes depth ordering only at card crossings (reusing the approach from PR #3). It avoids intersecting CSS 3D surfaces and permanent GPU promotion of every card. Images are loaded/decoded two at a time near the front, with dark loading placeholders. The rotation remains one turn per 110 seconds. Android-specific flashing still requires an actual phone check; DOM checks cannot verify a GPU/compositor result.
 
 ## Rules
-- Approved character art, approved badge art, and the page files only. No source screenshots or personal files.
+- Approved character art, approved badge art, owner-approved member music and video (AI-made submissions included) in `media/` or as YouTube entries in `media.json`, and the page files only. No source screenshots or personal files.
 - Phone-sourced images get their location metadata stripped before upload.
 - Members appear under their game names.
 - Private while the roster is being built. Goes public when the showcase page launches, so every member can view and download their character.

@@ -9,6 +9,10 @@
   var viewArt = document.getElementById('viewArt');
   var charactersTab = document.getElementById('charactersTab');
   var badgesTab = document.getElementById('badgesTab');
+  var mediaTab = document.getElementById('mediaTab');
+  var directory = document.querySelector('.directory');
+  var hints = document.getElementById('galleryHints');
+  var media = window.AllianceMedia;
   var aliases = {};
   list.querySelectorAll('button').forEach(function (button) {
     aliases[button.textContent.trim()] = button.getAttribute('data-search');
@@ -20,7 +24,11 @@
   });
   var items = [], current = 0, step = 360 / members.length;
   var speed = 360 / 110;
-  var gallery = new URLSearchParams(location.search).get('view') === 'badges' ? 'badges' : 'characters';
+  var requested = new URLSearchParams(location.search).get('view');
+  var gallery = requested === 'badges' ? 'badges' : 'characters';
+  // view is the visible tab; gallery is the wheel's content, kept while Music & Videos is open.
+  var view = requested === 'media' && media ? 'media' : gallery;
+  var savedRoster = false;
   var mode = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'hold' : 'spin';
   var focusTarget = 0, activeFile = null, holdPause = false, resumeTimer;
   var generation = 0, queue = [], loading = 0, lastDepthBucket = null;
@@ -154,19 +162,42 @@
     var active = items.find(function (item) { return item.member.file === activeFile; });
     if (active) { active.card.classList.add('active'); active.button.classList.add('active'); }
     else activeFile = null;
-    charactersTab.setAttribute('aria-pressed', String(gallery === 'characters'));
-    badgesTab.setAttribute('aria-pressed', String(gallery === 'badges'));
+    lastDepthBucket = null;
+    chrome(); applyFilter(); showOriginal();
+    if (view !== 'media') { warm(); render(); }
+    if (syncUrl) setUrl();
+  }
+  function chrome() {
+    charactersTab.setAttribute('aria-pressed', String(view === 'characters'));
+    badgesTab.setAttribute('aria-pressed', String(view === 'badges'));
+    mediaTab.setAttribute('aria-pressed', String(view === 'media'));
+    stage.hidden = directory.hidden = hints.hidden = view === 'media';
+    if (view === 'media') return; // media.js owns the header and footer note while its tab is open
     document.getElementById('gallerySubtitle').textContent = (gallery === 'badges' ? 'MEMBER BADGES · ' : 'MEMBER SHOWCASE · ') + items.length + ' MEMBERS';
     document.getElementById('directoryHeading').textContent = gallery === 'badges' ? 'BADGE DIRECTORY' : 'MEMBER DIRECTORY';
-    document.getElementById('galleryArtNote').textContent = gallery === 'badges' ? 'Member-created badge artwork' : 'Art set in the alliance house style';
+    document.getElementById('galleryArtNote').textContent = (gallery === 'badges' ? 'Member-created badge artwork' : 'Art set in the alliance house style') + (savedRoster ? ' · Saved roster (refresh to retry updates)' : '');
     document.title = gallery === 'badges' ? 'Alliance Badges | Alliance Roster Showcase' : 'Alliance Roster Showcase';
-    lastDepthBucket = null;
-    applyFilter(); showOriginal(); warm(); render();
-    if (syncUrl) {
-      var url = new URL(location.href);
-      if (gallery === 'badges') url.searchParams.set('view', 'badges'); else url.searchParams.delete('view');
-      history.replaceState(null, '', url.pathname + url.search + url.hash);
+  }
+  function setUrl() {
+    var url = new URL(location.href);
+    if (view !== 'characters') url.searchParams.set('view', view); else url.searchParams.delete('view');
+    history.replaceState(null, '', url.pathname + url.search + url.hash);
+  }
+  function setView(next) {
+    if (next === view) return;
+    var leaving = view === 'media';
+    view = next;
+    if (next === 'media') {
+      // Freeze the wheel where it is; its focus and rotation resume on return.
+      clearTimeout(resumeTimer); holdPause = false;
+      chrome(); media.show();
+    } else {
+      if (leaving) media.hide();
+      if (next !== gallery) build(next, false);
+      else { chrome(); lastDepthBucket = null; warm(); render(); }
+      if (leaving && mode === 'focus') resumeTimer = setTimeout(resume, 25000);
     }
+    setUrl();
   }
   function goTo(i) {
     var item = items[i];
@@ -187,7 +218,8 @@
   function tick(ts) {
     if (last === null) last = ts;
     var dt = Math.min(0.05, (ts - last) / 1000); last = ts;
-    if (!holdPause && !document.hidden) {
+    var showing = view !== 'media' && !document.hidden;
+    if (!holdPause && showing) {
       if (mode === 'spin') current -= speed * dt;
       else if (mode === 'focus') {
         var delta = focusTarget - current;
@@ -195,7 +227,7 @@
         if (Math.abs(delta) < 0.05) current = focusTarget;
       }
     }
-    if (!document.hidden && ts - lastPaint >= (innerWidth <= 760 ? 32 : 16)) {
+    if (showing && ts - lastPaint >= (innerWidth <= 760 ? 32 : 16)) {
       warm(); render(); lastPaint = ts;
     }
     requestAnimationFrame(tick);
@@ -213,9 +245,12 @@
   resumeBtn.addEventListener('click', resume);
   search.addEventListener('input', applyFilter);
   search.addEventListener('keydown', function (event) { if (event.key === 'Enter') { var first = applyFilter(); if (first) first.click(); } });
-  charactersTab.addEventListener('click', function () { if (gallery !== 'characters') build('characters', true); });
-  badgesTab.addEventListener('click', function () { if (gallery !== 'badges') build('badges', true); });
+  charactersTab.addEventListener('click', function () { setView('characters'); });
+  badgesTab.addEventListener('click', function () { setView('badges'); });
+  if (media) mediaTab.addEventListener('click', function () { setView('media'); });
+  else mediaTab.hidden = true;
   build(gallery, false);
+  if (view === 'media') media.show();
   requestAnimationFrame(tick);
   fetch('gallery-data.json', { cache: 'no-cache' }).then(function (response) {
     if (!response.ok) throw new Error('Roster unavailable');
@@ -232,6 +267,6 @@
     members = Array.from(byFile.values());
     build(gallery, false);
   }).catch(function () {
-    document.getElementById('galleryArtNote').textContent += ' · Saved roster (refresh to retry updates)';
+    savedRoster = true; chrome();
   });
 })();

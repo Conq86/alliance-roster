@@ -16,6 +16,7 @@
   <nav class="showcase-tabs" aria-label="Showcase views">
     <button id="charactersTab" type="button" aria-pressed="true">Characters</button>
     <button id="badgesTab" type="button" aria-pressed="false">Badges</button>
+    <button id="mediaTab" type="button" aria-pressed="false">Music &amp; Videos</button>
   </nav>
   <div class="stage">
     <div class="deck">
@@ -272,8 +273,44 @@
     </div>
     <p id="noMatch" class="no-match" hidden>No member matches that search.</p>
   </section>
+  <section id="mediaHub" class="media-hub" aria-labelledby="mediaHeading" hidden>
+    <h2 id="mediaHeading">MUSIC &amp; VIDEOS</h2>
+    <div class="media-subtabs" role="group" aria-label="Media type">
+      <button id="musicTab" type="button" aria-pressed="false">Music</button>
+      <button id="videosTab" type="button" aria-pressed="false">Videos</button>
+    </div>
+    <p id="mediaStatus" class="media-empty" role="status" hidden></p>
+    <div id="musicPanel" hidden>
+      <div id="playlistPicker" class="media-chips" role="group" aria-label="Choose a playlist"></div>
+      <p id="musicEmpty" class="media-empty" hidden>No playlists yet. Approved member music will appear here once it is added.</p>
+      <article id="playlist" class="media-panel" aria-labelledby="playlistTitle">
+        <div class="media-head">
+          <img id="playlistArt" class="creator-art" alt="" width="56" height="56" decoding="async" hidden>
+          <div><h3 id="playlistTitle"></h3><p id="playlistCredit" class="media-credit"></p></div>
+        </div>
+        <div id="audioPlayer" class="audio-player" hidden>
+          <p id="nowPlaying" class="now-playing" aria-live="polite"></p>
+          <audio id="mediaAudio" controls preload="none">Your browser cannot play audio here. Use the track link below.</audio>
+          <div class="player-controls">
+            <button id="prevTrack" type="button">Previous</button>
+            <button id="nextTrack" type="button">Next</button>
+          </div>
+          <p id="audioError" class="media-error" hidden>This track could not play here. <a id="audioFallback" target="_blank" rel="noopener">Open the MP3 directly</a></p>
+        </div>
+        <ol id="trackList" class="track-list"></ol>
+        <p id="playlistEmpty" class="media-empty" hidden></p>
+      </article>
+    </div>
+    <div id="videoPanel" hidden>
+      <div id="videoPicker" class="media-chips" role="group" aria-label="Filter videos by creator" hidden></div>
+      <div id="videoGroups"></div>
+      <p id="videoEmpty" class="media-empty" hidden>No videos yet. Approved member videos will appear here once they are added.</p>
+      <p class="media-fineprint">YouTube videos load from youtube-nocookie.com only when you press play.</p>
+    </div>
+  </section>
   <div class="glow"></div>
-  <footer><span class="hint-hover">Hover to pause &middot; click a name below to jump to them</span><span class="hint-swipe">Auto-rotating &middot; tap a name below to jump to them</span> &middot; <span id="galleryArtNote">Art set in the alliance house style</span></footer>
+  <footer><span id="galleryHints"><span class="hint-hover">Hover to pause &middot; click a name below to jump to them</span><span class="hint-swipe">Auto-rotating &middot; tap a name below to jump to them</span> &middot; </span><span id="galleryArtNote">Art set in the alliance house style</span></footer>
+<script src="media.js"></script>
 <script src="gallery.js"></script>
 </body>
 </html>
