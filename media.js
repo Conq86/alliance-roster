@@ -11,6 +11,8 @@
   var audioError = $('audioError'), audioFallback = $('audioFallback');
   var trackList = $('trackList'), playlistEmpty = $('playlistEmpty');
   var videoPicker = $('videoPicker'), videoGroups = $('videoGroups'), videoEmpty = $('videoEmpty');
+  // Android gets Chrome intent links so YouTube opens in its app; everywhere else uses normal HTTPS links.
+  var ANDROID = /Android/i.test(navigator.userAgent);
   var ID = /^[a-z0-9_-]+$/, YOUTUBE = /^[A-Za-z0-9_-]{11}$/, DATE = /^\d{4}-\d{2}-\d{2}$/;
   var playlists = [], groups = [], videoCount = 0;
   var active = false, loadState = 'idle', section = null;
@@ -228,26 +230,43 @@
     var link, direct;
     if (item.youtube) {
       // The poster opens YouTube directly; inline playback is the explicit "Play here" button.
+      // On Android the poster is a Chrome intent link (same tab) for the YouTube app, with the HTTPS page as fallback.
       var watch = 'https://www.youtube.com/watch?v=' + item.youtube;
-      var watchLabel = 'Watch on YouTube: ' + item.title + ' by ' + group.name + ' (opens in a new tab)';
-      var poster = el('a', 'media-poster');
-      poster.href = watch; poster.target = '_blank'; poster.rel = 'noopener';
-      poster.setAttribute('aria-label', watchLabel);
-      poster.append(el('span', 'media-play'), el('span', 'media-watch', 'Watch on YouTube'), el('span', 'media-kind', kind));
+      var appHref = 'intent://www.youtube.com/watch?v=' + item.youtube + '#Intent;scheme=https;package=com.google.android.youtube;S.browser_fallback_url=' + encodeURIComponent(watch) + ';end';
+      var watchText = ANDROID ? 'Open YouTube app' : 'Watch on YouTube';
+      var watchLabel = ANDROID ? 'Open YouTube app: ' + item.title + ' by ' + group.name : 'Watch on YouTube: ' + item.title + ' by ' + group.name + ' (opens in a new tab)';
+      var external = function (content, className) {
+        var anchor = el('a', className, content);
+        anchor.href = ANDROID ? appHref : watch;
+        if (!ANDROID) { anchor.target = '_blank'; anchor.rel = 'noopener'; }
+        anchor.setAttribute('aria-label', watchLabel);
+        return anchor;
+      };
+      var poster = external('', 'media-poster');
+      poster.append(el('span', 'media-play'), el('span', 'media-watch', watchText), el('span', 'media-kind', kind));
       poster.addEventListener('click', stopAll);
       frame.append(poster);
       // Shown above the player only while it plays inline, never over the iframe.
       direct = el('div', 'media-direct');
       direct.hidden = true;
-      var away = el('a', 'media-link', 'Watch on YouTube');
-      away.href = watch; away.target = '_blank'; away.rel = 'noopener';
-      away.setAttribute('aria-label', watchLabel);
+      var away = external(watchText, 'media-link');
       away.addEventListener('click', function () { stopAll(); poster.focus(); });
-      direct.append(away, el('p', 'media-direct-note', 'If YouTube asks you to sign in, open this video on YouTube.'));
+      direct.append(away, el('p', 'media-direct-note', 'If YouTube asks you to sign in, open this video ' + (ANDROID ? 'in the YouTube app.' : 'on YouTube.')));
       link = el('button', 'media-link', 'Play here');
       link.type = 'button';
       link.setAttribute('aria-label', 'Play here: ' + item.title + ' by ' + group.name + ' (loads YouTube player)');
       link.addEventListener('click', function () { playYouTube(article, frame, poster, item, group, direct); });
+      if (ANDROID) {
+        // Secondary HTTPS option in case the browser refuses the intent link.
+        var browser = el('a', 'media-link', 'Watch in browser');
+        browser.href = watch; browser.target = '_blank'; browser.rel = 'noopener';
+        browser.setAttribute('aria-label', 'Watch in browser: ' + item.title + ' by ' + group.name + ' (opens in a new tab)');
+        browser.addEventListener('click', stopAll);
+        var actions = el('div', 'media-actions');
+        actions.append(link, browser);
+        link = actions;
+        var hint = el('p', 'media-hint', 'If the app does not open, open this page in Chrome and try again.');
+      }
     } else {
       var video = el('video');
       video.controls = true; video.preload = 'none'; video.playsInline = true;
@@ -269,6 +288,7 @@
     body.append(title, el('p', 'media-tile-meta', meta));
     if (failed) body.append(failed);
     body.append(link);
+    if (hint) body.append(hint);
     if (direct) article.append(direct);
     article.append(frame, body);
     return article;
