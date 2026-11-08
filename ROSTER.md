@@ -11,7 +11,7 @@ Muse updates this file in the same commit as any art change.
 - Transfer method (proven 2026-10-22): GPT stages each approved PNG as a real file in Shawn's Google Drive ("Alliance Roster Finals" folder). Muse downloads from Drive, verifies the PNG, and uploads it to `characters/` through the GitHub web upload (browser signed in as Conq86; login saved in the Secure Vault). GPT's own GitHub tool is text-only and cannot push binary; Muse's GitHub connector cannot carry MB-sized files either. No hand-carrying by Shawn.
 - Filename note: both GitHub web upload routes (the repo upload page and the github.dev editor) silently refuse non-ASCII filenames, verified 2026-10-22. Two members therefore live under web-safe file names; their exact game names stay in the Member column here and in the showcase page captions.
 
-## Committed: final art in repo (48)
+## Committed: final art in repo (49)
 | Member | File |
 |---|---|
 | AllFatherFalcon | characters/allfatherfalcon.png |
@@ -62,11 +62,11 @@ Muse updates this file in the same commit as any art change.
 | RD5002 | characters/rd5002.png |
 | Ahmad mag | characters/ahmad-mag.png |
 | RODxOxD | characters/rodxoxd.png |
+| Juana de Arco | characters/juana-de-arco.png |
 
-## Approved, awaiting GitHub transfer (1)
+## Approved, awaiting GitHub transfer (0)
 | Member | Approved staged image | Target path | Status |
 |---|---|---|---|
-| Juana de Arco (out-of-order special request) | Google Drive `Alliance Roster Finals/juana-de-arco.png` | `characters/juana-de-arco.png` | Exact first compliant full-body Alliance comic asset approved and staged; transfer pending |
 
 - **Syd Smith II canon:** Shawn approved the lone full-body Australian gentleman-blacksmith, human male with sunglasses, purple tie, leather apron, 713/POW and Australian insignia, oversized ram-head forging war hammer. NO goat companion, anvil, barrels, scenery, or other background props. Exact final is the third, isolated solo revision, not either earlier goat/forge draft. Google Drive file ID `1DDpu4ErkUbhhHPMyAtG_IpyG3xR_2Jq6`, `image/png`, 1,979,337 bytes, 1024×1536. SHA-256 `bf447c3ba3d03b37b85b63e1a327e2ce0e33761e627cf1742f19ff97adc88500`. Preserve exact bytes. TRANSFERRED 2026-10-23: byte-verified after download, artwork visually confirmed against canon (solo figure, no goat companion or props), uploaded to `characters/syd-smith-ii.png` via the GitHub web upload, and added to the showcase page.
 - Syd Smith II (#35) through Staton (#42, out of order) all transferred 2026-10-23. Do not change the roster order; Q #52 was created out of order.
@@ -133,7 +133,7 @@ Members without completed characters may be registered here using their exact ga
 | BiggJohn | badges/biggjohn.png |
 | D3V3L0P3R | badges/d3v3l0p3r.png |
 
-- **Juana de Arco character CANON (Shawn approved 2026-11-08, out-of-order member request):** Exact isolated full-body Alliance comic character from the final generated draft: adult Argentine woman with long curly brown hair and subtle face marks, blue/white/gold Argentine tactical armor with sun emblems, bright electric-blue wings, jaguar-head motif at belt/hip, rifle and ornate curved knife, blue/white cape, POW/#713 style identity; dark neutral-purple isolation background with thin gold border, no separate jaguar, no scenery, no poster title. Earlier two scenic poster drafts were REJECTED. **Preserve this exact approved version; do not regenerate.** Source Drive `Alliance Roster Finals/juana-de-arco.png`, file ID `1ZaMbmAqga_F1_tZMbvuciGGaJL0eIVl7`, verified `image/png`, 2,765,813 bytes. GitHub target `characters/juana-de-arco.png`. Muse to transfer original binary bytes, verify artwork and hash, update the character gallery and mark committed. Juana's already-existing `badges/juana-de-arco.png` is independent and must not be replaced. This out-of-order approval does not change the next sequential member (#49 NishXReign; #47 NatushaXD deferred).
+- **Juana de Arco character CANON (Shawn approved 2026-11-08, out-of-order member request):** Exact isolated full-body Alliance comic character from the final generated draft: adult Argentine woman with long curly brown hair and subtle face marks, blue/white/gold Argentine tactical armor with sun emblems, bright electric-blue wings, jaguar-head motif at belt/hip, rifle and ornate curved knife, blue/white cape, POW/#713 style identity; dark neutral-purple isolation background with thin gold border, no separate jaguar, no scenery, no poster title. Earlier two scenic poster drafts were REJECTED. **Preserve this exact approved version; do not regenerate.** Source Drive `Alliance Roster Finals/juana-de-arco.png`, file ID `1ZaMbmAqga_F1_tZMbvuciGGaJL0eIVl7`, verified `image/png`, 2,765,813 bytes. GitHub target `characters/juana-de-arco.png`. TRANSFERRED 2026-11-08: downloaded from Drive (2,765,813 bytes, exact match to this record; no SHA-256 was recorded for this file, so verification rests on exact size plus visual canon check), artwork visually confirmed against canon (isolated version: electric-blue wings, jaguar-head belt motif, rifle and curved knife, blue/white cape, purple background with thin gold border; NO separate jaguar, scenery, or poster title; NOT either rejected scenic poster draft), uploaded to `characters/juana-de-arco.png` via the GitHub web upload, and added to the character gallery. The pre-existing `badges/juana-de-arco.png` was left untouched. Juana's already-existing `badges/juana-de-arco.png` is independent and must not be replaced. This out-of-order approval does not change the next sequential member (#49 NishXReign; #47 NatushaXD deferred).
 ## Badge replacements
 
 - **ŁIØN badge (owner-approved 2026-11-08 UTC):** replaced `badges/lion.png` with Shawn's supplied lion-and-purple-dragon badge (`1000015236.jpg`). Converted JPEG to PNG without resizing or changing decoded pixels; 1280×1280. PNG SHA-256 `94cc32b05b3299056a229b8dd826430943496dd359820bbcee31ee213db00b05`. The earlier lion badge remains in Git history; `characters/lion.png` is unchanged.
