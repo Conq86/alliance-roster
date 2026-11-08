@@ -10,9 +10,15 @@
   var charactersTab = document.getElementById('charactersTab');
   var badgesTab = document.getElementById('badgesTab');
   var mediaTab = document.getElementById('mediaTab');
+  var fanArtTab = document.getElementById('fanArtTab');
+  var submitTab = document.getElementById('submitTab');
   var directory = document.querySelector('.directory');
   var hints = document.getElementById('galleryHints');
   var media = window.AllianceMedia;
+  var fanart = window.AllianceFanArt;
+  var submit = window.AllianceSubmit;
+  // Every non-wheel view is a hub module with show()/hide(). The wheel freezes while one is open.
+  var hubs = { media: media, fanart: fanart, submit: submit };
   var aliases = {};
   list.querySelectorAll('button').forEach(function (button) {
     aliases[button.textContent.trim()] = button.getAttribute('data-search');
@@ -26,8 +32,8 @@
   var speed = 360 / 110;
   var requested = new URLSearchParams(location.search).get('view');
   var gallery = requested === 'badges' ? 'badges' : 'characters';
-  // view is the visible tab; gallery is the wheel's content, kept while Music & Videos is open.
-  var view = requested === 'media' && media ? 'media' : gallery;
+  // view is the visible tab; gallery is the wheel's content, kept while a hub tab is open.
+  var view = (requested === 'media' || requested === 'fanart' || requested === 'submit') && hubs[requested] ? requested : gallery;
   var savedRoster = false;
   var mode = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'hold' : 'spin';
   var focusTarget = 0, activeFile = null, holdPause = false, resumeTimer;
@@ -164,19 +170,21 @@
     else activeFile = null;
     lastDepthBucket = null;
     chrome(); applyFilter(); showOriginal();
-    if (view !== 'media') { warm(); render(); }
+    if (!hubs[view]) { warm(); render(); }
     if (syncUrl) setUrl();
   }
   function chrome() {
     charactersTab.setAttribute('aria-pressed', String(view === 'characters'));
     badgesTab.setAttribute('aria-pressed', String(view === 'badges'));
     mediaTab.setAttribute('aria-pressed', String(view === 'media'));
-    stage.hidden = directory.hidden = hints.hidden = view === 'media';
-    if (view === 'media') return; // media.js owns the header and footer note while its tab is open
+    fanArtTab.setAttribute('aria-pressed', String(view === 'fanart'));
+    submitTab.setAttribute('aria-pressed', String(view === 'submit'));
+    stage.hidden = directory.hidden = hints.hidden = !!hubs[view];
+    if (hubs[view]) return; // the hub module owns the header and footer note while its tab is open
     document.getElementById('gallerySubtitle').textContent = (gallery === 'badges' ? 'MEMBER BADGES · ' : 'MEMBER SHOWCASE · ') + items.length + ' MEMBERS';
     document.getElementById('directoryHeading').textContent = gallery === 'badges' ? 'BADGE DIRECTORY' : 'MEMBER DIRECTORY';
     document.getElementById('galleryArtNote').textContent = (gallery === 'badges' ? 'Member-created badge artwork' : 'Art set in the alliance house style') + (savedRoster ? ' · Saved roster (refresh to retry updates)' : '');
-    document.title = gallery === 'badges' ? 'Alliance Badges | Alliance Roster Showcase' : 'Alliance Roster Showcase';
+    document.title = gallery === 'badges' ? 'Alliance Badges | POW 713' : 'POW 713';
   }
   function setUrl() {
     var url = new URL(location.href);
@@ -185,17 +193,17 @@
   }
   function setView(next) {
     if (next === view) return;
-    var leaving = view === 'media';
+    var leavingHub = hubs[view];
     view = next;
-    if (next === 'media') {
+    if (hubs[next]) {
       // Freeze the wheel where it is; its focus and rotation resume on return.
       clearTimeout(resumeTimer); holdPause = false;
-      chrome(); media.show();
+      chrome(); hubs[next].show();
     } else {
-      if (leaving) media.hide();
+      if (leavingHub) leavingHub.hide();
       if (next !== gallery) build(next, false);
       else { chrome(); lastDepthBucket = null; warm(); render(); }
-      if (leaving && mode === 'focus') resumeTimer = setTimeout(resume, 25000);
+      if (leavingHub && mode === 'focus') resumeTimer = setTimeout(resume, 25000);
     }
     setUrl();
   }
@@ -218,7 +226,7 @@
   function tick(ts) {
     if (last === null) last = ts;
     var dt = Math.min(0.05, (ts - last) / 1000); last = ts;
-    var showing = view !== 'media' && !document.hidden;
+    var showing = !hubs[view] && !document.hidden;
     if (!holdPause && showing) {
       if (mode === 'spin') current -= speed * dt;
       else if (mode === 'focus') {
@@ -249,8 +257,12 @@
   badgesTab.addEventListener('click', function () { setView('badges'); });
   if (media) mediaTab.addEventListener('click', function () { setView('media'); });
   else mediaTab.hidden = true;
+  if (fanart) fanArtTab.addEventListener('click', function () { setView('fanart'); });
+  else fanArtTab.hidden = true;
+  if (submit) submitTab.addEventListener('click', function () { setView('submit'); });
+  else submitTab.hidden = true;
   build(gallery, false);
-  if (view === 'media') media.show();
+  if (hubs[view]) hubs[view].show();
   requestAnimationFrame(tick);
   fetch('gallery-data.json', { cache: 'no-cache' }).then(function (response) {
     if (!response.ok) throw new Error('Roster unavailable');

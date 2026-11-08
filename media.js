@@ -62,8 +62,8 @@
       if (!group) return null;
       group.tracks = (Array.isArray(row.tracks) ? row.tracks : []).map(function (entry, j) {
         var where = group.id + ' track ' + (j + 1), title = text(entry && entry.title);
-        var src = entry && (entry.type || 'audio') === 'audio' ? localSrc(entry.src, /\.mp3$/i) : null;
-        if (!title || !src) { skip(where, 'needs type "audio", title and src media/...mp3'); return null; }
+        var src = entry && (entry.type || 'audio') === 'audio' ? localSrc(entry.src, /\.(mp3|m4a)$/i) : null;
+        if (!title || !src) { skip(where, 'needs type "audio", title and src media/...mp3 or .m4a'); return null; }
         return { title: title, src: src, duration: duration(entry.duration) };
       }).filter(Boolean);
       return group;
@@ -110,7 +110,7 @@
     if (loadState === 'ready') parts.push(playlists.length + (playlists.length === 1 ? ' PLAYLIST' : ' PLAYLISTS'), videoCount + (videoCount === 1 ? ' VIDEO' : ' VIDEOS'));
     $('gallerySubtitle').textContent = parts.join(' · ');
     $('galleryArtNote').textContent = 'Member-made music and videos, shared with permission';
-    document.title = 'Music & Videos | Alliance Roster Showcase';
+    document.title = 'Music & Videos | POW 713';
   }
   function setSection(next) {
     var changed = section !== next;

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>POW 713 — Approvals</title>
+<style>
+  body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background: #160b2e; color: #fff6ec; margin: 0; padding: 20px; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  h2 { font-size: 15px; letter-spacing: .12em; color: #ffd27a; margin: 28px 0 10px; }
+  p, li { line-height: 1.5; }
+  a { color: #ffd27a; }
+  .wrap { max-width: 860px; margin: 0 auto; }
+  .muted { color: #e9d7c4; font-size: 14px; }
+  .status { background: #26163f; border: 1px solid rgba(255,210,122,.35); border-radius: 12px; padding: 12px 16px; margin: 12px 0; font-size: 14px; }
+  .status.bad { border-color: #ff7a5c; color: #ffc6ae; }
+  .status.good { border-color: #8cdc78; color: #d9f7c4; }
+  .card { background: #26163f; border: 1px solid rgba(255,210,122,.25); border-radius: 14px; padding: 14px 16px; margin: 10px 0; }
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; background: #ff9a3d; color: #1c0f2e; margin-right: 8px; }
+  .badge.fanart { background: #a78bfa; }
+  .badge.youtube { background: #ff5c5c; color: #fff; }
+  .card h3 { margin: 6px 0 4px; font-size: 17px; }
+  .card .meta { color: #e9d7c4; font-size: 13px; }
+  .preview { margin: 10px 0; }
+  .preview img { max-width: 100%; max-height: 320px; border-radius: 8px; }
+  .preview audio { width: 100%; }
+  .row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  label { display: block; font-size: 13px; font-weight: 600; color: #ffe2b4; margin: 8px 0 4px; }
+  input[type="text"], input[type="password"], input[type="number"], textarea { width: 100%; box-sizing: border-box; padding: 10px 12px; border-radius: 10px; border: 1px solid rgba(255,190,110,.35); background: #120923; color: #fff6ec; font: inherit; font-size: 14px; }
+  textarea { min-height: 70px; }
+  button { min-height: 42px; padding: 0 18px; border-radius: 999px; border: 1px solid rgba(255,236,200,.55); background: linear-gradient(135deg, #ffe0a0, #ff9a3d); color: #1c0f2e; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; }
+  button.ghost { background: #2a1a45; color: #f3e6ff; border-color: rgba(255,190,110,.35); }
+  button.danger { background: #4a1620; color: #ffc6ae; border-color: rgba(255,120,90,.5); }
+  button:disabled { opacity: .5; cursor: default; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
+  @media (max-width: 640px) { .grid2 { grid-template-columns: 1fr; } }
+  details { background: #1d1038; border: 1px solid rgba(255,210,122,.25); border-radius: 12px; padding: 10px 14px; margin: 10px 0; }
+  summary { cursor: pointer; font-weight: 700; color: #ffe2b4; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>POW 713 — Approvals</h1>
+  <p class="muted">Private owner screen. Only the owner's Google account can open it. Nothing here is public, and pending submissions never appear on the website.</p>
+  <div id="msg" class="status" hidden></div>
+  <div id="statusBox" class="status">Loading…</div>
+
+  <h2>PENDING</h2>
+  <div id="pending"><p class="muted">Loading…</p></div>
+
+  <h2>APPROVED</h2>
+  <div id="approved"><p class="muted">Loading…</p></div>
+
+  <h2>YOUTUBE PLAYLIST SYNC</h2>
+  <div class="card">
+    <p class="muted" id="syncInfo">Loading…</p>
+    <div class="row">
+      <button id="syncNow" type="button">Sync now</button>
+      <button id="syncTrigger" type="button" class="ghost">Enable daily sync (9 AM)</button>
+    </div>
+    <p class="muted">Sync adds videos from configured Alliance playlists to media.json, newest first, skipping any video already listed. No playlists are configured by default — add them in Settings below. Individual video links still go through the approval queue above.</p>
+  </div>
+
+  <h2>SETUP</h2>
+  <div class="card">
+    <div class="row">
+      <button id="setupDrive" type="button">Create Drive folder + Sheet</button>
+    </div>
+    <p class="muted" id="setupOut">Creates the private "POW 713 Submissions" Drive folder and tracking Sheet, and stores their IDs here. Copy the two IDs into the Submissions project's Script Properties afterwards (same names), so both projects share one folder and one Sheet.</p>
+    <details>
+      <summary>Settings</summary>
+      <div class="grid2">
+        <div>
+          <label>GitHub token (fine-grained, Contents: read/write on Conq86/alliance-roster)
+            <input id="setToken" type="password" placeholder="Leave blank to keep the saved token" autocomplete="off">
+          </label>
+          <label>YouTube API key (optional — playlist sync + video details)
+            <input id="setYt" type="password" placeholder="Leave blank to keep the saved key" autocomplete="off">
+          </label>
+          <label>Storage safety limit (MB, Pages limit is 1024)
+            <input id="setCap" type="number" min="100" max="1024" value="900">
+          </label>
+        </div>
+        <div>
+          <label>Drive folder ID
+            <input id="setFolder" type="text" autocomplete="off">
+          </label>
+          <label>Tracking Sheet ID
+            <input id="setSheet" type="text" autocomplete="off">
+          </label>
+          <label>Repo
+            <input id="setRepo" type="text" value="Conq86/alliance-roster" autocomplete="off">
+          </label>
+        </div>
+      </div>
+      <label>Alliance playlists (JSON array — leave empty until the owner supplies playlist URLs)
+        <textarea id="setPlaylists" placeholder='[{"playlistId":"PL…","creatorId":"med","creator":"MED","member":"med","channel":"MED LAST Z","channelUrl":"https://www.youtube.com/@med.713"}]'></textarea>
+      </label>
+      <div class="row"><button id="saveSettings" type="button">Save settings</button></div>
+    </details>
+  </div>
+</div>
+
+<script>
+function call(name) {
+  var args = Array.prototype.slice.call(arguments, 1);
+  return new Promise(function (resolve, reject) {
+    google.script.run
+      .withSuccessHandler(resolve)
+      .withFailureHandler(function (err) { reject(new Error(err && err.message || String(err))); })
+      [name].apply(google.script.run, args);
+  });
+}
+function showMsg(text, kind) {
+  var box = document.getElementById('msg');
+  box.hidden = !text;
+  box.textContent = text || '';
+  box.className = 'status' + (kind ? ' ' + kind : '');
+}
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+function fmtDate(iso) { try { return new Date(iso).toLocaleString(); } catch (e) { return iso || ''; } }
+
+var state = { status: null };
+
+function renderStatus() {
+  var s = state.status;
+  var box = document.getElementById('statusBox');
+  if (!s) { box.textContent = 'Could not load status.'; return; }
+  var cfg = s.configured || {};
+  var repo = s.repo || {};
+  var counts = s.counts || {};
+  var missing = [];
+  if (!cfg.drive) missing.push('Drive folder');
+  if (!cfg.sheet) missing.push('tracking Sheet');
+  if (!cfg.github) missing.push('GitHub token');
+  box.innerHTML =
+    'Signed in as <b>' + esc(s.owner) + '</b> · ' +
+    'Pending: <b>' + (counts.pending || 0) + '</b> · Approved: ' + (counts.approved || 0) + ' · Rejected: ' + (counts.rejected || 0) + '<br>' +
+    (repo.error ? 'Site size: unavailable (' + esc(repo.error) + ')'
+      : 'Site size: <b>' + esc(repo.sizeMB) + ' MB</b> of ' + esc(repo.limitMB) + ' MB safety limit (' + esc(repo.repo) + ')') +
+    (missing.length ? '<br>Still needed: <b>' + esc(missing.join(', ')) + '</b> — see Setup below.' : '') +
+    (s.countsError ? '<br>Submission list error: ' + esc(s.countsError) : '');
+  document.getElementById('syncInfo').textContent =
+    (s.playlists && s.playlists.length ? s.playlists.length + ' playlist(s) configured. ' : 'No playlists configured. ') +
+    (s.syncTrigger ? 'Daily sync is ON.' : 'Daily sync is OFF.');
+  if (s.playlists && s.playlists.length) {
+    document.getElementById('setPlaylists').value = JSON.stringify(s.playlists, null, 2);
+  }
+}
+
+function previewHtml(item, host) {
+  var box = document.createElement('div');
+  box.className = 'preview';
+  box.textContent = 'Loading preview…';
+  call('getPreview', item.id).then(function (p) {
+    box.textContent = '';
+    if (p.type === 'youtube') {
+      var a = document.createElement('a');
+      a.href = p.youtubeUrl || ('https://www.youtube.com/watch?v=' + p.youtubeId);
+      a.target = '_blank'; a.rel = 'noopener';
+      a.textContent = 'Watch on YouTube';
+      box.appendChild(a);
+    } else if (p.tooBig) {
+      var b = document.createElement('a');
+      b.href = p.driveUrl; b.target = '_blank'; b.rel = 'noopener';
+      b.textContent = 'Open original in Drive (' + Math.round(p.size / 1048576 * 10) / 10 + ' MB — too big to preview here)';
+      box.appendChild(b);
+    } else if (p.type === 'music') {
+      var au = document.createElement('audio');
+      au.controls = true; au.preload = 'none'; au.src = p.dataUrl;
+      box.appendChild(au);
+    } else {
+      var im = document.createElement('img');
+      im.src = p.dataUrl; im.alt = p.title || 'Fan art preview';
+      box.appendChild(im);
+    }
+  }).catch(function (err) { box.textContent = 'Preview failed: ' + err.message; });
+  return box;
+}
+
+function pendingCard(item) {
+  var card = document.createElement('div');
+  card.className = 'card';
+  var badge = document.createElement('span');
+  badge.className = 'badge' + (item.type === 'fanart' ? ' fanart' : item.type === 'youtube' ? ' youtube' : '');
+  badge.textContent = item.type === 'music' ? 'MUSIC' : item.type === 'fanart' ? 'FAN ART' : 'YOUTUBE';
+  var meta = document.createElement('div');
+  meta.className = 'meta';
+  meta.textContent = 'Submitted ' + fmtDate(item.submittedAt) + ' · ID ' + item.id + (item.fileSize ? ' · ' + Math.round(item.fileSize / 1024) + ' KB' : '');
+  var h = document.createElement('h3');
+  h.textContent = item.title;
+  card.append(badge, h, meta);
+  if (item.description) { var d = document.createElement('p'); d.textContent = item.description; card.appendChild(d); }
+  card.appendChild(previewHtml(item));
+  var titleLabel = document.createElement('label');
+  titleLabel.textContent = 'Title (correct it before approving if needed)';
+  var titleInput = document.createElement('input');
+  titleInput.type = 'text'; titleInput.value = item.title; titleInput.maxLength = 120;
+  titleLabel.appendChild(titleInput);
+  var nameLabel = document.createElement('label');
+  nameLabel.textContent = 'Game name (creator credit)';
+  var nameInput = document.createElement('input');
+  nameInput.type = 'text'; nameInput.value = item.gameName; nameInput.maxLength = 40;
+  nameLabel.appendChild(nameInput);
+  card.append(titleLabel, nameLabel);
+  var row = document.createElement('div');
+  row.className = 'row';
+  var approve = document.createElement('button');
+  approve.type = 'button'; approve.textContent = 'Approve + publish';
+  approve.addEventListener('click', function () {
+    approve.disabled = true;
+    showMsg('Publishing ' + item.title + '…', '');
+    call('approveSubmission', item.id, { title: titleInput.value, gameName: nameInput.value }).then(function (r) {
+      showMsg((r.already ? 'Already approved. ' : 'Approved — publishing. ') + (r.liveUrl || '') + ' ' + (r.note || ''), 'good');
+      refresh();
+    }).catch(function (err) { showMsg('Approval failed: ' + err.message, 'bad'); approve.disabled = false; });
+  });
+  var reject = document.createElement('button');
+  reject.type = 'button'; reject.textContent = 'Reject'; reject.className = 'danger';
+  reject.addEventListener('click', function () {
+    var reason = prompt('Reason for rejecting (optional, kept private):', '') || '';
+    reject.disabled = true;
+    call('rejectSubmission', item.id, reason).then(function () { showMsg('Rejected. Nothing was published.', 'good'); refresh(); })
+      .catch(function (err) { showMsg('Reject failed: ' + err.message, 'bad'); reject.disabled = false; });
+  });
+  row.append(approve, reject);
+  card.appendChild(row);
+  return card;
+}
+
+function approvedCard(item) {
+  var card = document.createElement('div');
+  card.className = 'card';
+  var h = document.createElement('h3');
+  h.textContent = item.title + ' — ' + item.gameName;
+  var meta = document.createElement('div');
+  meta.className = 'meta';
+  meta.textContent = item.type + ' · approved ' + fmtDate(item.approvedAt) + ' · ' + (item.publishedPath || '');
+  card.append(h, meta);
+  var row = document.createElement('div');
+  row.className = 'row';
+  var live = document.createElement('a');
+  live.href = item.publishedPath ? ('https://conq86.github.io/alliance-roster/' + item.publishedPath) : 'https://conq86.github.io/alliance-roster/';
+  live.target = '_blank'; live.rel = 'noopener'; live.textContent = 'Open live';
+  var check = document.createElement('button');
+  check.type = 'button'; check.textContent = 'Check live'; check.className = 'ghost';
+  check.addEventListener('click', function () {
+    check.disabled = true;
+    call('checkLive', item.publishedPath).then(function (r) {
+      showMsg(r.live ? 'Live now: ' + r.url + ' (HTTP ' + r.code + ')' : 'Not live yet: ' + r.url + ' (HTTP ' + r.code + '). Pages can take a couple of minutes.', r.live ? 'good' : 'bad');
+      check.disabled = false;
+    }).catch(function (err) { showMsg('Check failed: ' + err.message, 'bad'); check.disabled = false; });
+  });
+  var unpub = document.createElement('button');
+  unpub.type = 'button'; unpub.textContent = 'Unpublish'; unpub.className = 'danger';
+  unpub.addEventListener('click', function () {
+    if (!confirm('Unpublish "' + item.title + '"? It will be removed from the website.')) return;
+    unpub.disabled = true;
+    call('unpublishSubmission', item.id).then(function () { showMsg('Unpublished.', 'good'); refresh(); })
+      .catch(function (err) { showMsg('Unpublish failed: ' + err.message, 'bad'); unpub.disabled = false; });
+  });
+  row.append(live, check, unpub);
+  card.appendChild(row);
+  return card;
+}
+
+function refresh() {
+  call('getStatus').then(function (s) { state.status = s; renderStatus(); })
+    .catch(function (err) { document.getElementById('statusBox').textContent = 'Status failed: ' + err.message; });
+  call('listPending').then(function (list) {
+    var host = document.getElementById('pending');
+    host.textContent = '';
+    if (!list.length) { host.innerHTML = '<p class="muted">Nothing waiting. New member submissions will show up here.</p>'; return; }
+    list.forEach(function (item) { host.appendChild(pendingCard(item)); });
+  }).catch(function (err) { document.getElementById('pending').textContent = 'Failed to load pending: ' + err.message; });
+  call('listApproved').then(function (list) {
+    var host = document.getElementById('approved');
+    host.textContent = '';
+    if (!list.length) { host.innerHTML = '<p class="muted">Nothing approved through this screen yet.</p>'; return; }
+    list.forEach(function (item) { host.appendChild(approvedCard(item)); });
+  }).catch(function (err) { document.getElementById('approved').textContent = 'Failed to load approved: ' + err.message; });
+}
+
+document.getElementById('setupDrive').addEventListener('click', function () {
+  var btn = this; btn.disabled = true;
+  call('setupDrive').then(function (r) {
+    document.getElementById('setFolder').value = r.folderId;
+    document.getElementById('setSheet').value = r.sheetId;
+    document.getElementById('setupOut').innerHTML =
+      'Created. Folder: <a href="' + esc(r.folderUrl) + '" target="_blank" rel="noopener">open in Drive</a> · Sheet: <a href="' + esc(r.sheetUrl) + '" target="_blank" rel="noopener">open Sheet</a><br>' + esc(r.note);
+    showMsg('Drive folder + Sheet are ready.', 'good');
+    refresh();
+  }).catch(function (err) { showMsg('Setup failed: ' + err.message, 'bad'); })
+    .finally(function () { btn.disabled = false; });
+});
+
+document.getElementById('saveSettings').addEventListener('click', function () {
+  var btn = this; btn.disabled = true;
+  var payload = {
+    githubToken: document.getElementById('setToken').value,
+    youtubeKey: document.getElementById('setYt').value,
+    capacityLimitMB: document.getElementById('setCap').value,
+    folderId: document.getElementById('setFolder').value,
+    sheetId: document.getElementById('setSheet').value,
+    repo: document.getElementById('setRepo').value,
+    playlists: document.getElementById('setPlaylists').value
+  };
+  call('saveSettings', payload).then(function (s) {
+    state.status = s; renderStatus();
+    document.getElementById('setToken').value = '';
+    document.getElementById('setYt').value = '';
+    showMsg('Settings saved.', 'good');
+  }).catch(function (err) { showMsg('Save failed: ' + err.message, 'bad'); })
+    .finally(function () { btn.disabled = false; });
+});
+
+document.getElementById('syncNow').addEventListener('click', function () {
+  var btn = this; btn.disabled = true;
+  showMsg('Syncing playlists…', '');
+  call('syncPlaylists').then(function (r) { showMsg(r.message || ('Added ' + r.added + ' video(s).'), 'good'); refresh(); })
+    .catch(function (err) { showMsg('Sync failed: ' + err.message, 'bad'); })
+    .finally(function () { btn.disabled = false; });
+});
+
+document.getElementById('syncTrigger').addEventListener('click', function () {
+  var btn = this; btn.disabled = true;
+  call('installSyncTrigger').then(function (r) { showMsg(r.message, 'good'); refresh(); })
+    .catch(function (err) { showMsg('Could not enable daily sync: ' + err.message, 'bad'); })
+    .finally(function () { btn.disabled = false; });
+});
+
+refresh();
+</script>
+</body>
+</html>

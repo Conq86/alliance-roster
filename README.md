@@ -5,8 +5,11 @@ Alliance character roster: full-body character art for all ~100 members, plus th
 ## Layout
 - `characters/` — one file per member, named after the member (e.g. `characters/scatcat.png`). Every edit is a new commit, so the full revision history of each character is kept here.
 - `badges/` — original member-created PNG badges. Use the same filename as the member's character: `badges/scatcat.png`, `badges/lion.png` for ŁIØN, `badges/baqian.png` for 仈仟, or `badges/ace-yen.png` for Ace ¥.
-- `index.html` — a shared 3D carousel with **Characters** and **Badges** tabs. Both use the same rotating wheel, member directory, search, hover pause, and name-jump controls. Direct-link to badges with `?view=badges`. A third **Music & Videos** tab (`?view=media`) replaces the wheel and directory while it is open; the wheel pauses and resumes where it left off.
-- `media.json` and `media/`: the Music & Videos list and the approved member MP3/MP4 files it points to (see below). `media.js` renders it.
+- `index.html` — a shared 3D carousel with **Characters** and **Badges** tabs. Both use the same rotating wheel, member directory, search, hover pause, and name-jump controls. Direct-link to badges with `?view=badges`. A third **Music & Videos** tab (`?view=media`) replaces the wheel and directory while it is open; the wheel pauses and resumes where it left off. **Fan Art** (`?view=fanart`) and **Submit** (`?view=submit`) tabs work the same way.
+- `media.json` and `media/`: the Music & Videos list and the approved member MP3/M4A/MP4 files it points to (see below). `media.js` renders it.
+- `fanart.json` and `fanart/`: the approved fan art list and files. `fanart.js` renders the gallery.
+- `submit.js`: the member submission form (posts to the Apps Script backend; see Submissions & approvals).
+- `apps-script/`: the Google Apps Script backend — public submissions endpoint + private owner approval screen. See `apps-script/README.md` for deployment.
 
 ## Uploading badges
 1. Find the member's exact name and filename in `ROSTER.md`. Upload the approved original PNG to `badges/` with that filename, preserving the image bytes and artist credit. Do not regenerate or recompress it.
@@ -60,18 +63,55 @@ A VIDEO is either a YouTube entry or a local MP4:
 ```
 (These are illustrations only. They are not in the live list.)
 - `title` (required): exact title as supplied by the creator. Unicode and emoji are fine.
-- `src` (local files): must start with `media/`, end in `.mp3` (tracks) or `.mp4` (videos), and must not contain `..`, `\`, `%`, `?`, `#` or `:`. Write the real filename, spaces included. Do not URL-encode it; the page encodes it, and it works under the `/alliance-roster/` Pages path.
+- `src` (local files): must start with `media/`, end in `.mp3` or `.m4a` (tracks) or `.mp4` (videos), and must not contain `..`, `\`, `%`, `?`, `#` or `:`. Write the real filename, spaces included. Do not URL-encode it; the page encodes it, and it works under the `/alliance-roster/` Pages path. M4A playback is supported by the player but has not been verified with a real M4A file yet — play the first approved M4A on the owner's phone before relying on it.
 - `youtubeId`: the 11-character id from `youtube.com/watch?v=<id>` or `youtube.com/shorts/<id>`.
 - `format` (optional): `"short"` for portrait/Shorts, otherwise `"video"`.
 - `duration` (optional): seconds (`286`) or `"m:ss"` / `"h:mm:ss"`. `published` (optional): `YYYY-MM-DD`. Only fill these in from real data. Leave them out if unknown.
 - Invalid entries are skipped and reported in the browser console. The rest of the list still shows.
 
-### Adding approved uploads (Google Drive intake)
+### Adding approved uploads
+The normal path is the approval screen (see Submissions & approvals): approve a
+submission and it publishes itself — no manual download or commit. The manual
+intake below is the fallback for files that arrive outside the form (e.g. Drive
+folders shared directly by an artist).
+
 Each artist's Google Drive folder (DaWG's and KelGris's are separate) is an **intake source only**. It is not a streaming URL and does not sync. Do not put Drive links in `media.json`.
 1. Confirm the owner approved the file and get its title and the creator's game name from the submission.
-2. Download it from Drive. MP3 goes in `media/<creatorId>/` (e.g. `media/dawg/`), MP4 in `media/<creatorId>/` as well. Keep files modest: a few MB per track. Large videos should be uploaded to YouTube and added as a `youtube` entry instead. GitHub rejects files over 100 MB, and Pages sites should stay small. No paid hosting is needed.
+2. Download it from Drive. MP3/M4A goes in `media/<creatorId>/` (e.g. `media/dawg/`), MP4 in `media/<creatorId>/` as well. Keep files modest: a few MB per track. Large videos should be uploaded to YouTube and added as a `youtube` entry instead. GitHub rejects files over 100 MB, and Pages sites should stay small. No paid hosting is needed.
 3. Add one TRACK or VIDEO object to that creator's `tracks`/`items` array in the position it should appear. A new creator is one new object in `music` or `videos`.
 4. Commit to `main`. The Pages build deploys it. Reload `?view=media` once Pages succeeds.
+
+## Submissions & approvals
+Members submit from the **Submit** tab — no account, no Google sign-in. They pick
+Music, Fan Art or YouTube video link, enter their game name and a title, upload the
+original file or paste the link, and optionally add a description. They only see
+"Submitted — awaiting approval" after the file is safely stored. Their game name is
+remembered on their own device. Nothing goes public until the owner approves it.
+
+- **Backend:** two Google Apps Script projects in `apps-script/` — a public
+  submissions endpoint (private Drive folder + tracking Sheet) and a private,
+  owner-only approval screen. Full setup takes ~15 minutes; see
+  `apps-script/README.md`. Until the endpoint URL is pasted into `submit.js`, the
+  Submit tab shows "Submissions are not open yet" and the form stays disabled.
+- **Owner approval link:** the Admin web app URL (bookmark it; only the owner's
+  Google account can open it). On it the owner previews submissions, corrects titles
+  and game names, approves (publishes to GitHub automatically), rejects, or unpublishes
+  an approved entry later. Approval reports the commit and a "Check live" button
+  confirms the file is actually serving — approval and live deployment are different
+  steps and the screen shows which one you are looking at.
+- **Storage:** approved songs start on GitHub Pages (`media/<creatorId>/`, ~1–3.7 MB
+  each). The site is ~280 MB of a 1 GB Pages limit; the approval screen refuses to
+  publish past a 900 MB safety limit and shows the current size. Fan art publishes to
+  `fanart/`. Originals stay private in Drive either way.
+- **Fan art:** approved artwork appears in the **Fan Art** tab with its title, creator
+  game name and description; tapping a piece opens it full size. The gallery shows an
+  honest "No fan art yet" until the first piece is approved. Entries live in
+  `fanart.json`: `{ "title", "creator", "description", "src": "fanart/<file>", "submissionId", "approved" }`.
+- **YouTube:** the 48 existing approved entries (18 MED, 30 POW Ruthless) are untouched.
+  Individual submitted links go through the approval queue. Creator-managed Alliance
+  playlists can be synced once a day by the Admin script — but only playlists the owner
+  configures in Admin Settings are read, and no playlist URLs have been supplied yet,
+  so sync is off until then. Sync deduplicates by video ID and never removes entries.
 
 ## Rendering
 The shared wheel uses a flat projection of its circular rotation, hides rear cards, and changes depth ordering only at card crossings (reusing the approach from PR #3). It avoids intersecting CSS 3D surfaces and permanent GPU promotion of every card. Images are loaded/decoded two at a time near the front, with dark loading placeholders. The rotation remains one turn per 110 seconds. Android-specific flashing still requires an actual phone check; DOM checks cannot verify a GPU/compositor result.

@@ -162,18 +162,19 @@ header p::after {
 }
 
 /* ---- Directory panel ---- */
-.directory, .media-hub {
+.directory, .media-hub, .submit-hub, .fanart-hub {
   width: min(1060px, 94vw); margin: 4px auto 14px; z-index: 2; padding: 20px 20px 22px;
   border: 1px solid transparent; border-radius: 22px;
   background: linear-gradient(155deg, #26163f, #140a28) padding-box, var(--edge) border-box;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06), 0 1px 2px rgba(0, 0, 0, .4), 0 24px 48px -24px rgba(0, 0, 0, .9);
 }
-.directory h2, .media-hub h2 {
+.directory h2, .media-hub h2, .submit-hub h2, .fanart-hub h2 {
   display: flex; align-items: center; gap: 14px; margin-bottom: 16px;
   font-size: 14px; letter-spacing: .22em; font-weight: 700; color: #ffe2b4;
 }
-.directory h2::before, .directory h2::after, .media-hub h2::before, .media-hub h2::after { content: ''; flex: 1; height: 1px; background: var(--rule); }
-.directory h2::before, .media-hub h2::before { transform: scaleX(-1); }
+.directory h2::before, .directory h2::after, .media-hub h2::before, .media-hub h2::after,
+.submit-hub h2::before, .submit-hub h2::after, .fanart-hub h2::before, .fanart-hub h2::after { content: ''; flex: 1; height: 1px; background: var(--rule); }
+.directory h2::before, .media-hub h2::before, .submit-hub h2::before, .fanart-hub h2::before { transform: scaleX(-1); }
 .dir-controls { display: flex; gap: 10px; justify-content: center; align-items: center; flex-wrap: wrap; margin-bottom: 18px; }
 .dir-controls input {
   min-height: 48px; min-width: min(300px, 78vw); padding: 0 18px;
@@ -193,7 +194,7 @@ header p::after {
 }
 
 /* ---- Music & Videos hub (own class names; nothing here matches the wheel's .card) ---- */
-.media-hub { margin-top: 18px; }
+.media-hub, .submit-hub, .fanart-hub { margin-top: 18px; }
 .media-subtabs {
   display: flex; gap: 6px; width: fit-content; max-width: 100%; margin: 0 auto 18px; padding: 5px;
   border: 1px solid rgba(255, 190, 110, .22); border-radius: 999px; background: var(--field);
@@ -289,6 +290,71 @@ header p::after {
 .media-hint { font-size: 13px; line-height: 1.4; color: var(--muted); }
 .media-fineprint { margin-top: 18px; text-align: center; font-size: 12px; color: var(--muted); opacity: .8; }
 
+/* ---- Submit form and Fan Art gallery (same panel treatment as Music & Videos) ---- */
+.submit-intro { max-width: 560px; margin: 0 auto 18px; text-align: center; line-height: 1.55; color: var(--muted); }
+.submit-status {
+  max-width: 560px; margin: 0 auto 18px; padding: 14px 18px; text-align: center; line-height: 1.55;
+  color: #ffe2b4; border: 1px dashed rgba(255, 210, 122, .35); border-radius: 16px; background: var(--field);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, .5);
+}
+.submit-status.is-ok { color: #d9f7c4; border-color: rgba(140, 220, 120, .55); border-style: solid; }
+.submit-status.is-error { color: #ffc6ae; border-color: rgba(255, 120, 90, .55); border-style: solid; }
+#submitForm { max-width: 560px; margin: 0 auto; display: grid; gap: 14px; }
+.submit-type {
+  display: flex; flex-wrap: wrap; gap: 8px 18px; padding: 14px 16px;
+  border: 1px solid rgba(255, 190, 110, .22); border-radius: 16px; background: var(--field);
+}
+.submit-type legend { padding: 0 8px; font-size: 13px; font-weight: 700; letter-spacing: .08em; color: #ffe2b4; }
+.submit-choice { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; cursor: pointer; }
+.submit-choice input { accent-color: var(--orange); width: 18px; height: 18px; }
+.submit-field { display: grid; gap: 6px; font-size: 14px; font-weight: 600; color: #ffe2b4; }
+.submit-field input[type="text"], .submit-field input[type="url"], .submit-field textarea, .submit-field input[type="file"] {
+  min-height: 48px; padding: 10px 16px; font-family: inherit; font-size: 15px; font-weight: 400; color: var(--fg);
+  border: 1px solid rgba(255, 190, 110, .3); border-radius: 14px; background: var(--field);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, .6), 0 1px 0 rgba(255, 255, 255, .05);
+  outline: none; width: 100%;
+}
+.submit-field textarea { min-height: 84px; resize: vertical; }
+.submit-field input[type="file"] { padding: 12px 14px; }
+.submit-field input::placeholder, .submit-field textarea::placeholder { color: rgba(240, 225, 210, .62); }
+.submit-field input:focus, .submit-field textarea:focus { border-color: rgba(255, 210, 122, .8); box-shadow: inset 0 2px 6px rgba(0, 0, 0, .6), var(--ring); }
+.submit-field input:disabled, .submit-field textarea:disabled { opacity: .5; }
+#submitBtn {
+  justify-self: center; min-height: 48px; padding: 0 28px; border-radius: 999px; cursor: pointer;
+  font-family: inherit; font-size: 15px; font-weight: 700; color: var(--on-gold);
+  border: 1px solid rgba(255, 236, 200, .55); background: var(--primary);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5), 0 6px 18px -6px rgba(255, 154, 61, .6), 0 10px 26px -10px rgba(124, 58, 237, .55);
+}
+#submitBtn:disabled { opacity: .5; cursor: default; }
+.submit-note { text-align: center; font-size: 13px; line-height: 1.5; color: var(--muted); }
+.hp { position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+.fanart-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 14px; align-items: start; }
+.fanart-card {
+  border: 1px solid transparent; border-radius: 18px; overflow: hidden;
+  background: var(--raised) padding-box, var(--edge) border-box; box-shadow: var(--lift);
+  display: flex; flex-direction: column;
+}
+.fanart-card.is-missing .fanart-thumb { display: none; }
+.fanart-thumb { display: block; width: 100%; padding: 0; border: 0; background: #0c0518; cursor: pointer; }
+.fanart-thumb img { display: block; width: 100%; max-height: 420px; object-fit: contain; background: #0c0518; }
+.fanart-caption { display: flex; flex-direction: column; gap: 4px; padding: 12px 14px 14px; }
+.fanart-title { font-size: 15px; font-weight: 700; color: #fff; overflow-wrap: anywhere; }
+.fanart-creator { font-size: 13px; color: var(--gold); }
+.fanart-desc { font-size: 13px; line-height: 1.45; color: var(--muted); overflow-wrap: anywhere; }
+.fanart-dialog {
+  max-width: min(92vw, 900px); width: fit-content; padding: 0; border: 1px solid rgba(255, 210, 122, .4); border-radius: 18px;
+  background: #140a28; color: var(--fg); box-shadow: 0 24px 60px -12px rgba(0, 0, 0, .9);
+}
+.fanart-dialog::backdrop { background: rgba(8, 3, 18, .82); }
+.fanart-dialog img { display: block; max-width: 100%; max-height: 78vh; margin: 0 auto; }
+.fanart-dialog #fanArtCaption { padding: 12px 16px 4px; font-size: 14px; line-height: 1.5; color: var(--muted); }
+.fanart-dialog-actions { display: flex; gap: 12px; align-items: center; justify-content: space-between; padding: 10px 16px 14px; }
+.fanart-dialog-actions .media-link { margin-top: 0; }
+#fanArtClose {
+  min-height: 44px; padding: 0 18px; border-radius: 999px; cursor: pointer; font-family: inherit; font-size: 14px; font-weight: 700;
+  color: #f3e6ff; border: 1px solid rgba(255, 190, 110, .28); background: var(--raised); box-shadow: var(--lift);
+}
+
 /* ---- Footer ---- */
 footer {
   margin: 0 16px 20px; padding: 10px 18px; z-index: 2; text-align: center;
@@ -307,7 +373,7 @@ footer {
   header { padding: 22px 14px 10px; }
   .directory { padding: 16px 12px 18px; border-radius: 18px; }
   footer { border-radius: 18px; }
-  .media-hub { padding: 16px 12px 18px; border-radius: 18px; }
+  .media-hub, .submit-hub, .fanart-hub { padding: 16px 12px 18px; border-radius: 18px; }
   .media-panel { padding: 14px 12px; }
 }
 @media (max-width: 420px) {
@@ -322,7 +388,8 @@ footer {
   header h1 { -webkit-text-fill-color: CanvasText; }
   .card, .directory, footer, .no-match, .dir-controls input,
   .showcase-tabs button, .member-list button, #viewArt, #resumeBtn,
-  .media-hub, .media-panel, .media-tile, .media-empty, .media-subtabs button, .media-chip, .player-controls button, .media-link, .track { border-color: CanvasText; }
+  .media-hub, .media-panel, .media-tile, .media-empty, .media-subtabs button, .media-chip, .player-controls button, .media-link, .track,
+  .submit-hub, .fanart-hub, .fanart-card, .submit-status, #submitBtn, #fanArtClose { border-color: CanvasText; }
   .card.active, .member-list button.active, .showcase-tabs button[aria-pressed="true"],
   .media-subtabs button[aria-pressed="true"], .media-chip[aria-pressed="true"], .track[aria-current="true"] { border-color: Highlight; outline: 2px solid Highlight; }
   .card:not([data-state="ready"])::before { border: 1px dashed CanvasText; }

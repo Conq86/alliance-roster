@@ -22,6 +22,8 @@
     <button id="charactersTab" type="button" aria-pressed="true">Characters</button>
     <button id="badgesTab" type="button" aria-pressed="false">Badges</button>
     <button id="mediaTab" type="button" aria-pressed="false">Music &amp; Videos</button>
+    <button id="fanArtTab" type="button" aria-pressed="false">Fan Art</button>
+    <button id="submitTab" type="button" aria-pressed="false">Submit</button>
   </nav>
   <div class="stage">
     <div class="deck">
@@ -305,7 +307,7 @@
             <button id="prevTrack" type="button">Previous</button>
             <button id="nextTrack" type="button">Next</button>
           </div>
-          <p id="audioError" class="media-error" hidden>This track could not play here. <a id="audioFallback" target="_blank" rel="noopener">Open the MP3 directly</a></p>
+          <p id="audioError" class="media-error" hidden>This track could not play here. <a id="audioFallback" target="_blank" rel="noopener">Open the audio file directly</a></p>
         </div>
         <ol id="trackList" class="track-list"></ol>
         <p id="playlistEmpty" class="media-empty" hidden></p>
@@ -318,9 +320,63 @@
       <p class="media-fineprint">YouTube videos load from youtube-nocookie.com only when you press Play here.</p>
     </div>
   </section>
+  <section id="fanArtHub" class="fanart-hub" aria-labelledby="fanArtHeading" hidden>
+    <h2 id="fanArtHeading">FAN ART</h2>
+    <p id="fanArtStatus" class="media-empty" role="status" hidden></p>
+    <div id="fanArtGrid" class="fanart-grid"></div>
+    <p id="fanArtEmpty" class="media-empty" hidden>No fan art yet. Approved fan art will appear here once it is added.</p>
+  </section>
+  <section id="submitHub" class="submit-hub" aria-labelledby="submitHeading" hidden>
+    <h2 id="submitHeading">SUBMIT</h2>
+    <p class="submit-intro">Share your music, fan art or a YouTube video with the alliance. Everything is reviewed by the owner first — nothing goes public until it is approved.</p>
+    <p id="submitStatus" class="submit-status" role="status" hidden></p>
+    <form id="submitForm" method="post" enctype="multipart/form-data" novalidate>
+      <fieldset class="submit-type">
+        <legend>What are you submitting?</legend>
+        <label class="submit-choice"><input type="radio" name="type" value="music" checked> Music</label>
+        <label class="submit-choice"><input type="radio" name="type" value="fanart"> Fan Art</label>
+        <label class="submit-choice"><input type="radio" name="type" value="youtube"> YouTube video link</label>
+      </fieldset>
+      <label class="submit-field">Game name
+        <input id="gameName" name="gameName" type="text" required maxlength="40" autocomplete="nickname" placeholder="Your game name">
+      </label>
+      <label class="submit-field">Title
+        <input id="submitTitle" name="title" type="text" required maxlength="120" placeholder="Song, artwork or video title">
+      </label>
+      <label class="submit-field">Description (optional)
+        <textarea id="submitDesc" name="description" maxlength="500" rows="3" placeholder="Anything the owner should know"></textarea>
+      </label>
+      <div id="fileField">
+        <label class="submit-field"><span id="fileLabel">Audio file (MP3 or M4A, up to 25 MB)</span>
+          <input id="fileInput" name="file" type="file" accept=".mp3,.m4a,audio/mpeg,audio/mp4,audio/x-m4a">
+        </label>
+      </div>
+      <div id="linkField" hidden>
+        <label class="submit-field">YouTube link
+          <input id="youtubeUrl" name="youtubeUrl" type="url" inputmode="url" placeholder="https://www.youtube.com/watch?v=...">
+        </label>
+      </div>
+      <input id="honeypot" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" class="hp">
+      <input id="nonceInput" name="nonce" type="hidden">
+      <input id="actionInput" name="action" type="hidden" value="submit">
+      <button id="submitBtn" type="submit">Submit for approval</button>
+      <p class="submit-note">No account or sign-in needed. Your game name is remembered on this device only.</p>
+    </form>
+  </section>
+  <iframe id="submitFrame" name="submitFrame" hidden title="Submission result"></iframe>
+  <dialog id="fanArtDialog" class="fanart-dialog">
+    <img id="fanArtFull" alt="">
+    <p id="fanArtCaption"></p>
+    <div class="fanart-dialog-actions">
+      <a id="fanArtOpen" class="media-link" target="_blank" rel="noopener">Open full size</a>
+      <button id="fanArtClose" type="button">Close</button>
+    </div>
+  </dialog>
   <div class="glow"></div>
   <footer><span id="galleryHints"><span class="hint-hover">Hover to pause &middot; click a name below to jump to them</span><span class="hint-swipe">Auto-rotating &middot; tap a name below to jump to them</span> &middot; </span><span id="galleryArtNote">Art set in the alliance house style</span></footer>
 <script src="media.js"></script>
+<script src="fanart.js"></script>
+<script src="submit.js"></script>
 <script src="gallery.js"></script>
 </body>
 </html>
