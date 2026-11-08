@@ -131,3 +131,7 @@ Members without completed characters may be registered here using their exact ga
 | MOSA | badges/mosa.png |
 | BiggJohn | badges/biggjohn.png |
 | D3V3L0P3R | badges/d3v3l0p3r.png |
+
+## Badge replacements
+
+- **ŁIØN badge (owner-approved 2026-11-08 UTC):** replaced `badges/lion.png` with Shawn's supplied lion-and-purple-dragon badge (`1000015236.jpg`). Converted JPEG to PNG without resizing or changing decoded pixels; 1280×1280. PNG SHA-256 `94cc32b05b3299056a229b8dd826430943496dd359820bbcee31ee213db00b05`. The earlier lion badge remains in Git history; `characters/lion.png` is unchanged.
