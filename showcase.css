@@ -251,8 +251,8 @@ header p::after {
 .media-tile.is-short.is-playing .media-frame { aspect-ratio: 9 / 16; }
 .media-frame iframe, .media-frame video { display: block; width: 100%; height: 100%; border: 0; background: #000; }
 .media-poster {
-  position: absolute; inset: 0; width: 100%; display: grid; place-items: center; cursor: pointer; border: 0;
-  font: inherit; color: var(--fg); touch-action: manipulation;
+  position: absolute; inset: 0; width: 100%; display: grid; place-items: center; align-content: center; gap: 10px;
+  cursor: pointer; border: 0; font: inherit; color: var(--fg); text-decoration: none; touch-action: manipulation;
   background: radial-gradient(60% 70% at 50% 60%, rgba(255, 140, 60, .22), transparent 70%), linear-gradient(160deg, #2a1745, #10071f);
 }
 /* Portrait outline marks a Short before it loads; the frame turns 9:16 once playing. */
@@ -268,6 +268,7 @@ header p::after {
   content: ''; position: absolute; left: 22px; top: 17px;
   border-style: solid; border-width: 11px 0 11px 18px; border-color: transparent transparent transparent var(--on-gold);
 }
+.media-watch { position: relative; font-size: 14px; font-weight: 700; letter-spacing: .02em; color: var(--gold); }
 .media-kind {
   position: absolute; left: 10px; bottom: 10px; padding: 3px 10px; border-radius: 999px;
   font-size: 12px; font-weight: 700; letter-spacing: .06em; color: var(--gold); background: rgba(12, 5, 24, .82);
@@ -277,6 +278,9 @@ header p::after {
   .media-poster:hover .media-play { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .6), 0 0 0 4px rgba(255, 210, 122, .25), 0 8px 26px -4px rgba(255, 154, 61, .85); }
 }
 .media-poster:focus-visible { outline-offset: -4px; }
+.media-direct:not([hidden]) { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; padding: 10px 14px; }
+.media-direct .media-link { margin-top: 0; }
+.media-direct-note { flex: 1 1 180px; font-size: 13px; line-height: 1.4; color: var(--muted); }
 .media-tile-body { display: flex; flex-direction: column; gap: 6px; padding: 12px 14px 14px; flex: 1; }
 .media-tile-title { font-size: 15px; font-weight: 700; line-height: 1.35; color: #fff; overflow-wrap: anywhere; }
 .media-tile-meta { font-size: 13px; color: var(--muted); }

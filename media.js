@@ -95,6 +95,7 @@
     if (activeTile && activeTile.tile !== (except && except.closest('.media-tile'))) {
       activeTile.frame.replaceChildren(activeTile.poster);
       activeTile.tile.classList.remove('is-playing');
+      activeTile.direct.hidden = true;
       activeTile = null;
     }
   }
@@ -206,7 +207,7 @@
   nextTrack.addEventListener('click', function () { cue(track + 1, !audio.paused); });
 
   // ---- Videos ----
-  function playYouTube(tile, frame, poster, item, group) {
+  function playYouTube(tile, frame, poster, item, group, direct) {
     stopAudio(); stopVideos();
     var iframe = el('iframe');
     iframe.src = 'https://www.youtube-nocookie.com/embed/' + item.youtube + '?autoplay=1&rel=0&playsinline=1';
@@ -216,23 +217,37 @@
     iframe.referrerPolicy = 'strict-origin-when-cross-origin';
     frame.replaceChildren(iframe);
     tile.classList.add('is-playing');
-    activeTile = { tile: tile, frame: frame, poster: poster };
+    direct.hidden = false;
+    activeTile = { tile: tile, frame: frame, poster: poster, direct: direct };
     iframe.focus();
   }
   function tile(item, group) {
     var article = el('article', 'media-tile' + (item.short ? ' is-short' : ''));
     var frame = el('div', 'media-frame'), body = el('div', 'media-tile-body');
     var kind = (item.short ? 'Short' : 'Video') + (item.duration ? ' · ' + item.duration : '');
-    var link;
+    var link, direct;
     if (item.youtube) {
-      var poster = el('button', 'media-poster');
-      poster.type = 'button';
-      poster.setAttribute('aria-label', 'Play ' + item.title + ' by ' + group.name + ' (loads YouTube)');
-      poster.append(el('span', 'media-play'), el('span', 'media-kind', kind));
-      poster.addEventListener('click', function () { playYouTube(article, frame, poster, item, group); });
+      // The poster opens YouTube directly; inline playback is the explicit "Play here" button.
+      var watch = 'https://www.youtube.com/watch?v=' + item.youtube;
+      var watchLabel = 'Watch on YouTube: ' + item.title + ' by ' + group.name + ' (opens in a new tab)';
+      var poster = el('a', 'media-poster');
+      poster.href = watch; poster.target = '_blank'; poster.rel = 'noopener';
+      poster.setAttribute('aria-label', watchLabel);
+      poster.append(el('span', 'media-play'), el('span', 'media-watch', 'Watch on YouTube'), el('span', 'media-kind', kind));
+      poster.addEventListener('click', stopAll);
       frame.append(poster);
-      link = el('a', 'media-link', 'Watch on YouTube');
-      link.href = 'https://www.youtube.com/watch?v=' + item.youtube;
+      // Shown above the player only while it plays inline, never over the iframe.
+      direct = el('div', 'media-direct');
+      direct.hidden = true;
+      var away = el('a', 'media-link', 'Watch on YouTube');
+      away.href = watch; away.target = '_blank'; away.rel = 'noopener';
+      away.setAttribute('aria-label', watchLabel);
+      away.addEventListener('click', function () { stopAll(); poster.focus(); });
+      direct.append(away, el('p', 'media-direct-note', 'If YouTube asks you to sign in, open this video on YouTube.'));
+      link = el('button', 'media-link', 'Play here');
+      link.type = 'button';
+      link.setAttribute('aria-label', 'Play here: ' + item.title + ' by ' + group.name + ' (loads YouTube player)');
+      link.addEventListener('click', function () { playYouTube(article, frame, poster, item, group, direct); });
     } else {
       var video = el('video');
       video.controls = true; video.preload = 'none'; video.playsInline = true;
@@ -244,16 +259,17 @@
       frame.append(video);
       link = el('a', 'media-link', 'Open video file');
       link.href = item.src;
+      link.target = '_blank'; link.rel = 'noopener';
       var failed = el('p', 'media-error', 'This video could not play here. Use the link below to open the file.');
       failed.hidden = true;
     }
-    link.target = '_blank'; link.rel = 'noopener';
     var title = el('h4', 'media-tile-title', item.title);
     title.dir = 'auto';
     var meta = [group.name, item.published, item.youtube ? '' : kind].filter(Boolean).join(' · ');
     body.append(title, el('p', 'media-tile-meta', meta));
     if (failed) body.append(failed);
     body.append(link);
+    if (direct) article.append(direct);
     article.append(frame, body);
     return article;
   }
