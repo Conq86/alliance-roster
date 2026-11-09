@@ -5,9 +5,10 @@ Alliance character roster: full-body character art for all ~100 members, plus th
 ## Layout
 - `characters/` — one file per member, named after the member (e.g. `characters/scatcat.png`). Every edit is a new commit, so the full revision history of each character is kept here.
 - `badges/` — original member-created PNG badges. Use the same filename as the member's character: `badges/scatcat.png`, `badges/lion.png` for ŁIØN, `badges/baqian.png` for 仈仟, or `badges/ace-yen.png` for Ace ¥.
-- `index.html` — a shared 3D carousel with **Characters** and **Badges** tabs. Both use the same rotating wheel, member directory, search, hover pause, and name-jump controls. Direct-link to badges with `?view=badges`. A third **Music & Videos** tab (`?view=media`) replaces the wheel and directory while it is open; the wheel pauses and resumes where it left off. **Fan Art** (`?view=fanart`) and **Submit** (`?view=submit`) tabs work the same way.
+- `index.html` — a shared 3D carousel with **Characters** and **Badges** tabs. Both use the same rotating wheel, member directory, search, hover pause, and name-jump controls. Direct-link to badges with `?view=badges`. A third **Music & Videos** tab (`?view=media`) replaces the wheel and directory while it is open; the wheel pauses and resumes where it left off. **Fan Art** (`?view=fanart`), **Guides** (`?view=guides`) and **Submit** (`?view=submit`) tabs work the same way. Switching between these hub tabs hides the previous one (and stops any playing media).
 - `media.json` and `media/`: the Music & Videos list and the approved member MP3/M4A/MP4 files it points to (see below). `media.js` renders it.
 - `fanart.json` and `fanart/`: the approved fan art list and files. `fanart.js` renders the gallery.
+- `guides.json`, `guides.js` and `guides/`: the Season Guides tab (tips and walkthroughs per season) and its downloadable decks.
 - `submit.js`: the member submission form (posts to the Apps Script backend; see Submissions & approvals).
 - `apps-script/`: the Google Apps Script backend — public submissions endpoint + private owner approval screen. See `apps-script/README.md` for deployment.
 
@@ -80,6 +81,15 @@ Each artist's Google Drive folder (DaWG's and KelGris's are separate) is an **in
 2. Download it from Drive. MP3/M4A goes in `media/<creatorId>/` (e.g. `media/dawg/`), MP4 in `media/<creatorId>/` as well. Keep files modest: a few MB per track. Large videos should be uploaded to YouTube and added as a `youtube` entry instead. GitHub rejects files over 100 MB, and Pages sites should stay small. No paid hosting is needed.
 3. Add one TRACK or VIDEO object to that creator's `tracks`/`items` array in the position it should appear. A new creator is one new object in `music` or `videos`.
 4. Commit to `main`. The Pages build deploys it. Reload `?view=media` once Pages succeeds.
+
+## Season Guides
+The **Guides** tab (`?view=guides`) has one sub-tab per season, taken from `guides.json` in listed order. Link straight to a season with `?view=guides&season=s3`; without `season`, the manifest's `default` opens. Phones show the six top tabs as two rows of three.
+
+- A season with no `sections` shows "No Season N guide yet", so future seasons can be listed before their guide is written.
+- Each season: `id` (`a-z 0-9 - _`), `label`, optional `title`, `tagline`, `updated` (`YYYY-MM-DD`), `downloads` (`{ "label", "src": "guides/..." }`, PDF/PPTX/images only), `sources` (`{ "label", "url": "https://..." }`) and `sections`.
+- A section has `id`, `heading` and any of: `intro`, `stats` (`{ value, label }`), `flow` (+ `flowLabel`), `list`, `steps` (`{ title, tag?, text }` + `stepsLabel`), `cards` (`{ title, tag?, tone?: "warn", lines }`), `table` (`{ columns, rows, highlightLast? }`) and `note`. A list/card line or note is a string or `{ "lead": "bold gold start", "text": "rest" }`. Everything renders as plain text.
+- Adding or editing a guide is a manifest edit (plus any download files in `guides/<season>/`). Commit to `main` and reload once Pages succeeds.
+- Season 3 (Dinosaur Origin) is community-sourced from fan guides (linked at the bottom of the guide), not official patch notes. Its last section lists the points that differ between sources.
 
 ## Submissions & approvals
 Members submit from the **Submit** tab — no account, no Google sign-in. They pick

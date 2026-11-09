@@ -23,6 +23,7 @@
     <button id="badgesTab" type="button" aria-pressed="false">Badges</button>
     <button id="mediaTab" type="button" aria-pressed="false">Music &amp; Videos</button>
     <button id="fanArtTab" type="button" aria-pressed="false">Fan Art</button>
+    <button id="guidesTab" type="button" aria-pressed="false">Guides</button>
     <button id="submitTab" type="button" aria-pressed="false">Submit</button>
   </nav>
   <div class="stage">
@@ -326,6 +327,12 @@
     <div id="fanArtGrid" class="fanart-grid"></div>
     <p id="fanArtEmpty" class="media-empty" hidden>No fan art yet. Approved fan art will appear here once it is added.</p>
   </section>
+  <section id="guidesHub" class="guides-hub" aria-labelledby="guidesHeading" hidden>
+    <h2 id="guidesHeading">SEASON GUIDES</h2>
+    <div id="seasonPicker" class="media-subtabs guide-seasons" role="group" aria-label="Choose a season" hidden></div>
+    <p id="guidesStatus" class="media-empty" role="status" hidden></p>
+    <div id="guideBody"></div>
+  </section>
   <section id="submitHub" class="submit-hub" aria-labelledby="submitHeading" hidden>
     <h2 id="submitHeading">SUBMIT</h2>
     <p class="submit-intro">Share your music, fan art or a YouTube video with the alliance. Everything is reviewed by the owner first — nothing goes public until it is approved.</p>
@@ -376,6 +383,7 @@
   <footer><span id="galleryHints"><span class="hint-hover">Hover to pause &middot; click a name below to jump to them</span><span class="hint-swipe">Auto-rotating &middot; tap a name below to jump to them</span> &middot; </span><span id="galleryArtNote">Art set in the alliance house style</span></footer>
 <script src="media.js"></script>
 <script src="fanart.js"></script>
+<script src="guides.js"></script>
 <script src="submit.js"></script>
 <script src="gallery.js"></script>
 </body>

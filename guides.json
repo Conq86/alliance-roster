@@ -1,0 +1,288 @@
+{
+  "default": "s3",
+  "seasons": [
+    { "id": "s1", "label": "Season 1" },
+    { "id": "s2", "label": "Season 2" },
+    {
+      "id": "s3",
+      "label": "Season 3",
+      "title": "Dinosaur Origin",
+      "tagline": "Alliance briefing: every event, every priority, and how we get ahead.",
+      "updated": "2026-11-09",
+      "downloads": [
+        { "label": "Briefing deck (PDF)", "src": "guides/season-3/pow713-s3-dinosaur-origin.pdf" },
+        { "label": "Briefing deck (PowerPoint)", "src": "guides/season-3/pow713-s3-dinosaur-origin.pptx" }
+      ],
+      "sections": [
+        {
+          "id": "glance",
+          "heading": "Season at a glance",
+          "stats": [
+            { "value": "91", "label": "days long (13 weeks), the longest season yet" },
+            { "value": "+30%", "label": "Troop ATK from a max Lv.30 Hatch of Legends dino" },
+            { "value": "Lv.70", "label": "new Specialization cap (was 50)" },
+            { "value": "3", "label": "Alliance Centers per alliance, needed for every season building" }
+          ],
+          "flow": ["Kill dinos", "Bank Scales", "Upgrade Biotech Lab", "Unlock higher dinos"],
+          "note": { "lead": "Your first week decides your last week.", "text": "Every day the Lab is behind means lower dinos, fewer Scales and an even slower Lab. That gap does not close on its own." }
+        },
+        {
+          "id": "resources",
+          "heading": "Know your four resources",
+          "cards": [
+            { "title": "Fern Leaves", "lines": [{ "lead": "From:", "text": "Bio Greenhouses (passive)" }, { "lead": "Used for:", "text": "main currency for season buildings" }] },
+            { "title": "Cretaceous Scales", "tag": "Bottleneck", "lines": [{ "lead": "From:", "text": "Stegosaurus, Velociraptors, Predator Squads" }, { "lead": "Used for:", "text": "Biotech Lab and buildings" }] },
+            { "title": "Ancient Dino Eggs", "lines": [{ "lead": "From:", "text": "Stegosaurus, Predator Squads, duplicate fossils" }, { "lead": "Used for:", "text": "Bio Institute Shop (weekends)" }] },
+            { "title": "Pine Cones + Pet Feed", "lines": [{ "lead": "From:", "text": "Predator Squads, daily Hatch tasks" }, { "lead": "Used for:", "text": "raising your Hatch of Legends dino" }] }
+          ],
+          "note": { "lead": "Lab stalled?", "text": "It's almost always Scales. Fix the daily farming routine, not your spending." }
+        },
+        {
+          "id": "week-one",
+          "heading": "Week 1: the non-negotiables",
+          "steps": [
+            { "title": "Build all 4 Bio Greenhouses on day one", "text": "A greenhouse built on day 4 has lost 3 days of output forever." },
+            { "title": "Pour everything into the Biotech Lab", "text": "Virus resistance sets the max dino level you can attack." },
+            { "title": "Set Specialization to Support", "text": "Faster builds, more resources per kill, extra virus resistance." },
+            { "title": "Leader + R4: place all 3 Alliance Centers", "text": "Only Leader and R4 can. It's a land grab, so go early." },
+            { "title": "Hold off on Command Center, Armory, Fortification", "text": "Good buildings, not week-one buildings." },
+            { "title": "Don't spend diamonds", "text": "Trade Hubs run on diamonds. Bank them." }
+          ],
+          "note": { "lead": "Biggest early mistake:", "text": "rushing troop-stat buildings. Low resistance locks you out of high dinos, no matter your power." }
+        },
+        {
+          "id": "buildings",
+          "heading": "Building upgrade order",
+          "steps": [
+            { "title": "Biotech Lab", "tag": "Critical", "text": "Raises virus resistance, the max dino level you can hit. Ease off once Lv.60 dinos are comfortable." },
+            { "title": "Bio Greenhouses", "tag": "Critical", "text": "Passive Fern Leaves. 4 plots; the 5th unlocks with Wartime Investment. Keep them upgraded." },
+            { "title": "Alliance Centers ×3", "tag": "High", "text": "Territory and Glory War. Required to place every season building." },
+            { "title": "Command Center", "tag": "Medium", "text": "Seasonal troop damage. Strong, not urgent. Start once Lab and Greenhouses are stable." },
+            { "title": "Armory ×2 + Fortification ×2", "tag": "Medium", "text": "Troop ATK and DEF. Upgrade together; all attack and no defense loses troops." }
+          ]
+        },
+        {
+          "id": "daily",
+          "heading": "Daily routine: every day, no exceptions",
+          "stats": [
+            { "value": "30 → 15", "label": "reward attempts a day; drops to 15 when Bones & Eggs Boom hits, but rewards double" },
+            { "value": "3", "label": "Glory Chests a day (one every 8 hours)" },
+            { "value": "2 / 5", "label": "Predator Squad kills (Mon–Sat / Sunday)" }
+          ],
+          "list": [
+            { "lead": "Stegosaurus first,", "text": "Raptors with leftover fuel. Stego drops eggs; Raptors don't." },
+            { "lead": "Hit the highest dino level", "text": "your virus resistance allows. The reward curve is steep." },
+            { "lead": "Kill your Predator Squads.", "text": "Capped daily, so never skip them." },
+            { "lead": "Do all 5 Hatch of Legends tasks.", "text": "Missed days are gone for good." },
+            { "lead": "Collect every Glory Chest.", "text": "Miss one and you lose a third of the day's badges." },
+            { "lead": "Can't solo it? Join a rally.", "text": "Same glory as leading one." }
+          ]
+        },
+        {
+          "id": "weekly",
+          "heading": "The weekly battle rhythm",
+          "table": {
+            "columns": ["Day", "What's on", "What we do"],
+            "rows": [
+              ["Monday", "Trade Hubs 11:00 AT · Clash for Glory rival pick", "Troops staged before 11:00. Leaders pick a rival we can beat"],
+              ["Tuesday", "Glory War / Battle of Honor", "All hands. Winning takes points from the enemy"],
+              ["Wednesday", "Trade Hubs 11:00 AT", "Same drill as Monday"],
+              ["Thursday", "Farm + build day", "Stockpile eggs and Scales for the weekend"],
+              ["Friday", "Trade Hubs 11:00 AT", "Same drill as Monday"],
+              ["Saturday", "Bio Institute Shop opens", "Spend eggs on priority items only"],
+              ["Sunday", "Ancient Dino 12:00 AT · Dino Rescue · Bio Shop", "Biggest day. Online by 11:55 AT"]
+            ],
+            "highlightLast": true
+          },
+          "note": { "lead": "Also:", "text": "Dino Egg Defense is started by Leader/R4; we'll call it in chat. AT = Apocalypse Time; trust the in-game timer." }
+        },
+        {
+          "id": "ancient-dino",
+          "heading": "Sunday: Ancient Dino world boss",
+          "stats": [
+            { "value": "12:00 AT", "label": "dies in 5–15 minutes on an active server. Be parked near the spawn by 11:55" }
+          ],
+          "flow": ["T-Rex", "Triceratops", "Pterosaur", "Ankylosaurus", "Dimetrodon"],
+          "flowLabel": "Weekly rotation",
+          "list": [
+            { "lead": "Unlimited attacks,", "text": "ranked on total damage. Keep sending and healing." },
+            { "lead": "Shield phase:", "text": "your troops aren't injured. Once it breaks, heal between waves." },
+            { "lead": "Top 200 get fossils.", "text": "That's what fills the Fossil Album." },
+            { "lead": "Titles:", "text": "top 3 only, and only on that species' FIRST kill on our server. Save buffs for those weeks." },
+            { "lead": "Fire buffs right before spawn,", "text": "not 5 minutes early." },
+            { "lead": "Burst hero:", "text": "Liliana (Queenie). Can't solo? Join a rally." }
+          ]
+        },
+        {
+          "id": "trade-hubs",
+          "heading": "Trade Hubs: diamonds into power",
+          "intro": "Monday, Wednesday and Friday at 11:00 AT, for one hour. Our highest-value alliance objective all season.",
+          "list": [
+            { "text": "Holding a hub pays diamond tax envelopes to the alliance and unlocks a diamond shop." },
+            { "text": "Shop stock: hero fragments, badges, plug-in chests, steel, speedups, power cores." },
+            { "text": "Week 1 is state-only. Cross-state fighting starts week 2." }
+          ],
+          "steps": [
+            { "title": "Troops staged before 11:00", "text": "Not marching after it opens." },
+            { "title": "Roles set", "text": "Rally leads, fillers and one hub manager." },
+            { "title": "Rotate reinforcements", "text": "Snipes happen in the gaps." },
+            { "title": "First 30–60 minutes: alliance-only shopping", "text": "Our members buy first." },
+            { "title": "Then open it to everyone", "text": "Their spending becomes our tax." }
+          ],
+          "stepsLabel": "Our playbook"
+        },
+        {
+          "id": "clash",
+          "heading": "Clash for Glory: alliance war",
+          "stats": [
+            { "value": "20%", "label": "of the loser's Season Points go to the winner" },
+            { "value": "No refusal", "label": "a declared war can't be turned down" },
+            { "value": "AC I", "label": "if Alliance Center I falls, we lose instantly" },
+            { "value": "150K+", "label": "contribution needed for ranking rewards" }
+          ],
+          "list": [
+            { "text": "Alliance Center I placed and garrisoned BEFORE the war starts (no AC I = instant defeat)." },
+            { "text": "Leaders set Truce Settings, or the third offered session is auto-picked." },
+            { "text": "We score by destroying enemy Alliance Centers and season buildings." },
+            { "text": "End-of-season Points Rush: loot rate rises from 20% to 25%. Peak war time." }
+          ]
+        },
+        {
+          "id": "rescue-defense",
+          "heading": "Dino Rescue + Dino Egg Defense",
+          "cards": [
+            { "title": "Dino Rescue", "tag": "Sundays", "lines": [
+              { "text": "Predator Squad reward limit rises from 2 to 5." },
+              { "text": "Squads and Guardians hit HQ durability directly, bypassing guards." },
+              { "lead": "Black Market Guardian", "text": "(up to Lv.350) is a rally boss. State-wide thresholds pay EVERYONE, so nobody holds back." },
+              { "text": "Send scouts to heal the rescued Spinosaurus: up to 10 gifts." }
+            ] },
+            { "title": "Dino Egg Defense", "tag": "Leader / R4", "lines": [
+              { "text": "Waves hit every member's HQ. Leader and R4 each start it once." },
+              { "lead": "Target:", "text": "survive through round 23 (~900M wall defense was needed on one server)." },
+              { "text": "A breach takes 5% of your eggs (max 1,000), max 2 losses." },
+              { "lead": "Completion beats ranking:", "text": "a full clear pays 14 Golden Wrenches. Weak HQ? Reinforce a stronger member." }
+            ] }
+          ]
+        },
+        {
+          "id": "hatch-fossils",
+          "heading": "Hatch of Legends + Fossil Album",
+          "cards": [
+            { "title": "Hatch of Legends", "lines": [
+              { "lead": "+1% Troop ATK per level,", "text": "+30% at Lv.30." },
+              { "text": "T-Rex, Triceratops or Ankylosaurus: same stats, pick the look you like. Locked in for the season." },
+              { "text": "Lv.6 hatches · Lv.11 adult · Lv.16 vehicle skin." },
+              { "lead": "5 daily tasks give feed.", "text": "Missed days don't come back." },
+              { "text": "Bonus and skin disappear at season end." }
+            ] },
+            { "title": "Fossil Album", "lines": [
+              { "text": "20 fossils: mostly from Sunday Ancient Dino (top 200) plus the weekend shop." },
+              { "text": "Every fossil, even duplicates, adds album points (milestones 30 to 300)." },
+              { "text": "Duplicates convert to Ancient Dino Eggs or go to the Exchange." },
+              { "lead": "Never skip a Sunday.", "text": "A missed boss leaves that set short until it rotates back." }
+            ] }
+          ]
+        },
+        {
+          "id": "bio-shop",
+          "heading": "Bio Institute Shop: Saturday + Sunday",
+          "stepsLabel": "Buy in this order",
+          "steps": [
+            { "title": "Exclusive equipment fragments", "text": "Hardest to get anywhere else." },
+            { "title": "Orange hero fragments", "text": "Core long-term progression." },
+            { "title": "Badges", "text": "Also from Glory Chests and Trade Hubs, so last." }
+          ],
+          "list": [
+            { "text": "Paid in Ancient Dino Eggs. Closed Monday to Friday." },
+            { "text": "Discounts up to −80%, fossil pieces included." },
+            { "text": "14 refreshes per weekend; the cost climbs as you use them." },
+            { "lead": "Farm eggs all week,", "text": "arrive with a stockpile, and scan the whole board before refreshing." },
+            { "text": "Don't burn 10 refreshes chasing one item." }
+          ]
+        },
+        {
+          "id": "spec-heroes",
+          "heading": "Specialization + season heroes",
+          "list": [
+            { "lead": "Start in Support.", "text": "Build speed, more resources per kill, virus resistance." },
+            { "lead": "Switch to Combat", "text": "once Lv.60 dinos are comfortable (around mid-season). Combat 51–70 adds free teleport, instant rally launch and a 3rd Armory." },
+            { "text": "Economy players can stay Support all season." }
+          ],
+          "stepsLabel": "Season heroes",
+          "steps": [
+            { "title": "Licia (Yu Chan)", "tag": "Wk 1–2", "text": "Blood Rose · all-rounder, the safe first pick." },
+            { "title": "Liliana (Queenie)", "tag": "Wk 3–4", "text": "Wings of Dawn · burst damage, the Ancient Dino pick." },
+            { "title": "Dodomeki (Amber)", "tag": "Wk 5–6", "text": "Guard of Order · sustained DPS for long fights." }
+          ],
+          "note": { "lead": "Stats are near-identical at Lv.175.", "text": "Invest in the one you have the most fragments for. Passes rotate into fragments later, so no panic buying. Use Level Swap to move levels onto a new hero." }
+        },
+        {
+          "id": "spending",
+          "heading": "Spending smart (all optional)",
+          "list": [
+            { "lead": "Free players:", "text": "bank diamonds for Trade Hubs and never miss Hatch tasks, Glory Chests or Sunday. Hatch of Legends is the best free power in the season." }
+          ],
+          "steps": [
+            { "title": "Wartime Investment ×4", "tag": "$9.99 USD each", "text": "+100 virus resistance, +10% Fern Leaves, 5th Greenhouse, +30% march vs Raptors. Best value." },
+            { "title": "Season Journey", "tag": "$24.99 USD", "text": "Doubles every Glory Chest (about 444 → 900 badges a day). Buy early." },
+            { "title": "Week-1 Fern / Scale packs", "tag": "~$10 USD", "text": "Jump-start only. Skip after week 1." }
+          ],
+          "note": { "lead": "Prices are USD from a community guide.", "text": "Your app store shows its own local price plus tax. Check before buying." }
+        },
+        {
+          "id": "ranking",
+          "heading": "How our alliance ranks",
+          "note": { "lead": "Alliance Season Points =", "text": "every member's Personal Glory + city points." },
+          "list": [
+            { "lead": "Every member's daily kills count.", "text": "Inactive members cost us rank." },
+            { "lead": "City points stay banked", "text": "even if we lose the city later." },
+            { "text": "Win Clash for Glory to take 20% of their points." },
+            { "text": "Glory rank itself pays nothing: aim for speed, not placement." }
+          ],
+          "table": {
+            "columns": ["Rank", "Reward bracket"],
+            "rows": [
+              ["#1", "Supreme Legion"], ["#2–3", "Dawn Army"], ["#4–5", "Glorious Pioneer"], ["#6–10", "Protection Oath"],
+              ["#11–20", "Expeditionary Alliance"], ["#21–50", "Wasteland Legion"], ["#51+", "Wasteland Guardian"]
+            ]
+          }
+        },
+        {
+          "id": "do-dont",
+          "heading": "Do this, not that",
+          "cards": [
+            { "title": "Do", "lines": [
+              { "text": "Virus resistance before combat buildings" }, { "text": "Stegosaurus before Raptors" },
+              { "text": "Alarm for 11:55 AT every Sunday" }, { "text": "All 5 Hatch tasks, every day" },
+              { "text": "Open captured Trade Hubs after we shop" }, { "text": "Full damage on the Black Market Guardian" }
+            ] },
+            { "title": "Don't", "tone": "warn", "lines": [
+              { "text": "Rush Armory or Command Center in week 1" }, { "text": "Spend diamonds before Trade Hubs" },
+              { "text": "Log in late on Sunday" }, { "text": "Keep a captured hub locked all session" },
+              { "text": "Hold back hits to protect a rank" }, { "text": "Panic-refresh the Bio Shop" }
+            ] }
+          ]
+        },
+        {
+          "id": "check",
+          "heading": "Heads up: check these in-game",
+          "intro": "Built from community guides, not official patch notes. A few things differ between servers and regions:",
+          "list": [
+            { "lead": "Season number:", "text": "some guides call Dinosaur Origin Season 4. Same content." },
+            { "lead": "Hero names:", "text": "Licia / Liliana / Dodomeki = Yu Chan / Queenie / Amber. Match by faction icon." },
+            { "lead": "Bones & Eggs Boom:", "text": "most sources say eggs double along with Scales; one says eggs drop 50%. Check your drops." },
+            { "lead": "Times:", "text": "Trade Hubs are listed as 11:00 AT (one source says 11:00 PM). Trust the in-game timer." },
+            { "lead": "Tuesday war name:", "text": "Glory War or Battle of Honor, depending on the source." }
+          ]
+        }
+      ],
+      "sources": [
+        { "label": "LastZ.GG Season 3 guide", "url": "https://lastz.gg/guides/season-3-dinosaur-origin" },
+        { "label": "Last Z Guides: Dinosaur Origin", "url": "https://lastzguides.com/season-3-dinosaur-origin.html" },
+        { "label": "note.com Season 3 guide", "url": "https://note.com/joyful_fairy8161/n/n33dfa8299f0c?hl=en" }
+      ]
+    },
+    { "id": "s4", "label": "Season 4" }
+  ]
+}

@@ -11,14 +11,16 @@
   var badgesTab = document.getElementById('badgesTab');
   var mediaTab = document.getElementById('mediaTab');
   var fanArtTab = document.getElementById('fanArtTab');
+  var guidesTab = document.getElementById('guidesTab');
   var submitTab = document.getElementById('submitTab');
   var directory = document.querySelector('.directory');
   var hints = document.getElementById('galleryHints');
   var media = window.AllianceMedia;
   var fanart = window.AllianceFanArt;
+  var guides = window.AllianceGuides;
   var submit = window.AllianceSubmit;
   // Every non-wheel view is a hub module with show()/hide(). The wheel freezes while one is open.
-  var hubs = { media: media, fanart: fanart, submit: submit };
+  var hubs = { media: media, fanart: fanart, guides: guides, submit: submit };
   var aliases = {};
   list.querySelectorAll('button').forEach(function (button) {
     aliases[button.textContent.trim()] = button.getAttribute('data-search');
@@ -33,7 +35,7 @@
   var requested = new URLSearchParams(location.search).get('view');
   var gallery = requested === 'badges' ? 'badges' : 'characters';
   // view is the visible tab; gallery is the wheel's content, kept while a hub tab is open.
-  var view = (requested === 'media' || requested === 'fanart' || requested === 'submit') && hubs[requested] ? requested : gallery;
+  var view = (requested === 'media' || requested === 'fanart' || requested === 'guides' || requested === 'submit') && hubs[requested] ? requested : gallery;
   var savedRoster = false;
   var mode = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'hold' : 'spin';
   var focusTarget = 0, activeFile = null, holdPause = false, resumeTimer;
@@ -178,6 +180,7 @@
     badgesTab.setAttribute('aria-pressed', String(view === 'badges'));
     mediaTab.setAttribute('aria-pressed', String(view === 'media'));
     fanArtTab.setAttribute('aria-pressed', String(view === 'fanart'));
+    guidesTab.setAttribute('aria-pressed', String(view === 'guides'));
     submitTab.setAttribute('aria-pressed', String(view === 'submit'));
     stage.hidden = directory.hidden = hints.hidden = !!hubs[view];
     if (hubs[view]) return; // the hub module owns the header and footer note while its tab is open
@@ -198,6 +201,7 @@
     if (hubs[next]) {
       // Freeze the wheel where it is; its focus and rotation resume on return.
       clearTimeout(resumeTimer); holdPause = false;
+      if (leavingHub) leavingHub.hide();
       chrome(); hubs[next].show();
     } else {
       if (leavingHub) leavingHub.hide();
@@ -259,6 +263,8 @@
   else mediaTab.hidden = true;
   if (fanart) fanArtTab.addEventListener('click', function () { setView('fanart'); });
   else fanArtTab.hidden = true;
+  if (guides) guidesTab.addEventListener('click', function () { setView('guides'); });
+  else guidesTab.hidden = true;
   if (submit) submitTab.addEventListener('click', function () { setView('submit'); });
   else submitTab.hidden = true;
   build(gallery, false);
