@@ -21,24 +21,158 @@
       "channel": "MED LAST Z",
       "channelUrl": "https://www.youtube.com/@med.713",
       "items": [
-        {"type":"youtube","youtubeId":"ouTT_hEGiMA","title":"713 vs 705… & a Small Alliance Named TBag 😂🔥 | Last Z SVS","format":"short","published":"2026-11-07","duration":86},
-        {"type":"youtube","youtubeId":"bOoT6PynXpo","title":"POW 713 Brings the BOOM! 🔥 | Last Z: Survival Shooter | #lastzcreator","format":"short","published":"2026-11-05","duration":111},
-        {"type":"youtube","youtubeId":"xQPNNFPl93Y","title":"TBag’s Most Expensive Escape 😂🔥 | Last Z #shorts","format":"short","published":"2026-11-04","duration":138},
-        {"type":"youtube","youtubeId":"h_OpPlqM4bY","title":"LAST Z Comic: COME OUT & PLAY! We’re Coming, TBag! ","format":"video","published":"2026-11-03","duration":286},
-        {"type":"youtube","youtubeId":"dH55MUNrur8","title":"CROWN ON THE LINE 👑🔥 713 vs 705 | Last Z Cinematic War Comic","format":"video","published":"2026-11-02","duration":171},
-        {"type":"youtube","youtubeId":"_MobmX_yBpk","title":"مواردك تروح وقوتك ما تزيد؟ أخطاء تعطل تطورك | Last Z: Survival Shooter | #LastZCreator","format":"video","published":"2026-11-02","duration":354},
-        {"type":"youtube","youtubeId":"8OKlpq6dUpw","title":"707 Surrendered Before It Started! | Operation Symon Says | Last Z 713 vs 707","format":"video","published":"2026-10-31","duration":281},
-        {"type":"youtube","youtubeId":"lHtYWDAm3aM","title":"You Brought the Developers. We Brought 713.  | LAST Z Comic","format":"short","published":"2026-10-30","duration":154},
-        {"type":"youtube","youtubeId":"XNUh2XeVKSU","title":"لا تصرف عشوائي!  وش تجمع لكل يوم؟ | Last Z","format":"short","published":"2026-10-29","duration":66},
-        {"type":"youtube","youtubeId":"g-t6QaaInKk","title":"لا تضيع مصاصاتك! 🎃 شرح حدث الهالوين وأفضل المشتريات للمجاني ومتوسط الصرف | Last Z","format":"video","published":"2026-10-29","duration":545},
-        {"type":"youtube","youtubeId":"_tmAPWos1PA","title":"عصر الفولاذ في Last Z: محرقة شارات؟  نصيحتي للمجاني ومتوسط الصرف","format":"video","published":"2026-10-28","duration":494},
-        {"type":"youtube","youtubeId":"kSiRI4J0wo8","title":"LAST Z: Is Server 713 Being PUNISHED for Winning?! 😱🔥 | Migration Controversy","format":"video","published":"2026-10-27","duration":194},
-        {"type":"youtube","youtubeId":"pNvsUB-uXJc","title":"They Brought a 452M Whale… We Brought Team 2! 🐳🔥 | LAST Z","format":"video","published":"2026-10-23","duration":557},
-        {"type":"youtube","youtubeId":"tFQ3Xa-1X7g","title":"أخيرًا مقر 31 وصل! لا تضيّع الفولاذ | شرح الحدث الجديد Last Z","format":"video","published":"2026-10-21","duration":309},
-        {"type":"youtube","youtubeId":"Lw5r16bpAvI","title":"400M Power CKisSmallPotato vs POW  HQ Destruction Highlights | LAST Z","format":"short","published":"2026-10-16","duration":103},
-        {"type":"youtube","youtubeId":"KoaOuzgK2Dw","title":"713 vs 706 We Claimed Our 5th Star! ⭐ | LAST Z • POW","format":"video","published":"2026-10-16","duration":481},
-        {"type":"youtube","youtubeId":"Lwhgf6xALDQ","title":"LAST-Z: AFTERFALL | Chapter 02 — The One They Couldn’t Kill | Fan Manga","format":"video","published":"2026-10-16","duration":525},
-        {"type":"youtube","youtubeId":"vostTF-Ht6k","title":"LAST Z: AFTERFALL — CHAPTER 01 THE DAY THE WORLD DIED","format":"video","published":"2026-10-10","duration":343}
+        {
+          "type": "youtube",
+          "youtubeId": "oKnIiNQprJI",
+          "title": "oKnIiNQprJI",
+          "format": "short",
+          "discoveredAt": "2026-11-09T03:59:34.620Z",
+          "channelSync": true
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "ouTT_hEGiMA",
+          "title": "713 vs 705… & a Small Alliance Named TBag 😂🔥 | Last Z SVS",
+          "format": "short",
+          "published": "2026-11-07",
+          "duration": 86
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "bOoT6PynXpo",
+          "title": "POW 713 Brings the BOOM! 🔥 | Last Z: Survival Shooter | #lastzcreator",
+          "format": "short",
+          "published": "2026-11-05",
+          "duration": 111
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "xQPNNFPl93Y",
+          "title": "TBag’s Most Expensive Escape 😂🔥 | Last Z #shorts",
+          "format": "short",
+          "published": "2026-11-04",
+          "duration": 138
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "h_OpPlqM4bY",
+          "title": "LAST Z Comic: COME OUT & PLAY! We’re Coming, TBag! ",
+          "format": "video",
+          "published": "2026-11-03",
+          "duration": 286
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "dH55MUNrur8",
+          "title": "CROWN ON THE LINE 👑🔥 713 vs 705 | Last Z Cinematic War Comic",
+          "format": "video",
+          "published": "2026-11-02",
+          "duration": 171
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "_MobmX_yBpk",
+          "title": "مواردك تروح وقوتك ما تزيد؟ أخطاء تعطل تطورك | Last Z: Survival Shooter | #LastZCreator",
+          "format": "video",
+          "published": "2026-11-02",
+          "duration": 354
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "8OKlpq6dUpw",
+          "title": "707 Surrendered Before It Started! | Operation Symon Says | Last Z 713 vs 707",
+          "format": "video",
+          "published": "2026-10-31",
+          "duration": 281
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "lHtYWDAm3aM",
+          "title": "You Brought the Developers. We Brought 713.  | LAST Z Comic",
+          "format": "short",
+          "published": "2026-10-30",
+          "duration": 154
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "XNUh2XeVKSU",
+          "title": "لا تصرف عشوائي!  وش تجمع لكل يوم؟ | Last Z",
+          "format": "short",
+          "published": "2026-10-29",
+          "duration": 66
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "g-t6QaaInKk",
+          "title": "لا تضيع مصاصاتك! 🎃 شرح حدث الهالوين وأفضل المشتريات للمجاني ومتوسط الصرف | Last Z",
+          "format": "video",
+          "published": "2026-10-29",
+          "duration": 545
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "_tmAPWos1PA",
+          "title": "عصر الفولاذ في Last Z: محرقة شارات؟  نصيحتي للمجاني ومتوسط الصرف",
+          "format": "video",
+          "published": "2026-10-28",
+          "duration": 494
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "kSiRI4J0wo8",
+          "title": "LAST Z: Is Server 713 Being PUNISHED for Winning?! 😱🔥 | Migration Controversy",
+          "format": "video",
+          "published": "2026-10-27",
+          "duration": 194
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "pNvsUB-uXJc",
+          "title": "They Brought a 452M Whale… We Brought Team 2! 🐳🔥 | LAST Z",
+          "format": "video",
+          "published": "2026-10-23",
+          "duration": 557
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "tFQ3Xa-1X7g",
+          "title": "أخيرًا مقر 31 وصل! لا تضيّع الفولاذ | شرح الحدث الجديد Last Z",
+          "format": "video",
+          "published": "2026-10-21",
+          "duration": 309
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "Lw5r16bpAvI",
+          "title": "400M Power CKisSmallPotato vs POW  HQ Destruction Highlights | LAST Z",
+          "format": "short",
+          "published": "2026-10-16",
+          "duration": 103
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "KoaOuzgK2Dw",
+          "title": "713 vs 706 We Claimed Our 5th Star! ⭐ | LAST Z • POW",
+          "format": "video",
+          "published": "2026-10-16",
+          "duration": 481
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "Lwhgf6xALDQ",
+          "title": "LAST-Z: AFTERFALL | Chapter 02 — The One They Couldn’t Kill | Fan Manga",
+          "format": "video",
+          "published": "2026-10-16",
+          "duration": 525
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "vostTF-Ht6k",
+          "title": "LAST Z: AFTERFALL — CHAPTER 01 THE DAY THE WORLD DIED",
+          "format": "video",
+          "published": "2026-10-10",
+          "duration": 343
+        }
       ]
     },
     {
@@ -48,36 +182,246 @@
       "channel": "POW Ruthless",
       "channelUrl": "https://www.youtube.com/@powruthless",
       "items": [
-        {"type":"youtube","youtubeId":"q9QBf7JTJ-M","title":"713 vs 705 | Last Z | SVS","format":"short","published":"2026-11-07","duration":148},
-        {"type":"youtube","youtubeId":"KHrXmJd6SxA","title":"705 Cry cry cry | Last Z","format":"short","published":"2026-11-04","duration":115},
-        {"type":"youtube","youtubeId":"JVhe4ho7Hvo","title":"500 Subscriber Giveaway! | Last Z | Last Z Creator","format":"video","published":"2026-11-02","duration":167},
-        {"type":"youtube","youtubeId":"tTTOk0EM_BY","title":"500 Subscriber Giveaway!","format":"short","published":"2026-11-02","duration":39},
-        {"type":"youtube","youtubeId":"HMYAybLaPNE","title":"713 vs 707 SVS | Simon Says | Last Z","format":"short","published":"2026-11-01","duration":154},
-        {"type":"youtube","youtubeId":"O1tCXIPMhBM","title":"Glory war vs TML (Round2) | Last Z","format":"short","published":"2026-10-31","duration":179},
-        {"type":"youtube","youtubeId":"iUbXPFjalas","title":"How Not to F**K Up Season 2 | Last Z","format":"video","published":"2026-10-30","duration":1456},
-        {"type":"youtube","youtubeId":"r-dVw2VdtZU","title":"713 Got Nerfed in migration | Last Z Devs don't like winning |","format":"short","published":"2026-10-28","duration":155},
-        {"type":"youtube","youtubeId":"RFIaKGu7RiY","title":"Last Z | Buster Event | 713 VS 712","format":"short","published":"2026-10-26","duration":65},
-        {"type":"youtube","youtubeId":"JG6_J3L5tEE","title":"Clik Clik BOOM | Last Z | 706 Vs 713","format":"short","published":"2026-10-24","duration":178},
-        {"type":"youtube","youtubeId":"IHaxvs7dKWA","title":"Glory War done in 8 Minutes?!?! | Last Z Creator","format":"short","published":"2026-10-21","duration":124},
-        {"type":"youtube","youtubeId":"MLiIi_gEThg","title":"Last Z | Giveaway Winner |","format":"video","published":"2026-10-19","duration":100},
-        {"type":"youtube","youtubeId":"FVUshT0_MaY","title":"250 Subscriber Giveaway | POW Ruthless | Last Z Survival!","format":"video","published":"2026-10-17","duration":100},
-        {"type":"youtube","youtubeId":"EpDV8vL8Hew","title":"Last Z | 705 vs 713 | Canyon Clash","format":"short","published":"2026-10-17","duration":166},
-        {"type":"youtube","youtubeId":"AHpGt4hFlK4","title":"Last Z | Subscriber Giveaway!! |","format":"short","published":"2026-10-16","duration":8},
-        {"type":"youtube","youtubeId":"4FXWaVYKRBA","title":"Trapping Whales in Last Z | Adding to Swade Toobs Thick Walls | LastZ Creator","format":"video","published":"2026-10-14","duration":642},
-        {"type":"youtube","youtubeId":"aJk4tJWdaHI","title":"Last Z | POW vs Warr | Glory wars","format":"short","published":"2026-10-14","duration":96},
-        {"type":"youtube","youtubeId":"yehY4FGQMX8","title":"Last Z | 713 5 Star State","format":"short","published":"2026-10-11","duration":167},
-        {"type":"youtube","youtubeId":"9TueDeAJlfg","title":"713 Vs 706 | Last Z | State Vs State","format":"short","published":"2026-10-10","duration":49},
-        {"type":"youtube","youtubeId":"uHGhZZ5ZsNQ","title":"How to Win Every Glory War | LastZ Survival Guide","format":"video","published":"2026-10-06","duration":1068},
-        {"type":"youtube","youtubeId":"xJiy-bM_sbs","title":"710 VS 713 Its Brittany Bisssh","format":"short","published":"2026-10-05","duration":113},
-        {"type":"youtube","youtubeId":"KV5Z2GcdFxU","title":"713 Vs 710 | LastZ | Last Z Creator","format":"short","published":"2026-10-04","duration":45},
-        {"type":"youtube","youtubeId":"C98P4lAe8Nw","title":"Canyon Clash 713 Vs 700Last Z | One Lonely Island","format":"short","published":"2026-09-26","duration":93},
-        {"type":"youtube","youtubeId":"gA6vlOFIORs","title":"Last Z Survival | Glory Wars Preview!","format":"short","published":"2026-09-23","duration":66},
-        {"type":"youtube","youtubeId":"92TIqocCjbc","title":"Last Z | 713 vs 715","format":"short","published":"2026-09-19","duration":44},
-        {"type":"youtube","youtubeId":"08bWdyFROl8","title":"See You Soon","format":"short","published":"2026-09-17","duration":27},
-        {"type":"youtube","youtubeId":"phlD5DKG4UE","title":"Season Overview | Last Z: Survival Shooter | #LastZCreator","format":"video","published":"2026-09-16","duration":438},
-        {"type":"youtube","youtubeId":"__dwPaf_jkY","title":"713 Vs 718 | LastZ Creator","format":"short","published":"2026-09-15","duration":67},
-        {"type":"youtube","youtubeId":"rBh9SWrnljI","title":"P0W Canyon Clash, need some stronger challengers","format":"short","published":"2026-09-14","duration":68},
-        {"type":"youtube","youtubeId":"-IIftx7EEm4","title":"713 VS 718 | Last Z: Survival Shooter | #LastZCreator","format":"short","published":"2026-09-13","duration":112}
+        {
+          "type": "youtube",
+          "youtubeId": "q9QBf7JTJ-M",
+          "title": "713 vs 705 | Last Z | SVS",
+          "format": "short",
+          "published": "2026-11-07",
+          "duration": 148
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "KHrXmJd6SxA",
+          "title": "705 Cry cry cry | Last Z",
+          "format": "short",
+          "published": "2026-11-04",
+          "duration": 115
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "JVhe4ho7Hvo",
+          "title": "500 Subscriber Giveaway! | Last Z | Last Z Creator",
+          "format": "video",
+          "published": "2026-11-02",
+          "duration": 167
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "tTTOk0EM_BY",
+          "title": "500 Subscriber Giveaway!",
+          "format": "short",
+          "published": "2026-11-02",
+          "duration": 39
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "HMYAybLaPNE",
+          "title": "713 vs 707 SVS | Simon Says | Last Z",
+          "format": "short",
+          "published": "2026-11-01",
+          "duration": 154
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "O1tCXIPMhBM",
+          "title": "Glory war vs TML (Round2) | Last Z",
+          "format": "short",
+          "published": "2026-10-31",
+          "duration": 179
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "iUbXPFjalas",
+          "title": "How Not to F**K Up Season 2 | Last Z",
+          "format": "video",
+          "published": "2026-10-30",
+          "duration": 1456
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "r-dVw2VdtZU",
+          "title": "713 Got Nerfed in migration | Last Z Devs don't like winning |",
+          "format": "short",
+          "published": "2026-10-28",
+          "duration": 155
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "RFIaKGu7RiY",
+          "title": "Last Z | Buster Event | 713 VS 712",
+          "format": "short",
+          "published": "2026-10-26",
+          "duration": 65
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "JG6_J3L5tEE",
+          "title": "Clik Clik BOOM | Last Z | 706 Vs 713",
+          "format": "short",
+          "published": "2026-10-24",
+          "duration": 178
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "IHaxvs7dKWA",
+          "title": "Glory War done in 8 Minutes?!?! | Last Z Creator",
+          "format": "short",
+          "published": "2026-10-21",
+          "duration": 124
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "MLiIi_gEThg",
+          "title": "Last Z | Giveaway Winner |",
+          "format": "video",
+          "published": "2026-10-19",
+          "duration": 100
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "FVUshT0_MaY",
+          "title": "250 Subscriber Giveaway | POW Ruthless | Last Z Survival!",
+          "format": "video",
+          "published": "2026-10-17",
+          "duration": 100
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "EpDV8vL8Hew",
+          "title": "Last Z | 705 vs 713 | Canyon Clash",
+          "format": "short",
+          "published": "2026-10-17",
+          "duration": 166
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "AHpGt4hFlK4",
+          "title": "Last Z | Subscriber Giveaway!! |",
+          "format": "short",
+          "published": "2026-10-16",
+          "duration": 8
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "4FXWaVYKRBA",
+          "title": "Trapping Whales in Last Z | Adding to Swade Toobs Thick Walls | LastZ Creator",
+          "format": "video",
+          "published": "2026-10-14",
+          "duration": 642
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "aJk4tJWdaHI",
+          "title": "Last Z | POW vs Warr | Glory wars",
+          "format": "short",
+          "published": "2026-10-14",
+          "duration": 96
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "yehY4FGQMX8",
+          "title": "Last Z | 713 5 Star State",
+          "format": "short",
+          "published": "2026-10-11",
+          "duration": 167
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "9TueDeAJlfg",
+          "title": "713 Vs 706 | Last Z | State Vs State",
+          "format": "short",
+          "published": "2026-10-10",
+          "duration": 49
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "uHGhZZ5ZsNQ",
+          "title": "How to Win Every Glory War | LastZ Survival Guide",
+          "format": "video",
+          "published": "2026-10-06",
+          "duration": 1068
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "xJiy-bM_sbs",
+          "title": "710 VS 713 Its Brittany Bisssh",
+          "format": "short",
+          "published": "2026-10-05",
+          "duration": 113
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "KV5Z2GcdFxU",
+          "title": "713 Vs 710 | LastZ | Last Z Creator",
+          "format": "short",
+          "published": "2026-10-04",
+          "duration": 45
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "C98P4lAe8Nw",
+          "title": "Canyon Clash 713 Vs 700Last Z | One Lonely Island",
+          "format": "short",
+          "published": "2026-09-26",
+          "duration": 93
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "gA6vlOFIORs",
+          "title": "Last Z Survival | Glory Wars Preview!",
+          "format": "short",
+          "published": "2026-09-23",
+          "duration": 66
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "92TIqocCjbc",
+          "title": "Last Z | 713 vs 715",
+          "format": "short",
+          "published": "2026-09-19",
+          "duration": 44
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "08bWdyFROl8",
+          "title": "See You Soon",
+          "format": "short",
+          "published": "2026-09-17",
+          "duration": 27
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "phlD5DKG4UE",
+          "title": "Season Overview | Last Z: Survival Shooter | #LastZCreator",
+          "format": "video",
+          "published": "2026-09-16",
+          "duration": 438
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "__dwPaf_jkY",
+          "title": "713 Vs 718 | LastZ Creator",
+          "format": "short",
+          "published": "2026-09-15",
+          "duration": 67
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "rBh9SWrnljI",
+          "title": "P0W Canyon Clash, need some stronger challengers",
+          "format": "short",
+          "published": "2026-09-14",
+          "duration": 68
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "-IIftx7EEm4",
+          "title": "713 VS 718 | Last Z: Survival Shooter | #LastZCreator",
+          "format": "short",
+          "published": "2026-09-13",
+          "duration": 112
+        }
       ]
     }
   ]
