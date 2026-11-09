@@ -184,6 +184,15 @@
       "items": [
         {
           "type": "youtube",
+          "youtubeId": "l_9uBXsJteo",
+          "title": "Last Z | Giveaway Drawing! | 500 Subscribers",
+          "format": "video",
+          "published": "2026-11-09",
+          "duration": 376,
+          "channelSync": true
+        },
+        {
+          "type": "youtube",
           "youtubeId": "q9QBf7JTJ-M",
           "title": "713 vs 705 | Last Z | SVS",
           "format": "short",
