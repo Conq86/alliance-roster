@@ -51,14 +51,14 @@
   <h2>APPROVED</h2>
   <div id="approved"><p class="muted">Loading…</p></div>
 
-  <h2>YOUTUBE PLAYLIST SYNC</h2>
+  <h2>YOUTUBE CHANNEL SYNC</h2>
   <div class="card">
     <p class="muted" id="syncInfo">Loading…</p>
     <div class="row">
       <button id="syncNow" type="button">Sync now</button>
-      <button id="syncTrigger" type="button" class="ghost">Enable daily sync (9 AM)</button>
+      <button id="syncTrigger" type="button" class="ghost">Enable hourly sync</button>
     </div>
-    <p class="muted">Sync adds videos from configured Alliance playlists to media.json, newest first, skipping any video already listed. No playlists are configured by default — add them in Settings below. Individual video links still go through the approval queue above.</p>
+    <p class="muted">Sync reads the public Videos and Shorts tabs of the trusted creator channels listed above (no API key) and adds new uploads to media.json automatically, with the real upload date from each video's page. Videos already listed are never changed, duplicated or removed. If a channel can't be read, sync fails and nothing changes. Playlists in Settings are also synced when a YouTube API key is set. All other submissions still go through the approval queue above.</p>
   </div>
 
   <h2>SETUP</h2>
@@ -140,9 +140,15 @@ function renderStatus() {
       : 'Site size: <b>' + esc(repo.sizeMB) + ' MB</b> of ' + esc(repo.limitMB) + ' MB safety limit (' + esc(repo.repo) + ')') +
     (missing.length ? '<br>Still needed: <b>' + esc(missing.join(', ')) + '</b> — see Setup below.' : '') +
     (s.countsError ? '<br>Submission list error: ' + esc(s.countsError) : '');
-  document.getElementById('syncInfo').textContent =
-    (s.playlists && s.playlists.length ? s.playlists.length + ' playlist(s) configured. ' : 'No playlists configured. ') +
-    (s.syncTrigger ? 'Daily sync is ON.' : 'Daily sync is OFF.');
+  var ch = s.channels || [], last = s.lastSync;
+  document.getElementById('syncInfo').innerHTML =
+    (ch.error ? 'Channel settings error: ' + esc(ch.error)
+      : 'Channels: ' + (ch.length ? ch.map(function (c) {
+          return '<b>' + esc(c.creatorId) + '</b> (' + esc(c.channelId) + (c.since ? ', uploads since ' + esc(c.since) : '') + ')';
+        }).join(', ') : 'none')) + '<br>' +
+    (s.playlists && s.playlists.length ? s.playlists.length + ' playlist(s) configured' + (s.configured && s.configured.youtube ? '' : ' (need a YouTube API key)') + '. ' : '') +
+    (s.syncTrigger ? 'Hourly sync is <b>ON</b>.' : 'Hourly sync is <b>OFF</b>.') +
+    (last ? '<br>Last sync ' + esc(new Date(last.at).toLocaleString()) + ': ' + (last.ok ? '' : '<b>FAILED</b> — ') + esc(last.message) : '<br>Not synced yet.');
   var set = s.settings || {};
   if (set.folderId) document.getElementById('setFolder').value = set.folderId;
   if (set.sheetId) document.getElementById('setSheet').value = set.sheetId;
@@ -321,7 +327,7 @@ document.getElementById('saveSettings').addEventListener('click', function () {
 
 document.getElementById('syncNow').addEventListener('click', function () {
   var btn = this; btn.disabled = true;
-  showMsg('Syncing playlists…', '');
+  showMsg('Syncing YouTube channels…', '');
   call('syncPlaylists').then(function (r) { showMsg(r.message || ('Added ' + r.added + ' video(s).'), 'good'); refresh(); })
     .catch(function (err) { showMsg('Sync failed: ' + err.message, 'bad'); })
     .finally(function () { btn.disabled = false; });
@@ -330,7 +336,7 @@ document.getElementById('syncNow').addEventListener('click', function () {
 document.getElementById('syncTrigger').addEventListener('click', function () {
   var btn = this; btn.disabled = true;
   call('installSyncTrigger').then(function (r) { showMsg(r.message, 'good'); refresh(); })
-    .catch(function (err) { showMsg('Could not enable daily sync: ' + err.message, 'bad'); })
+    .catch(function (err) { showMsg('Could not enable hourly sync: ' + err.message, 'bad'); })
     .finally(function () { btn.disabled = false; });
 });
 

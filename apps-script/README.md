@@ -6,7 +6,7 @@ new accounts, no recurring charges. Everything runs on the owner's Google accoun
 | Project | Folder here | Web app access | What it does |
 | --- | --- | --- | --- |
 | Submissions | `submissions/` | Execute as: Me · Who has access: **Anyone** | Accepts anonymous submissions, validates them server-side, stores originals in a private Drive folder + a tracking Sheet. Never publishes, never lists submissions. |
-| Admin | `admin/` | Execute as: Me · Who has access: **Only myself** | Private approval screen: preview, correct titles/names, approve (publishes to GitHub), reject, unpublish, playlist sync. Google-account sign-in is the authentication, plus an owner-email check in every function. |
+| Admin | `admin/` | Execute as: Me · Who has access: **Only myself** | Private approval screen: preview, correct titles/names, approve (publishes to GitHub), reject, unpublish, hourly YouTube channel sync. Google-account sign-in is the authentication, plus an owner-email check in every function. |
 
 The two projects share one Drive folder and one Sheet. The GitHub token lives only
 in the Admin project's Script Properties — never in this repo, never in the browser.
@@ -36,16 +36,14 @@ in the Admin project's Script Properties — never in this repo, never in the br
      with **Contents: Read and write** only. (GitHub → Settings → Developer settings →
      Personal access tokens → Fine-grained tokens.) It is stored server-side and is
      never shown again.
-   - **YouTube API key** (optional) — enables playlist sync and fills in publish dates
-     and durations for approved video links. Without it, sync refuses and links are
-     still approved with the title only.
-   - **Playlists** (optional) — JSON array of Alliance playlists to sync daily, e.g.
+   - **YouTube API key** (optional) — fills in publish dates and durations for approved
+     video links and enables the optional playlist sync. Channel sync does not need it.
+   - **Playlists** (optional, needs the API key) — JSON array of extra playlists, e.g.
      `[{"playlistId":"PL…","creatorId":"med","creator":"MED","member":"med","channel":"MED LAST Z","channelUrl":"https://www.youtube.com/@med.713"}]`.
-     Leave it empty until the owner supplies real playlist URLs. Nothing is invented.
    - **Storage safety limit** — default 900 MB. Publishing refuses above it (Pages
      limit is 1 GB; the site is ~280 MB now).
-8. **Daily sync (optional).** On the approval screen, "Enable daily sync (9 AM)".
-   It does nothing until playlists are configured.
+8. **Hourly sync.** On the approval screen, "Enable hourly sync" (creates one hourly
+   trigger; pressing it again replaces it). "Sync now" runs it immediately.
 
 ## How it works
 
@@ -72,9 +70,21 @@ in the Admin project's Script Properties — never in this repo, never in the br
 - **YouTube links:** approval lists the video in `media.json` (deduplicated by video ID).
   Format is `short` only when the submitted URL was a `/shorts/` link; publish date and
   duration are filled in from the YouTube API when a key is configured.
-- **Playlist sync:** once a day (or "Sync now"), each configured playlist is read via
-  the YouTube Data API and any video ID not already in `media.json` is appended,
-  newest first. The 48 existing approved entries are untouched.
+- **Channel sync:** every hour (or "Sync now") the script reads the public Videos and
+  Shorts tabs (first page, up to 50 each) of the owner-trusted channels — MED
+  (`UCJRuTu8UfGlM40IjvAc4N9Q`, uploads from 2026-10-10 on) and POW Ruthless
+  (`UC-AlzeeDBHbfnrjjlpC-Gng`) by default, or the `CHANNELS` Script Property if set
+  (`[{channelId, creatorId, since?}]`). No API key; YouTube's RSS feed returns 404 for
+  these channels. Each new video ID's own watch page gives the upload date, length and
+  owning channel; videos without a readable date, or owned by another channel, are
+  skipped and retried next run. New entries go into the creator's existing
+  `media.json` group (marked `channelSync: true`), newest first. Existing entries are
+  never changed, reordered, duplicated or removed. If a channel's tabs yield no usable
+  uploads, the sync fails with an error and nothing is written. Sync shares the
+  approval lock, and the last result shows on the approval screen. These two channels
+  publish without approval by owner decision; every other submission still needs it.
+- **Playlist sync (optional):** with an API key, configured playlists are synced the
+  same way in the same run.
 - **Unpublish:** removes the listing from `media.json` / `fanart.json` and deletes the
   published file from the repo. The private original stays in Drive and the Sheet row
   is kept for history.

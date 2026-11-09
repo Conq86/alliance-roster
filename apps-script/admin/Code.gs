@@ -14,9 +14,9 @@
  *   GitHub Pages deploys it. The screen reports "approved — publishing" and offers a
  *   "Check live" button that confirms the file is actually serving.
  * - Unpublish removes the listing (and the published file) later.
- * - Optional daily YouTube playlist sync (ordinary time trigger, not an AI run).
- *   It only runs when playlist IDs are configured in Settings; none are configured
- *   by default and none are invented here.
+ * - Hourly YouTube channel sync (ordinary time trigger, not an AI run). Reads the
+ *   public Videos and Shorts tabs of the owner-trusted creator channels (no API key)
+ *   and publishes new uploads to media.json. Key-backed playlist sync stays optional.
  *
  * Script Properties (Project Settings > Script Properties, or the Settings panel here):
  *   OWNER_EMAIL       — set automatically to the deploying account on first use.
@@ -26,6 +26,8 @@
  *                       Submissions project uses; paste the IDs into that project too).
  *   YOUTUBE_API_KEY   — optional, for playlist sync and video metadata.
  *   PLAYLISTS         — optional JSON array: [{playlistId, creatorId, creator, member, channel, channelUrl}].
+ *   CHANNELS          — optional JSON array: [{channelId, creatorId, since?, creator?, member?, channel?, channelUrl?}].
+ *                       When unset, TRUSTED_CHANNELS (MED, POW Ruthless) are synced.
  *   CAPACITY_LIMIT_MB — default 900. Publishing refuses above this (Pages limit is 1 GB).
  *   REPO              — default Conq86/alliance-roster.
  */
@@ -291,6 +293,8 @@ function getStatus() {
     },
     countsError: countsError, repo: size, counts: counts,
     playlists: getPlaylists_(),
+    channels: (function () { try { return getChannels_(); } catch (e) { return { error: String(e.message) }; } })(),
+    lastSync: (function () { try { return JSON.parse(props_().getProperty('LAST_SYNC') || 'null'); } catch (e) { return null; } })(),
     syncTrigger: ScriptApp.getProjectTriggers().some(function (t) { return t.getHandlerFunction() === 'syncPlaylists'; }),
     submitEndpointHint: 'Paste the Submissions web app URL into submit.js (SUBMIT_ENDPOINT) after deploying that project.'
   };
@@ -529,17 +533,135 @@ function checkLive(path) {
   return { ok: true, live: !problem, code: fileCode, url: fileUrl, problem: problem };
 }
 
-// ---- YouTube playlist sync (ordinary scheduled code; runs once a day when enabled) ----
-function syncPlaylists() {
-  requireOwner_();
-  var key = props_().getProperty('YOUTUBE_API_KEY');
-  if (!key) throw new Error('YouTube API key is not set. Add it in Settings to enable playlist sync.');
-  var lists = getPlaylists_();
-  if (!lists.length) return { ok: true, added: 0, message: 'No playlists configured. Add playlist IDs in Settings first.' };
-  var media = getJsonFile_('media.json', { music: [], videos: [] });
-  media.videos = media.videos || [];
-  var known = {};
-  media.videos.forEach(function (g) { (g.items || []).forEach(function (it) { if (it.youtubeId) known[it.youtubeId] = true; }); });
+// ---- YouTube sync (ordinary scheduled code; runs hourly when enabled) ----
+// Owner-trusted creator channels: their new uploads publish to media.json without the
+// approval queue (owner-authorized). Everything else still needs approval. MED uploads
+// before 2026-10-10 were never approved, so that backlog is not imported.
+var TRUSTED_CHANNELS = [
+  { channelId: 'UCJRuTu8UfGlM40IjvAc4N9Q', creatorId: 'med', since: '2026-10-10' },
+  { channelId: 'UC-AlzeeDBHbfnrjjlpC-Gng', creatorId: 'ruthless' }
+];
+
+function getChannels_() {
+  var raw = props_().getProperty('CHANNELS');
+  if (!raw) return TRUSTED_CHANNELS;
+  var list = JSON.parse(raw);
+  if (!Array.isArray(list)) throw new Error('CHANNELS must be a JSON array.');
+  return list;
+}
+
+function ytFetch_(url) {
+  var res = UrlFetchApp.fetch(url, { muteHttpExceptions: true, followRedirects: true, headers: { 'Accept-Language': 'en-US,en;q=0.9' } });
+  if (res.getResponseCode() !== 200) throw new Error(url + ' returned HTTP ' + res.getResponseCode());
+  return res.getContentText();
+}
+
+// Pulls a JSON object assigned in a page script (e.g. var ytInitialData = {...};).
+function ytJson_(html, name) {
+  var m = new RegExp('(?:var\\s+|window\\[["\']?)' + name + '(?:["\']?\\])?\\s*=\\s*\\{').exec(html);
+  if (!m) return null;
+  var start = m.index + m[0].length - 1, depth = 0, inStr = false;
+  for (var i = start; i < html.length; i++) {
+    var c = html.charAt(i);
+    if (inStr) { if (c === '\\') i++; else if (c === '"') inStr = false; }
+    else if (c === '"') inStr = true;
+    else if (c === '{') depth++;
+    else if (c === '}' && --depth === 0) return JSON.parse(html.slice(start, i + 1));
+  }
+  return null;
+}
+
+// Newest-first uploads from one tab ('videos' or 'shorts') of exactly this channel.
+function ytChannelTab_(channelId, tab) {
+  var data = ytJson_(ytFetch_('https://www.youtube.com/channel/' + channelId + '/' + tab + '?hl=en'), 'ytInitialData');
+  if (!data) throw new Error(tab + ': page data not found');
+  var meta = data.metadata && data.metadata.channelMetadataRenderer;
+  if (!meta || meta.externalId !== channelId) throw new Error(tab + ': page is not channel ' + channelId);
+  var grid = null;
+  var tabs = (data.contents && data.contents.twoColumnBrowseResultsRenderer && data.contents.twoColumnBrowseResultsRenderer.tabs) || [];
+  tabs.forEach(function (t) {
+    var r = t.tabRenderer;
+    var url = r && r.endpoint && r.endpoint.commandMetadata && r.endpoint.commandMetadata.webCommandMetadata.url;
+    if (r && r.selected && r.content && String(url || '').slice(-(tab.length + 1)) === '/' + tab) grid = r.content.richGridRenderer;
+  });
+  if (!grid) throw new Error(tab + ': upload grid not found');
+  var out = [];
+  (grid.contents || []).slice(0, 50).forEach(function (x) {
+    var c = x.richItemRenderer && x.richItemRenderer.content;
+    var id = '', title = '';
+    if (c && c.lockupViewModel && c.lockupViewModel.contentType === 'LOCKUP_CONTENT_TYPE_VIDEO') {
+      id = c.lockupViewModel.contentId;
+      var md = c.lockupViewModel.metadata && c.lockupViewModel.metadata.lockupMetadataViewModel;
+      title = md && md.title && md.title.content;
+    } else if (c && c.shortsLockupViewModel) {
+      var cmd = c.shortsLockupViewModel.onTap && c.shortsLockupViewModel.onTap.innertubeCommand;
+      var pt = c.shortsLockupViewModel.overlayMetadata && c.shortsLockupViewModel.overlayMetadata.primaryText;
+      id = cmd && cmd.reelWatchEndpoint && cmd.reelWatchEndpoint.videoId;
+      title = pt && pt.content;
+    }
+    if (/^[A-Za-z0-9_-]{11}$/.test(id || '')) out.push({ youtubeId: id, title: text_(title, 300), format: tab === 'shorts' ? 'short' : 'video' });
+  });
+  return out;
+}
+
+// Real upload date, length and owning channel from the video's own watch page.
+function ytWatchMeta_(videoId) {
+  try {
+    var p = ytJson_(ytFetch_('https://www.youtube.com/watch?v=' + videoId + '&hl=en'), 'ytInitialPlayerResponse');
+    var v = p && p.videoDetails, mf = p && p.microformat && p.microformat.playerMicroformatRenderer;
+    if (!v || !mf || v.videoId !== videoId) return null;
+    var published = String(mf.publishDate || mf.uploadDate || '').slice(0, 10);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(published)) return null;
+    return { channelId: v.channelId, title: text_(v.title, 300), published: published, duration: parseInt(v.lengthSeconds, 10) || 0, live: !!(v.isUpcoming || v.isLive) };
+  } catch (e) { return null; }
+}
+
+function syncChannels_(media, known) {
+  var added = [], notes = [];
+  // Read every channel first; an unusable channel aborts before media.json changes.
+  var plans = getChannels_().map(function (cfg) {
+    if (!cfg.channelId || !cfg.creatorId) throw new Error('Each channel needs channelId and creatorId.');
+    var group = null;
+    media.videos.forEach(function (g) { if (g.creatorId === cfg.creatorId) group = g; });
+    if (!group && !cfg.creator) throw new Error('media.json has no creator "' + cfg.creatorId + '" for channel ' + cfg.channelId + '. Nothing was changed.');
+    var entries = [], errors = [];
+    ['videos', 'shorts'].forEach(function (tab) {
+      try { entries = entries.concat(ytChannelTab_(cfg.channelId, tab)); }
+      catch (e) { errors.push(e.message); }
+    });
+    if (!entries.length) throw new Error('Channel ' + cfg.creatorId + ' (' + cfg.channelId + '): no usable uploads on Videos or Shorts (' + (errors.join('; ') || 'both tabs empty') + '). Nothing was changed.');
+    if (errors.length) notes.push(cfg.creatorId + ' ' + errors.join('; '));
+    return { cfg: cfg, group: group, entries: entries };
+  });
+  plans.forEach(function (plan) {
+    var cfg = plan.cfg, older = {};
+    plan.entries.forEach(function (it) {
+      if (known[it.youtubeId] || older[it.format]) return;
+      var meta = ytWatchMeta_(it.youtubeId);
+      if (!meta) { notes.push(it.youtubeId + ' skipped (upload date unavailable; retried next run)'); return; }
+      if (meta.channelId !== cfg.channelId) { known[it.youtubeId] = true; notes.push(it.youtubeId + ' skipped (owned by another channel)'); return; }
+      if (meta.live) return;
+      if (cfg.since && meta.published < cfg.since) { older[it.format] = true; return; } // tabs are newest first: the rest is older backlog
+      if (!plan.group) {
+        plan.group = { creatorId: cfg.creatorId, creator: cfg.creator, member: cfg.member || cfg.creatorId, channel: cfg.channel || '', channelUrl: cfg.channelUrl || '', items: [] };
+        media.videos.push(plan.group);
+      }
+      var item = { type: 'youtube', youtubeId: it.youtubeId, title: it.title || meta.title || it.youtubeId, format: it.format, published: meta.published };
+      if (meta.duration) item.duration = meta.duration;
+      item.channelSync = true;
+      // Insert newest first without reordering existing entries.
+      var items = plan.group.items = plan.group.items || [], at = 0;
+      while (at < items.length && String(items[at].published || '') > item.published) at++;
+      items.splice(at, 0, item);
+      known[it.youtubeId] = true;
+      added.push(it.youtubeId);
+    });
+  });
+  return { added: added, notes: notes, channels: plans.length };
+}
+
+// Optional key-backed mode: custom playlists configured in Settings.
+function syncPlaylistItems_(media, known, key, lists) {
   var added = [];
   lists.forEach(function (cfg) {
     if (!cfg.playlistId || !cfg.creatorId || !cfg.creator) return;
@@ -558,14 +680,50 @@ function syncPlaylists() {
     });
     group.items.sort(function (a, b) { return String(b.published || '') < String(a.published || '') ? -1 : 1; });
   });
-  if (!added.length) return { ok: true, added: 0, message: 'No new videos found in the configured playlists.' };
-  var commit = putJsonFile_('media.json', media, 'Sync YouTube playlists: add ' + added.length + ' video(s)');
-  return { ok: true, added: added.length, commit: commit.commit.sha, message: added.length + ' new video(s) added to media.json.' };
+  return added;
+}
+
+// Owner via the web app, or this project's own installed trigger (e.triggerUid).
+function requireOwnerOrTrigger_(e) {
+  var uid = e && e.triggerUid;
+  if (uid && ScriptApp.getProjectTriggers().some(function (t) { return t.getUniqueId() === String(uid); })) return;
+  requireOwner_();
+}
+
+function syncPlaylists(e) {
+  requireOwnerOrTrigger_(e);
+  var lock = LockService.getScriptLock();
+  if (!lock.tryLock(30000)) throw new Error('An approval or sync is already running. Please try again.');
+  var result = null;
+  try {
+    var media = getJsonFile_('media.json', null);
+    if (!media || !Array.isArray(media.videos)) throw new Error('media.json could not be read. Nothing was changed.');
+    var known = {};
+    media.videos.forEach(function (g) { (g.items || []).forEach(function (it) { if (it.youtubeId) known[it.youtubeId] = true; }); });
+    var ch = syncChannels_(media, known);
+    var added = ch.added;
+    var key = props_().getProperty('YOUTUBE_API_KEY'), lists = getPlaylists_();
+    if (key && lists.length) added = added.concat(syncPlaylistItems_(media, known, key, lists));
+    var notes = ch.notes.length ? ' Notes: ' + ch.notes.join(' | ') : '';
+    if (!added.length) {
+      result = { ok: true, added: 0, message: 'Checked ' + ch.channels + ' channel(s): no new uploads.' + notes };
+    } else {
+      var commit = putJsonFile_('media.json', media, 'Sync YouTube channels: add ' + added.length + ' video(s): ' + added.join(', '));
+      result = { ok: true, added: added.length, ids: added, commit: commit.commit.sha, message: added.length + ' new video(s) added to media.json: ' + added.join(', ') + '.' + notes };
+    }
+  } catch (err) {
+    result = { ok: false, message: String(err.message) };
+    throw err;
+  } finally {
+    props_().setProperty('LAST_SYNC', JSON.stringify({ at: new Date().toISOString(), ok: !!(result && result.ok), message: result ? result.message : 'Sync stopped unexpectedly.' }));
+    lock.releaseLock();
+  }
+  return result;
 }
 
 function installSyncTrigger() {
   requireOwner_();
   ScriptApp.getProjectTriggers().forEach(function (t) { if (t.getHandlerFunction() === 'syncPlaylists') ScriptApp.deleteTrigger(t); });
-  ScriptApp.newTrigger('syncPlaylists').timeBased().everyDays(1).atHour(9).create();
-  return { ok: true, message: 'Daily playlist sync is on (runs about 9 AM owner time). It only adds videos once playlist IDs are configured in Settings.' };
+  ScriptApp.newTrigger('syncPlaylists').timeBased().everyHours(1).create();
+  return { ok: true, message: 'Hourly YouTube sync is on. New uploads from the configured channels are added to media.json automatically.' };
 }
