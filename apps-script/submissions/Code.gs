@@ -21,13 +21,18 @@
  * - Spam protection is proportionate: a honeypot field, a daily submission cap, a
  *   per-name cap, and duplicate detection by file hash. Apps Script does not expose the
  *   visitor's IP to doPost, so IP-based limiting is not possible here.
- * - The form posts through a hidden iframe and this script answers with a tiny HTML page
- *   that postMessages the result to the site. XFrameOptionsMode.ALLOWALL is required
- *   for that page to load in the iframe; the page contains only a JSON payload.
+ * - The site posts a url-encoded form through a hidden iframe. The file travels as a
+ *   base64 text field (fileData) plus fileName; GAS form posts do not deliver file Blobs.
+ *   This script answers with a tiny HTML page that postMessages the result to the site
+ *   (window.top, exact SITE_ORIGIN). XFrameOptionsMode.ALLOWALL is required for that page
+ *   to load in the iframe; the page contains only a JSON payload.
  */
 
 // ---- Configuration ----
 var MAX_FILE_BYTES = 25 * 1024 * 1024; // 25 MB per file
+var MAX_BASE64_CHARS = Math.ceil(MAX_FILE_BYTES / 3) * 4;
+var BASE64_RE = /^[A-Za-z0-9+\/]*={0,2}$/;
+var SITE_ORIGIN = 'https://conq86.github.io'; // the only page allowed to receive answers
 var DAILY_CAP = 50;                     // submissions per day, all members
 var PER_NAME_CAP = 10;                  // submissions per day, per game name
 var MUSIC_EXTS = { mp3: 'audio/mpeg', m4a: 'audio/mp4' };
@@ -105,7 +110,10 @@ function safeName_(name) {
 }
 
 // ---- Web app entry points ----
-function doGet() {
+function doGet(e) {
+  var q = (e && e.parameter) || {};
+  // Handshake for the Submit tab: proves the web app itself answered (not a Google error page).
+  if (q.action === 'ping') return answer_({ ok: true, ping: true, nonce: text_(q.nonce, 64) });
   var out = { ok: true, service: 'alliance-submissions', version: 1 };
   return ContentService.createTextOutput(JSON.stringify(out))
     .setMimeType(ContentService.MimeType.JSON);
@@ -136,17 +144,20 @@ function doPost(e) {
         if (!m) fail_('Paste a valid YouTube watch or Shorts link.');
         youtubeId = m[1];
       } else {
-        var raw = p.file;
-        if (!raw || typeof raw.getBytes !== 'function') fail_('Choose a file to upload.');
-        var ext = extOf_(raw.getName());
+        var data = p.fileData;
+        if (typeof data !== 'string' || !data) fail_('Choose a file to upload.');
+        if (data.length > MAX_BASE64_CHARS) fail_('That file is over the 25 MB limit.');
+        if (data.length % 4 !== 0 || !BASE64_RE.test(data)) fail_('The file did not arrive intact. Please try again.');
+        fileName = text_(p.fileName, 200);
+        var ext = extOf_(fileName);
         var allowed = type === 'music' ? MUSIC_EXTS : ART_EXTS;
         if (!allowed[ext]) fail_(type === 'music' ? 'Music must be an MP3 or M4A file.' : 'Fan art must be a PNG, JPG or WebP file.');
-        var bytes = raw.getBytes();
+        var bytes = Utilities.base64Decode(data);
         if (!bytes.length) fail_('That file looks empty.');
         if (bytes.length > MAX_FILE_BYTES) fail_('That file is over the 25 MB limit.');
         if (!magicOk_(bytes, ext)) fail_('That file does not look like a real .' + ext + ' file.');
-        fileBlob = raw;
-        fileName = raw.getName();
+        // MIME comes from the validated extension, never from the client.
+        fileBlob = Utilities.newBlob(bytes, allowed[ext], fileName);
         fileSize = bytes.length;
         sha = sha256Hex_(bytes);
       }
@@ -196,7 +207,13 @@ function doPost(e) {
       values[COL.publishedCommit] = '';
       values[COL.reviewNote] = '';
       values[COL.approvedAt] = '';
-      sheet_().appendRow(values);
+      try {
+        sheet_().appendRow(values);
+      } catch (appendErr) {
+        // Never leave an untracked upload behind: trash only the file created above.
+        if (fileId) { try { DriveApp.getFileById(fileId).setTrashed(true); } catch (ignore) {} }
+        fail_('The submission could not be recorded. Nothing was saved. Please try again.');
+      }
       return answer_({ ok: true, id: id, nonce: nonce });
     } finally {
       lock.releaseLock();
@@ -211,7 +228,9 @@ function doPost(e) {
 function answer_(payload) {
   var json = JSON.stringify(payload).replace(/</g, '\\u003c');
   var html = '<!DOCTYPE html><html><head><meta charset="utf-8"></head><body>' +
-    '<script>window.parent.postMessage(' + json + ', "*");<\/script>' +
+    // HtmlService nests this page inside a Google wrapper frame, so window.parent is not the
+    // site; window.top is. The exact target origin keeps the result from leaking elsewhere.
+    '<script>window.top.postMessage(' + json + ', ' + JSON.stringify(SITE_ORIGIN) + ');<\/script>' +
     '</body></html>';
   return HtmlService.createHtmlOutput(html)
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);

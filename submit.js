@@ -14,8 +14,8 @@
   var gameName = $('gameName'), title = $('submitTitle'), desc = $('submitDesc');
   var fileField = $('fileField'), linkField = $('linkField'), fileInput = $('fileInput'), youtubeUrl = $('youtubeUrl');
   var fileLabel = $('fileLabel'), submitBtn = $('submitBtn');
-  var honeypot = $('honeypot'), nonceInput = $('nonceInput'), actionInput = $('actionInput');
-  var active = false, loadState = 'idle', nonce = '', timer = null;
+  var honeypot = $('honeypot');
+  var active = false, loadState = 'idle', nonce = '', timer = null, transport = null;
 
   function showStatus(message, kind) {
     status.hidden = false;
@@ -57,32 +57,51 @@
     if (!file.size) return 'That file looks empty.';
     return '';
   }
-  // Reachability ping: loads the endpoint in a hidden frame (no CORS involved).
-  // A load means the service answers; a timeout or error means it does not.
+  function makeNonce() { return Math.random().toString(36).slice(2) + Date.now().toString(36); }
+  // Apps Script HtmlService pages run on script.googleusercontent.com or a per-script sandbox
+  // host like n-<hash>-0lu-script.googleusercontent.com. Exact hostname match only, no substrings.
+  function fromAppsScript(event) {
+    var url;
+    try { url = new URL(event.origin); } catch (e) { return false; }
+    if (url.protocol !== 'https:' || url.port) return false;
+    var host = url.hostname;
+    return host === 'script.googleusercontent.com' ||
+      /^[a-z0-9-]+\.script\.googleusercontent\.com$/.test(host) ||
+      /^n-[a-z0-9-]+-script\.googleusercontent\.com$/.test(host);
+  }
+  // Handshake: loads ?action=ping in a hidden frame; only a matching reply from the web app
+  // counts (a Google error or sign-in page loads too, but never posts the nonce back).
   function ping(onResult) {
-    var done = false, probe = document.createElement('iframe');
+    var done = false, pingNonce = makeNonce(), probe = document.createElement('iframe');
     probe.hidden = true;
     probe.title = 'Submission service check';
+    var listen = function (event) {
+      if (!event.data || event.data.nonce !== pingNonce || !event.data.ping || !fromAppsScript(event)) return;
+      finish(event.data.ok === true);
+    };
     var finish = function (ok) {
       if (done) return;
       done = true;
       clearTimeout(timer);
+      window.removeEventListener('message', listen);
       probe.remove();
       onResult(ok);
     };
-    probe.onload = function () { finish(true); };
-    probe.onerror = function () { finish(false); };
-    timer = setTimeout(function () { finish(false); }, 15000);
-    probe.src = SUBMIT_ENDPOINT;
+    window.addEventListener('message', listen);
+    timer = setTimeout(function () { finish(false); }, 20000);
+    probe.src = SUBMIT_ENDPOINT + '?action=ping&nonce=' + encodeURIComponent(pingNonce);
     document.body.appendChild(probe);
   }
-  function onMessage(event) {
-    if (!nonce || !event.data || event.data.nonce !== nonce) return;
-    if (typeof event.origin !== 'string' || event.origin.indexOf('script.googleusercontent.com') === -1) return;
-    clearTimeout(timer);
-    window.removeEventListener('message', onMessage);
+  function restoreButton() {
     submitBtn.disabled = false;
     submitBtn.textContent = 'Submit for approval';
+  }
+  function onMessage(event) {
+    if (!nonce || !event.data || event.data.nonce !== nonce || !fromAppsScript(event)) return;
+    clearTimeout(timer);
+    window.removeEventListener('message', onMessage);
+    nonce = '';
+    restoreButton();
     if (event.data.ok) {
       try { localStorage.setItem(NAME_KEY, gameName.value.trim()); } catch (e) {}
       var text = 'Submitted — awaiting approval.' + (event.data.id ? ' Your submission ID is ' + event.data.id + '.' : '') + ' The owner reviews every submission before anything goes public.';
@@ -99,23 +118,76 @@
     var problem = validate();
     if (problem) { showStatus(problem, 'error'); return; }
     if (honeypot.value) { showStatus('That did not go through. Please try again.', 'error'); return; }
-    nonce = Math.random().toString(36).slice(2) + Date.now().toString(36);
-    nonceInput.value = nonce;
-    actionInput.value = 'submit';
-    form.action = SUBMIT_ENDPOINT;
-    form.target = 'submitFrame';
-    window.addEventListener('message', onMessage);
+    var type = currentType();
+    var fields = {
+      action: 'submit', type: type, website: honeypot.value,
+      gameName: gameName.value.trim(), title: title.value.trim(), description: desc.value
+    };
     submitBtn.disabled = true;
     submitBtn.textContent = 'Sending…';
+    if (type === 'youtube') {
+      fields.youtubeUrl = youtubeUrl.value.trim();
+      send(fields);
+      return;
+    }
+    // Apps Script form posts do not deliver file Blobs, so the file travels as base64 text.
+    var file = fileInput.files[0];
+    var reader = new FileReader();
+    showStatus('Preparing your file…', '');
+    reader.onerror = reader.onabort = function () {
+      restoreButton();
+      showStatus('That file could not be read. Nothing was sent. Please choose it again.', 'error');
+    };
+    reader.onload = function () {
+      var result = String(reader.result || '');
+      var comma = result.indexOf(',');
+      if (comma < 0 || result.slice(0, comma).indexOf(';base64') === -1) { reader.onerror(); return; }
+      fields.fileData = result.slice(comma + 1);
+      fields.fileName = file.name;
+      fields.fileType = file.type || '';
+      send(fields);
+    };
+    reader.readAsDataURL(file);
+  });
+  // Posts a url-encoded copy of the fields through a throwaway form into the hidden frame.
+  // The visible file input is never part of the request.
+  function send(fields) {
+    nonce = makeNonce();
+    fields.nonce = nonce;
+    if (transport) transport.remove(); // the previous post has finished or timed out
+    transport = document.createElement('form');
+    transport.hidden = true;
+    transport.method = 'post';
+    transport.enctype = 'application/x-www-form-urlencoded';
+    transport.action = SUBMIT_ENDPOINT;
+    transport.target = 'submitFrame';
+    Object.keys(fields).forEach(function (key) {
+      var input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = key;
+      input.value = fields[key];
+      transport.appendChild(input);
+    });
+    window.addEventListener('message', onMessage);
     showStatus('Sending your submission…', '');
+    clearTimeout(timer);
     timer = setTimeout(function () {
       window.removeEventListener('message', onMessage);
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Submit for approval';
+      nonce = '';
+      restoreButton();
       showStatus('The submission service did not answer in time. Nothing was published. Please check your connection and try again.', 'error');
-    }, 90000);
-    form.submit();
-  });
+    }, 180000);
+    document.body.appendChild(transport);
+    try {
+      transport.submit();
+    } catch (err) {
+      clearTimeout(timer);
+      window.removeEventListener('message', onMessage);
+      nonce = '';
+      restoreButton();
+      showStatus('That did not go through. Nothing was published. Please try again.', 'error');
+    }
+  }
   typeRadios.forEach(function (radio) { radio.addEventListener('change', applyType); });
   gameName.addEventListener('input', function () {
     try { localStorage.setItem(NAME_KEY, gameName.value.trim()); } catch (e) {}
@@ -153,6 +225,7 @@
     },
     hide: function () {
       active = false; hub.hidden = true;
+      if (nonce) return; // a submission is in flight: keep waiting so its result still shows
       clearTimeout(timer);
       window.removeEventListener('message', onMessage);
     }

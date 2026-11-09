@@ -143,6 +143,11 @@ function renderStatus() {
   document.getElementById('syncInfo').textContent =
     (s.playlists && s.playlists.length ? s.playlists.length + ' playlist(s) configured. ' : 'No playlists configured. ') +
     (s.syncTrigger ? 'Daily sync is ON.' : 'Daily sync is OFF.');
+  var set = s.settings || {};
+  if (set.folderId) document.getElementById('setFolder').value = set.folderId;
+  if (set.sheetId) document.getElementById('setSheet').value = set.sheetId;
+  if (set.capacityLimitMB) document.getElementById('setCap').value = set.capacityLimitMB;
+  if (set.repo) document.getElementById('setRepo').value = set.repo;
   if (s.playlists && s.playlists.length) {
     document.getElementById('setPlaylists').value = JSON.stringify(s.playlists, null, 2);
   }

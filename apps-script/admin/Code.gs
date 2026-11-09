@@ -259,6 +259,13 @@ function getStatus() {
       github: !!p.getProperty('GITHUB_TOKEN'),
       youtube: !!p.getProperty('YOUTUBE_API_KEY')
     },
+    // Non-secret settings so the Setup form can prefill them. Tokens/keys are never returned.
+    settings: {
+      folderId: p.getProperty('DRIVE_FOLDER_ID') || '',
+      sheetId: p.getProperty('SHEET_ID') || '',
+      capacityLimitMB: capacityLimitMB_(),
+      repo: repo_()
+    },
     countsError: countsError, repo: size, counts: counts,
     playlists: getPlaylists_(),
     syncTrigger: ScriptApp.getProjectTriggers().some(function (t) { return t.getHandlerFunction() === 'syncPlaylists'; }),
@@ -304,8 +311,11 @@ function saveSettings(settings) {
     p.setProperty('PLAYLISTS', JSON.stringify(parsed));
   }
   if (settings.capacityLimitMB !== undefined) p.setProperty('CAPACITY_LIMIT_MB', String(parseInt(settings.capacityLimitMB, 10) || 900));
-  if (settings.sheetId !== undefined) p.setProperty('SHEET_ID', String(settings.sheetId || ''));
-  if (settings.folderId !== undefined) p.setProperty('DRIVE_FOLDER_ID', String(settings.folderId || ''));
+  // Blank folder/Sheet fields keep the configured IDs (never wipe them).
+  var sheetId = String(settings.sheetId || '').trim();
+  var folderId = String(settings.folderId || '').trim();
+  if (sheetId) p.setProperty('SHEET_ID', sheetId);
+  if (folderId) p.setProperty('DRIVE_FOLDER_ID', folderId);
   if (settings.repo !== undefined) p.setProperty('REPO', String(settings.repo || REPO_DEFAULT));
   return getStatus();
 }
