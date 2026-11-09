@@ -36,8 +36,18 @@ in the Admin project's Script Properties — never in this repo, never in the br
      with **Contents: Read and write** only. (GitHub → Settings → Developer settings →
      Personal access tokens → Fine-grained tokens.) It is stored server-side and is
      never shown again.
-   - **YouTube API key** (optional) — fills in publish dates and durations for approved
-     video links and enables the optional playlist sync. Channel sync does not need it.
+   - **YouTube API key** (optional, recommended) — switches channel sync to the official
+     YouTube Data API, fills in publish dates and durations for approved video links, and
+     enables the optional playlist sync. Create it in Google Cloud Console (APIs & Services →
+     enable **YouTube Data API v3** → Credentials → Create credentials → API key). Restrict it:
+     **API restrictions → Restrict key → YouTube Data API v3** only. Leave application
+     restrictions at None — Apps Script calls come from Google servers with no fixed IP or
+     referrer, so IP/website restrictions would block it. Paste it only into this private
+     Admin screen: it is checked against the configured channels before saving (a failed
+     check keeps the previous key), stored in the Admin project's Script Properties, sent
+     only in the `X-goog-api-key` header, and never returned to the browser, logged or put in
+     the repo. Public data only — no OAuth or billing needed; daily sync uses a few quota
+     units of the free 10,000/day.
    - **Playlists** (optional, needs the API key) — JSON array of extra playlists, e.g.
      `[{"playlistId":"PL…","creatorId":"med","creator":"MED","member":"med","channel":"MED LAST Z","channelUrl":"https://www.youtube.com/@med.713"}]`.
    - **Storage safety limit** — default 900 MB. Publishing refuses above it (Pages
@@ -71,7 +81,15 @@ in the Admin project's Script Properties — never in this repo, never in the br
 - **YouTube links:** approval lists the video in `media.json` (deduplicated by video ID).
   Format is `short` only when the submitted URL was a `/shorts/` link; publish date and
   duration are filled in from the YouTube API when a key is configured.
-- **Channel sync:** every hour (or "Sync now") the script reads the public Videos and
+- **Channel sync, official API mode** (API key saved): once daily (or "Sync now")
+  `channels.list` returns each channel's uploads playlist, `playlistItems.list` reads every
+  page of it, and `videos.list` (batches of 50) gives each new ID's real title, owning
+  channel, publish date (`publishedAt`) and length. POW Ruthless: all uploads; MED: published
+  on or after 2026-10-10. Videos owned by another channel, live/upcoming or unavailable ones
+  are skipped. The API can't reliably identify Shorts, so new entries are `format: "video"`;
+  existing formats are kept. Nothing is scraped in this mode; an API error stops the sync
+  with a short message (no key or URL) and nothing is written.
+- **Channel sync, public mode** (no API key): once daily (or "Sync now") the script reads the public Videos and
   Shorts tabs (first page, up to 50 each) of the owner-trusted channels — MED
   (`UCJRuTu8UfGlM40IjvAc4N9Q`, uploads from 2026-10-10 on) and POW Ruthless
   (`UC-AlzeeDBHbfnrjjlpC-Gng`) by default, or the `CHANNELS` Script Property if set

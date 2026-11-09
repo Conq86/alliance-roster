@@ -109,8 +109,11 @@ remembered on their own device. Nothing goes public until the owner approves it.
   `fanart.json`: `{ "title", "creator", "description", "src": "fanart/<file>", "submissionId", "approved" }`.
 - **YouTube:** the 48 existing approved entries (18 MED, 30 POW Ruthless) are untouched.
   Individual submitted links go through the approval queue. The Admin script syncs the
-  owner-trusted MED and POW Ruthless channels once daily (public Videos + Shorts tabs, no API
-  key) around 9 AM script time. Each tab is read from the `/channel/<id>` URL, falling back
+  owner-trusted MED and POW Ruthless channels once daily around 9 AM script time. With a
+  YouTube API key saved in the private Admin settings it uses only the official YouTube Data
+  API (uploads playlist → video details; new entries are `format: "video"` with the API's
+  publish date; see `apps-script/README.md` for key setup). Without a key it reads the public
+  Videos + Shorts tabs as follows. Each tab is read from the `/channel/<id>` URL, falling back
   to the channel's `@handle` URL; either page must report the configured channel ID.
   POW Ruthless: every new upload on its own grid is added. MED: unknown uploads listed
   above the newest already-listed one in the same tab are added; ones below it only with a

@@ -58,7 +58,7 @@
       <button id="syncNow" type="button">Sync now</button>
       <button id="syncTrigger" type="button" class="ghost">Enable daily sync (9 AM)</button>
     </div>
-    <p class="muted">Sync reads the public Videos and Shorts tabs of the trusted creator channels listed above (no API key) and adds new uploads to media.json automatically, with the real upload date from each video's page. Videos already listed are never changed, duplicated or removed. If a channel can't be read, sync fails and nothing changes. Playlists in Settings are also synced when a YouTube API key is set. All other submissions still go through the approval queue above.</p>
+    <p class="muted">With a YouTube API key saved, sync uses only the official YouTube Data API (each channel's uploads playlist, then the real title, owner, publish date and length per video); new entries are listed as regular videos. Without a key it reads the public Videos and Shorts tabs of the trusted channels instead. New uploads are added to media.json automatically. Videos already listed are never changed, duplicated or removed. If a channel can't be read, sync fails and nothing changes. Playlists in Settings are also synced when a YouTube API key is set. All other submissions still go through the approval queue above.</p>
   </div>
 
   <h2>SETUP</h2>
@@ -74,7 +74,7 @@
           <label>GitHub token (fine-grained, Contents: read/write on Conq86/alliance-roster)
             <input id="setToken" type="password" placeholder="Leave blank to keep the saved token" autocomplete="off">
           </label>
-          <label>YouTube API key (optional — playlist sync + video details)
+          <label>YouTube API key (optional — official API sync; checked against the channels before saving)
             <input id="setYt" type="password" placeholder="Leave blank to keep the saved key" autocomplete="off">
           </label>
           <label>Storage safety limit (MB, Pages limit is 1024)
@@ -147,6 +147,7 @@ function renderStatus() {
           return '<b>' + esc(c.creatorId) + '</b> (' + esc(c.channelId) + (c.since ? ', uploads since ' + esc(c.since) : '') + ')';
         }).join(', ') : 'none')) + '<br>' +
     (s.playlists && s.playlists.length ? s.playlists.length + ' playlist(s) configured' + (s.configured && s.configured.youtube ? '' : ' (need a YouTube API key)') + '. ' : '') +
+    'Mode: <b>' + (s.syncMode === 'api' ? 'official YouTube API' : 'public channel pages (no API key)') + '</b>. ' +
     (s.syncTrigger ? 'Daily sync is <b>ON</b>.' : 'Daily sync is <b>OFF</b>.') +
     (last ? '<br>Last sync ' + esc(new Date(last.at).toLocaleString()) + ': ' + (last.ok ? '' : '<b>FAILED</b> — ') + esc(last.message) : '<br>Not synced yet.');
   var set = s.settings || {};

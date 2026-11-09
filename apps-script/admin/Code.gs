@@ -14,9 +14,10 @@
  *   GitHub Pages deploys it. The screen reports "approved — publishing" and offers a
  *   "Check live" button that confirms the file is actually serving.
  * - Unpublish removes the listing (and the published file) later.
- * - Daily YouTube channel sync (ordinary time trigger, not an AI run). Reads the
- *   public Videos and Shorts tabs of the owner-trusted creator channels (no API key)
- *   and publishes new uploads to media.json. Key-backed playlist sync stays optional.
+ * - Daily YouTube channel sync (ordinary time trigger, not an AI run) of the owner-trusted
+ *   creator channels, publishing new uploads to media.json. With YOUTUBE_API_KEY it uses
+ *   the official YouTube Data API only (no page scraping); without it, it reads the public
+ *   Videos and Shorts tabs. Key-backed playlist sync stays optional.
  *
  * Script Properties (Project Settings > Script Properties, or the Settings panel here):
  *   OWNER_EMAIL       — set automatically to the deploying account on first use.
@@ -24,7 +25,8 @@
  *                       Server-side only; never returned to the browser.
  *   DRIVE_FOLDER_ID / SHEET_ID — created by setupDrive() (same folder/Sheet the
  *                       Submissions project uses; paste the IDs into that project too).
- *   YOUTUBE_API_KEY   — optional, for playlist sync and video metadata.
+ *   YOUTUBE_API_KEY   — optional; switches channel sync to the official API, enables playlist
+ *                       sync and video metadata. Restrict it to YouTube Data API v3. Never returned.
  *   PLAYLISTS         — optional JSON array: [{playlistId, creatorId, creator, member, channel, channelUrl}].
  *   CHANNELS          — optional JSON array: [{channelId, creatorId, since?, creator?, member?, channel?, channelUrl?}].
  *                       When unset, TRUSTED_CHANNELS (MED, POW Ruthless) are synced.
@@ -210,18 +212,46 @@ function putJsonFile_(path, obj, message) {
 }
 
 // ---- YouTube Data API (only when a key is configured) ----
+// The key goes in the X-goog-api-key header, never in a URL. Errors never echo the key or URL.
+function ytApi_(method, params, key) {
+  var qs = Object.keys(params).filter(function (k) { return params[k] !== '' && params[k] != null; })
+    .map(function (k) { return k + '=' + encodeURIComponent(params[k]); }).join('&');
+  var res;
+  try {
+    res = UrlFetchApp.fetch('https://www.googleapis.com/youtube/v3/' + method + '?' + qs,
+      { muteHttpExceptions: true, headers: { 'X-goog-api-key': key } });
+  } catch (e) { throw new Error('YouTube API ' + method + ' request could not be sent.'); }
+  var code = res.getResponseCode(), data = null;
+  try { data = JSON.parse(res.getContentText()); } catch (e) {}
+  if (code !== 200 || !data) {
+    var err = (data && data.error) || {};
+    var reason = (err.errors && err.errors[0] && err.errors[0].reason) || err.status || '';
+    var msg = String(err.message || 'unexpected response').split(key).join('…').replace(/https?:\/\/\S+/g, '').slice(0, 200);
+    throw new Error('YouTube API ' + method + ' failed (HTTP ' + code + (reason ? ', ' + reason : '') + '): ' + msg);
+  }
+  return data;
+}
+
+// videos.list in batches of 50: id → {channelId, title, published, duration, live}.
+function ytVideos_(ids, key) {
+  var out = {};
+  for (var i = 0; i < ids.length; i += 50) {
+    var data = ytApi_('videos', { part: 'snippet,contentDetails', id: ids.slice(i, i + 50).join(','), maxResults: 50 }, key);
+    (data.items || []).forEach(function (it) {
+      var sn = it.snippet || {};
+      out[it.id] = {
+        channelId: sn.channelId, title: text_(sn.title, 300), published: String(sn.publishedAt || '').slice(0, 10),
+        duration: isoDuration_(it.contentDetails && it.contentDetails.duration), live: sn.liveBroadcastContent === 'live' || sn.liveBroadcastContent === 'upcoming'
+      };
+    });
+  }
+  return out;
+}
+
 function ytVideo_(videoId) {
   var key = props_().getProperty('YOUTUBE_API_KEY');
   if (!key) return null;
-  try {
-    var url = 'https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=' + encodeURIComponent(videoId) + '&key=' + encodeURIComponent(key);
-    var res = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
-    if (res.getResponseCode() !== 200) return null;
-    var data = JSON.parse(res.getContentText());
-    var it = (data.items || [])[0];
-    if (!it) return null;
-    return { published: (it.snippet.publishedAt || '').slice(0, 10), duration: isoDuration_(it.contentDetails.duration) };
-  } catch (e) { return null; }
+  try { return ytVideos_([videoId], key)[videoId] || null; } catch (e) { return null; }
 }
 
 function isoDuration_(iso) {
@@ -233,10 +263,7 @@ function isoDuration_(iso) {
 function ytPlaylistItems_(playlistId, key) {
   var out = [], token = '';
   do {
-    var url = 'https://www.googleapis.com/youtube/v3/playlistItems?part=snippet,contentDetails&maxResults=50&playlistId=' + encodeURIComponent(playlistId) + '&key=' + encodeURIComponent(key) + (token ? '&pageToken=' + encodeURIComponent(token) : '');
-    var res = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
-    if (res.getResponseCode() !== 200) throw new Error('YouTube API error (' + res.getResponseCode() + '): ' + res.getContentText().slice(0, 200));
-    var data = JSON.parse(res.getContentText());
+    var data = ytApi_('playlistItems', { part: 'snippet,contentDetails', maxResults: 50, playlistId: playlistId, pageToken: token }, key);
     (data.items || []).forEach(function (it) {
       var vid = it.contentDetails && it.contentDetails.videoId;
       if (!vid) return;
@@ -244,6 +271,20 @@ function ytPlaylistItems_(playlistId, key) {
     });
     token = data.nextPageToken || '';
   } while (token);
+  return out;
+}
+
+// channels.list for all configured channels at once: channelId → uploads playlist ID (as reported, never guessed).
+function ytUploadsPlaylists_(channels, key) {
+  var data = ytApi_('channels', { part: 'contentDetails,snippet', id: channels.map(function (c) { return c.channelId; }).join(','), maxResults: 50 }, key);
+  var out = {};
+  (data.items || []).forEach(function (it) {
+    var up = it.contentDetails && it.contentDetails.relatedPlaylists && it.contentDetails.relatedPlaylists.uploads;
+    if (up) out[it.id] = up;
+  });
+  channels.forEach(function (c) {
+    if (!out[c.channelId]) throw new Error('YouTube API: channel ' + (c.creatorId || '') + ' (' + c.channelId + ') was not found or has no uploads playlist.');
+  });
   return out;
 }
 
@@ -295,6 +336,7 @@ function getStatus() {
     playlists: getPlaylists_(),
     channels: (function () { try { return getChannels_(); } catch (e) { return { error: String(e.message) }; } })(),
     lastSync: (function () { try { return JSON.parse(props_().getProperty('LAST_SYNC') || 'null'); } catch (e) { return null; } })(),
+    syncMode: p.getProperty('YOUTUBE_API_KEY') ? 'api' : 'public',
     syncTrigger: ScriptApp.getProjectTriggers().some(function (t) { return t.getHandlerFunction() === 'syncPlaylists'; }),
     submitEndpointHint: 'Paste the Submissions web app URL into submit.js (SUBMIT_ENDPOINT) after deploying that project.'
   };
@@ -330,8 +372,14 @@ function saveSettings(settings) {
   requireOwner_();
   settings = settings || {};
   var p = props_();
+  var ytKey = String(settings.youtubeKey || '').trim();
+  // Check a new key against the configured channels before anything is saved; a failed check keeps the old key.
+  if (ytKey) {
+    try { ytUploadsPlaylists_(getChannels_(), ytKey); }
+    catch (e) { throw new Error('YouTube API key not saved (the previous key, if any, is unchanged). ' + e.message); }
+  }
   if (settings.githubToken) p.setProperty('GITHUB_TOKEN', String(settings.githubToken));
-  if (settings.youtubeKey) p.setProperty('YOUTUBE_API_KEY', String(settings.youtubeKey));
+  if (ytKey) p.setProperty('YOUTUBE_API_KEY', ytKey);
   if (settings.playlists !== undefined) {
     var parsed = JSON.parse(settings.playlists || '[]');
     if (!Array.isArray(parsed)) throw new Error('Playlists must be a JSON array.');
@@ -766,6 +814,51 @@ function syncChannels_(media, known) {
   return { added: added, notes: notes, channels: plans.length };
 }
 
+// Official API mode (YOUTUBE_API_KEY set): uploads playlist from channels.list, every page of
+// playlistItems, then videos.list for the real title, owner, publish date and length. No scraping.
+function syncChannelsApi_(media, known, key) {
+  var added = [], notes = [], channels = getChannels_();
+  channels.forEach(function (cfg) { if (!cfg.channelId || !cfg.creatorId) throw new Error('Each channel needs channelId and creatorId.'); });
+  var uploads = ytUploadsPlaylists_(channels, key);
+  // Read every channel first; any API error aborts before media.json changes.
+  var plans = channels.map(function (cfg) {
+    var group = null;
+    media.videos.forEach(function (g) { if (g.creatorId === cfg.creatorId) group = g; });
+    if (!group && !cfg.creator) throw new Error('media.json has no creator "' + cfg.creatorId + '" for channel ' + cfg.channelId + '. Nothing was changed.');
+    var ids = [], seen = {};
+    ytPlaylistItems_(uploads[cfg.channelId], key).forEach(function (it) {
+      if (!known[it.youtubeId] && !seen[it.youtubeId]) { seen[it.youtubeId] = true; ids.push(it.youtubeId); }
+    });
+    return { cfg: cfg, group: group, ids: ids, meta: ids.length ? ytVideos_(ids, key) : {} };
+  });
+  plans.forEach(function (plan) {
+    var cfg = plan.cfg;
+    plan.ids.forEach(function (id) {
+      if (known[id]) return;
+      var meta = plan.meta[id];
+      if (!meta || !/^\d{4}-\d{2}-\d{2}$/.test(meta.published)) return; // private, deleted or not yet processed: retried next run
+      if (meta.channelId !== cfg.channelId) { notes.push(id + ' skipped (owned by another channel)'); return; }
+      if (meta.live) return;
+      if (cfg.since && meta.published < cfg.since) return;
+      if (!plan.group) {
+        plan.group = { creatorId: cfg.creatorId, creator: cfg.creator, member: cfg.member || cfg.creatorId, channel: cfg.channel || '', channelUrl: cfg.channelUrl || '', items: [] };
+        media.videos.push(plan.group);
+      }
+      // The API can't reliably tell Shorts apart, so new entries default to "video".
+      var item = { type: 'youtube', youtubeId: id, title: meta.title || id, format: 'video', published: meta.published };
+      if (meta.duration) item.duration = meta.duration;
+      item.channelSync = true;
+      // Insert newest first without reordering existing entries.
+      var items = plan.group.items = plan.group.items || [], at = 0;
+      while (at < items.length && String(items[at].published || '') > item.published) at++;
+      items.splice(at, 0, item);
+      known[id] = true;
+      added.push(id);
+    });
+  });
+  return { added: added, notes: notes, channels: plans.length };
+}
+
 // Optional key-backed mode: custom playlists configured in Settings.
 function syncPlaylistItems_(media, known, key, lists) {
   var added = [];
@@ -806,16 +899,17 @@ function syncPlaylists(e) {
     if (!media || !Array.isArray(media.videos)) throw new Error('media.json could not be read. Nothing was changed.');
     var known = {};
     media.videos.forEach(function (g) { (g.items || []).forEach(function (it) { if (it.youtubeId) known[it.youtubeId] = true; }); });
-    var ch = syncChannels_(media, known);
-    var added = ch.added;
     var key = props_().getProperty('YOUTUBE_API_KEY'), lists = getPlaylists_();
+    var ch = key ? syncChannelsApi_(media, known, key) : syncChannels_(media, known);
+    var added = ch.added;
     if (key && lists.length) added = added.concat(syncPlaylistItems_(media, known, key, lists));
     var notes = ch.notes.length ? ' Notes: ' + ch.notes.join(' | ') : '';
+    var mode = key ? ' (official YouTube API)' : ' (public channel pages)';
     if (!added.length) {
-      result = { ok: true, added: 0, message: 'Checked ' + ch.channels + ' channel(s): no new uploads.' + notes };
+      result = { ok: true, added: 0, message: 'Checked ' + ch.channels + ' channel(s)' + mode + ': no new uploads.' + notes };
     } else {
       var commit = putJsonFile_('media.json', media, 'Sync YouTube channels: add ' + added.length + ' video(s): ' + added.join(', '));
-      result = { ok: true, added: added.length, ids: added, commit: commit.commit.sha, message: added.length + ' new video(s) added to media.json: ' + added.join(', ') + '.' + notes };
+      result = { ok: true, added: added.length, ids: added, commit: commit.commit.sha, message: added.length + ' new video(s) added to media.json' + mode + ': ' + added.join(', ') + '.' + notes };
     }
   } catch (err) {
     result = { ok: false, message: String(err.message) };
