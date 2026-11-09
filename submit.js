@@ -4,7 +4,7 @@
   // The form stays disabled until SUBMIT_ENDPOINT is set AND the endpoint answers a ping.
   // Uploads go to a private Drive folder; nothing here publishes anything.
   // The success message is shown ONLY when the backend answers "ok" after storing the file.
-  var SUBMIT_ENDPOINT = ''; // Owner: paste the deployed Submissions web app URL here (https://script.google.com/macros/s/.../exec)
+  var SUBMIT_ENDPOINT = 'https://script.google.com/macros/s/AKfycby-JgLxCeCKyb6YGkafYtWShhsfaH7LqrfZDt-Nr6o3cyb8XbeIhUBV3gitihr-8N29gg/exec'; // Owner: paste the deployed Submissions web app URL here (https://script.google.com/macros/s/.../exec)
   var MAX_BYTES = 25 * 1024 * 1024;
   var NAME_KEY = 'pow713.gameName';
   var YOUTUBE_URL = /^(?:https?:\/\/)?(?:www\.|m\.)?(?:youtube\.com\/(?:watch\?[^#]*v=|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{11})(?:[?&#].*)?$/;

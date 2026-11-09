@@ -234,7 +234,7 @@ function doGet() {
   requireOwner_();
   return HtmlService.createTemplateFromFile('Admin').evaluate()
     .setTitle('POW 713 — Approvals')
-    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.DENY);
+    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.DEFAULT);
 }
 
 // ---- Admin actions (called from Admin.html via google.script.run) ----
