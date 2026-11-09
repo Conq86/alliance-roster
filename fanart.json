@@ -1,3 +1,12 @@
 {
-  "art": []
+  "art": [
+    {
+      "title": "Deployment test — remove after verification",
+      "creator": "Conq86",
+      "description": "Temporary owner-authorized deployment test.",
+      "src": "fanart/406b1742-deployment-test-remove-after-verification.png",
+      "submissionId": "406b1742-019a-4931-8d93-a82310b5b6ec",
+      "approved": "2026-11-09"
+    }
+  ]
 }
