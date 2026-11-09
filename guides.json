@@ -12,7 +12,250 @@
     {
       "id": "s3",
       "label": "Season 3",
-      "title": "Dinosaur Origin"
+      "title": "Dinosaur Origin",
+      "tagline": "The POW 713 Alliance Warbook: 37 pages covering every event, every priority, and how we get ahead.",
+      "updated": "2026-11-09",
+      "sources": [
+        {
+          "label": "LastZ.GG Season 3 guide",
+          "url": "https://lastz.gg/guides/season-3-dinosaur-origin"
+        },
+        {
+          "label": "Alberta.ca: Alberta's new time system (ABT)",
+          "url": "https://www.alberta.ca/albertas-new-time-system-abt"
+        }
+      ],
+      "book": {
+        "label": "Warbook",
+        "pdf": "guides/season-3/warbook/pow713-s3-warbook.pdf",
+        "pdfLabel": "Download the warbook (PDF, 6 MB)",
+        "width": 1280,
+        "height": 1920,
+        "pages": [
+          {
+            "title": "Season 3: Dinosaur Origin",
+            "chapter": "Cover",
+            "image": "guides/season-3/warbook/pages/001.webp",
+            "thumb": "guides/season-3/warbook/thumbs/001.webp"
+          },
+          {
+            "title": "The Warbook: Mission Index",
+            "chapter": "Navigation",
+            "image": "guides/season-3/warbook/pages/002.webp",
+            "thumb": "guides/season-3/warbook/thumbs/002.webp"
+          },
+          {
+            "title": "The 13-Week Campaign",
+            "chapter": "Mission Intelligence",
+            "image": "guides/season-3/warbook/pages/003.webp",
+            "thumb": "guides/season-3/warbook/thumbs/003.webp"
+          },
+          {
+            "title": "The 13-Week Roadmap",
+            "chapter": "Campaign Timeline",
+            "image": "guides/season-3/warbook/pages/004.webp",
+            "thumb": "guides/season-3/warbook/thumbs/004.webp"
+          },
+          {
+            "title": "First 72 Hours",
+            "chapter": "Early Game",
+            "image": "guides/season-3/warbook/pages/005.webp",
+            "thumb": "guides/season-3/warbook/thumbs/005.webp"
+          },
+          {
+            "title": "The First-Kill Trap",
+            "chapter": "Launch Window",
+            "image": "guides/season-3/warbook/pages/006.webp",
+            "thumb": "guides/season-3/warbook/thumbs/006.webp"
+          },
+          {
+            "title": "The Season Economy",
+            "chapter": "Supply Lines",
+            "image": "guides/season-3/warbook/pages/007.webp",
+            "thumb": "guides/season-3/warbook/thumbs/007.webp"
+          },
+          {
+            "title": "Buildings: What to Rush",
+            "chapter": "Tech Tree",
+            "image": "guides/season-3/warbook/pages/008.webp",
+            "thumb": "guides/season-3/warbook/thumbs/008.webp"
+          },
+          {
+            "title": "Your Daily Field Routine",
+            "chapter": "Personal Orders",
+            "image": "guides/season-3/warbook/pages/009.webp",
+            "thumb": "guides/season-3/warbook/thumbs/009.webp"
+          },
+          {
+            "title": "Dinosaur Hunting",
+            "chapter": "Hunter Doctrine",
+            "image": "guides/season-3/warbook/pages/010.webp",
+            "thumb": "guides/season-3/warbook/thumbs/010.webp"
+          },
+          {
+            "title": "The Weekly Battle Rhythm",
+            "chapter": "Operations Clock",
+            "image": "guides/season-3/warbook/pages/011.webp",
+            "thumb": "guides/season-3/warbook/thumbs/011.webp"
+          },
+          {
+            "title": "Double-Dip Your Upgrades",
+            "chapter": "Scoring Discipline",
+            "image": "guides/season-3/warbook/pages/012.webp",
+            "thumb": "guides/season-3/warbook/thumbs/012.webp"
+          },
+          {
+            "title": "Don’t Miss the Spawn",
+            "chapter": "Time Intelligence",
+            "image": "guides/season-3/warbook/pages/013.webp",
+            "thumb": "guides/season-3/warbook/thumbs/013.webp"
+          },
+          {
+            "title": "Trade Hub Takeover",
+            "chapter": "Contested Objectives",
+            "image": "guides/season-3/warbook/pages/014.webp",
+            "thumb": "guides/season-3/warbook/thumbs/014.webp"
+          },
+          {
+            "title": "The Trade Hub Shop",
+            "chapter": "Diamond Economy",
+            "image": "guides/season-3/warbook/pages/015.webp",
+            "thumb": "guides/season-3/warbook/thumbs/015.webp"
+          },
+          {
+            "title": "Ancient Dino",
+            "chapter": "Sunday World Boss",
+            "image": "guides/season-3/warbook/pages/016.webp",
+            "thumb": "guides/season-3/warbook/thumbs/016.webp"
+          },
+          {
+            "title": "Five Beasts. Five Sundays.",
+            "chapter": "Boss Intelligence",
+            "image": "guides/season-3/warbook/pages/017.webp",
+            "thumb": "guides/season-3/warbook/thumbs/017.webp"
+          },
+          {
+            "title": "Clash for Glory",
+            "chapter": "Alliance War",
+            "image": "guides/season-3/warbook/pages/018.webp",
+            "thumb": "guides/season-3/warbook/thumbs/018.webp"
+          },
+          {
+            "title": "Win the War Before It Starts",
+            "chapter": "Clash Operations",
+            "image": "guides/season-3/warbook/pages/019.webp",
+            "thumb": "guides/season-3/warbook/thumbs/019.webp"
+          },
+          {
+            "title": "Volcano War",
+            "chapter": "State Warfare",
+            "image": "guides/season-3/warbook/pages/020.webp",
+            "thumb": "guides/season-3/warbook/thumbs/020.webp"
+          },
+          {
+            "title": "Volcano Officer Playbook",
+            "chapter": "State Conflict",
+            "image": "guides/season-3/warbook/pages/021.webp",
+            "thumb": "guides/season-3/warbook/thumbs/021.webp"
+          },
+          {
+            "title": "City Control + Officers",
+            "chapter": "Territory Command",
+            "image": "guides/season-3/warbook/pages/022.webp",
+            "thumb": "guides/season-3/warbook/thumbs/022.webp"
+          },
+          {
+            "title": "City Income Is the Game",
+            "chapter": "Territory Strategy",
+            "image": "guides/season-3/warbook/pages/023.webp",
+            "thumb": "guides/season-3/warbook/thumbs/023.webp"
+          },
+          {
+            "title": "Rescue + Egg Defense",
+            "chapter": "Alliance Survival",
+            "image": "guides/season-3/warbook/pages/024.webp",
+            "thumb": "guides/season-3/warbook/thumbs/024.webp"
+          },
+          {
+            "title": "Dino Rescue",
+            "chapter": "Sunday Co-Op",
+            "image": "guides/season-3/warbook/pages/025.webp",
+            "thumb": "guides/season-3/warbook/thumbs/025.webp"
+          },
+          {
+            "title": "Dino Egg Defense",
+            "chapter": "Alliance Defence",
+            "image": "guides/season-3/warbook/pages/026.webp",
+            "thumb": "guides/season-3/warbook/thumbs/026.webp"
+          },
+          {
+            "title": "Hatch + Fossil Album",
+            "chapter": "Permanent Vs Temporary",
+            "image": "guides/season-3/warbook/pages/027.webp",
+            "thumb": "guides/season-3/warbook/thumbs/027.webp"
+          },
+          {
+            "title": "Hatch of Legends",
+            "chapter": "Companion System",
+            "image": "guides/season-3/warbook/pages/028.webp",
+            "thumb": "guides/season-3/warbook/thumbs/028.webp"
+          },
+          {
+            "title": "The Fossil Album",
+            "chapter": "Collection System",
+            "image": "guides/season-3/warbook/pages/029.webp",
+            "thumb": "guides/season-3/warbook/thumbs/029.webp"
+          },
+          {
+            "title": "Bio Institute Shop",
+            "chapter": "Weekend Market",
+            "image": "guides/season-3/warbook/pages/030.webp",
+            "thumb": "guides/season-3/warbook/thumbs/030.webp"
+          },
+          {
+            "title": "Specialization + Heroes",
+            "chapter": "Power Engineering",
+            "image": "guides/season-3/warbook/pages/031.webp",
+            "thumb": "guides/season-3/warbook/thumbs/031.webp"
+          },
+          {
+            "title": "Level Swap Without Regret",
+            "chapter": "Hero System",
+            "image": "guides/season-3/warbook/pages/032.webp",
+            "thumb": "guides/season-3/warbook/thumbs/032.webp"
+          },
+          {
+            "title": "Spend Smart or Spend Nothing",
+            "chapter": "Optional Purchases",
+            "image": "guides/season-3/warbook/pages/033.webp",
+            "thumb": "guides/season-3/warbook/thumbs/033.webp"
+          },
+          {
+            "title": "Ranking + Season End",
+            "chapter": "Scoreboard",
+            "image": "guides/season-3/warbook/pages/034.webp",
+            "thumb": "guides/season-3/warbook/thumbs/034.webp"
+          },
+          {
+            "title": "Clear Your Reward Claims",
+            "chapter": "Final Week",
+            "image": "guides/season-3/warbook/pages/035.webp",
+            "thumb": "guides/season-3/warbook/thumbs/035.webp"
+          },
+          {
+            "title": "The Alliance Orders",
+            "chapter": "Pow 713 Command",
+            "image": "guides/season-3/warbook/pages/036.webp",
+            "thumb": "guides/season-3/warbook/thumbs/036.webp"
+          },
+          {
+            "title": "Read Before You Raid",
+            "chapter": "Evidence / Local Rules",
+            "image": "guides/season-3/warbook/pages/037.webp",
+            "thumb": "guides/season-3/warbook/thumbs/037.webp"
+          }
+        ]
+      }
     },
     {
       "id": "s4",

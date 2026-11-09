@@ -90,6 +90,8 @@ The **Guides** tab (`?view=guides`) has one sub-tab per season, taken from `guid
 - A section has `id`, `heading` and any of: `intro`, `stats` (`{ value, label }`), `flow` (+ `flowLabel`), `list`, `steps` (`{ title, tag?, text }` + `stepsLabel`), `cards` (`{ title, tag?, tone?: "warn", lines }`), `table` (`{ columns, rows, highlightLast? }`) and `note`. A list/card line or note is a string or `{ "lead": "bold gold start", "text": "rest" }`. Everything renders as plain text.
 - Adding or editing a guide is a manifest edit (plus any download files in `guides/<season>/`). Commit to `main` and reload once Pages succeeds.
 - Guides are community-sourced; have them checked for accuracy before publishing.
+- A season can also have an illustrated `book` (a page-by-page reader): `{ "label", "pdf", "pdfLabel", "width", "height", "pages": [{ "title", "chapter", "image", "thumb" }] }`, with files under `guides/<season>/`. Pages lazy-load; a contents grid, a sticky previous/jump/next bar and `&page=N` deep links handle navigation, and each page opens full size in a new tab for zooming. When a season has both a `book` and `sections`, readers switch between **Warbook** and **Text guide** (`&mode=text`).
+- Season 3's warbook (`guides/season-3/warbook/`: 37 page images at 1280×1920, 37 thumbnails and the 6 MB PDF) is the owner's ChatGPT-made "Cinematic Warbook" pack, published unchanged. The PDF is byte-identical to the Drive original.
 
 ## Submissions & approvals
 Members submit from the **Submit** tab — no account, no Google sign-in. They pick
