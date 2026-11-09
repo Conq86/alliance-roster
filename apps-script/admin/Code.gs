@@ -566,22 +566,48 @@ function ytPageHint_(html) {
   var title = t ? t[1].replace(/\s+/g, ' ').trim().slice(0, 80) : '(no title)';
   var kind = /consent\.(youtube|google)\.com|Before you continue/i.test(html) ? 'consent page'
     : /not a bot|unusual traffic|\/sorry\/|captcha/i.test(html) ? 'bot check page' : 'other page';
-  return 'title "' + title + '", ' + kind + ', ' + html.length + ' chars';
+  var at = html.indexOf('ytInitialData');
+  var near = at < 0 ? 'ytInitialData marker absent'
+    : 'ytInitialData at ' + at + ': ' + JSON.stringify(html.slice(Math.max(0, at - 100), at + 113).replace(/\s+/g, ' '));
+  return 'title "' + title + '", ' + kind + ', ' + html.length + ' chars, ' + near;
 }
 
-// Pulls a JSON object assigned in a page script (e.g. var ytInitialData = {...};).
+// Pulls a JSON object assigned in a page script: var/let/const/bare/window.x/window["x"] = {...}
+// or = '\x7b...' (JS-escaped string). Returns null if absent or unparseable.
 function ytJson_(html, name) {
-  var m = new RegExp('(?:var\\s+|window\\[["\']?)' + name + '(?:["\']?\\])?\\s*=\\s*\\{').exec(html);
-  if (!m) return null;
-  var start = m.index + m[0].length - 1, depth = 0, inStr = false;
-  for (var i = start; i < html.length; i++) {
-    var c = html.charAt(i);
-    if (inStr) { if (c === '\\') i++; else if (c === '"') inStr = false; }
-    else if (c === '"') inStr = true;
-    else if (c === '{') depth++;
-    else if (c === '}' && --depth === 0) return JSON.parse(html.slice(start, i + 1));
+  var re = new RegExp('(?:^|[^\\w$.\'"])(?:(?:var|let|const)\\s+|window\\.|window\\[["\'])?' + name + '(?:["\']\\])?\\s*=\\s*([{\'])', 'g');
+  var m;
+  while ((m = re.exec(html))) {
+    var start = m.index + m[0].length - 1, q = m[1] === '{' ? '"' : '\'', depth = 0, inStr = q === '\'';
+    for (var i = m[1] === '{' ? start : start + 1; i < html.length; i++) {
+      var c = html.charAt(i);
+      if (inStr) {
+        if (c === '\\') i++;
+        else if (c === q) {
+          if (q === '\'') return ytParse_(ytUnescape_(html.slice(start + 1, i)));
+          inStr = false;
+        }
+      }
+      else if (c === '"') inStr = true;
+      else if (c === '{') depth++;
+      else if (c === '}' && --depth === 0) return ytParse_(html.slice(start, i + 1));
+    }
   }
   return null;
+}
+
+// JSON.parse without letting a huge payload end up in an error message.
+function ytParse_(s) {
+  try { return JSON.parse(s); } catch (e) { return null; }
+}
+
+// Decodes a JS single-quoted string body (\xHH, \uHHHH, \', \/ ...) into plain text.
+function ytUnescape_(s) {
+  return s.replace(/\\(x([0-9a-fA-F]{2})|u([0-9a-fA-F]{4})|([\s\S]))/g, function (_, all, x, u, ch) {
+    if (x) return String.fromCharCode(parseInt(x, 16));
+    if (u) return String.fromCharCode(parseInt(u, 16));
+    return ch === 'n' ? '\n' : ch === 't' ? '\t' : ch === 'r' ? '\r' : ch;
+  });
 }
 
 // Newest-first uploads from one tab ('videos' or 'shorts') of exactly this channel.
