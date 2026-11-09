@@ -551,9 +551,22 @@ function getChannels_() {
 }
 
 function ytFetch_(url) {
-  var res = UrlFetchApp.fetch(url, { muteHttpExceptions: true, followRedirects: true, headers: { 'Accept-Language': 'en-US,en;q=0.9' } });
+  var res = UrlFetchApp.fetch(url, { muteHttpExceptions: true, followRedirects: true, headers: {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    'Accept-Language': 'en-US,en;q=0.9'
+  } });
   if (res.getResponseCode() !== 200) throw new Error(url + ' returned HTTP ' + res.getResponseCode());
   return res.getContentText();
+}
+
+// Short description of a page that lacked ytInitialData, for the sync error message.
+function ytPageHint_(html) {
+  var t = /<title[^>]*>([\s\S]*?)<\/title>/i.exec(html);
+  var title = t ? t[1].replace(/\s+/g, ' ').trim().slice(0, 80) : '(no title)';
+  var kind = /consent\.(youtube|google)\.com|Before you continue/i.test(html) ? 'consent page'
+    : /not a bot|unusual traffic|\/sorry\/|captcha/i.test(html) ? 'bot check page' : 'other page';
+  return 'title "' + title + '", ' + kind + ', ' + html.length + ' chars';
 }
 
 // Pulls a JSON object assigned in a page script (e.g. var ytInitialData = {...};).
@@ -573,8 +586,9 @@ function ytJson_(html, name) {
 
 // Newest-first uploads from one tab ('videos' or 'shorts') of exactly this channel.
 function ytChannelTab_(channelId, tab) {
-  var data = ytJson_(ytFetch_('https://www.youtube.com/channel/' + channelId + '/' + tab + '?hl=en'), 'ytInitialData');
-  if (!data) throw new Error(tab + ': page data not found');
+  var html = ytFetch_('https://www.youtube.com/channel/' + channelId + '/' + tab + '?hl=en&gl=US');
+  var data = ytJson_(html, 'ytInitialData');
+  if (!data) throw new Error(tab + ': page data not found (' + ytPageHint_(html) + ')');
   var meta = data.metadata && data.metadata.channelMetadataRenderer;
   if (!meta || meta.externalId !== channelId) throw new Error(tab + ': page is not channel ' + channelId);
   var grid = null;
@@ -607,7 +621,7 @@ function ytChannelTab_(channelId, tab) {
 // Real upload date, length and owning channel from the video's own watch page.
 function ytWatchMeta_(videoId) {
   try {
-    var p = ytJson_(ytFetch_('https://www.youtube.com/watch?v=' + videoId + '&hl=en'), 'ytInitialPlayerResponse');
+    var p = ytJson_(ytFetch_('https://www.youtube.com/watch?v=' + videoId + '&hl=en&gl=US'), 'ytInitialPlayerResponse');
     var v = p && p.videoDetails, mf = p && p.microformat && p.microformat.playerMicroformatRenderer;
     if (!v || !mf || v.videoId !== videoId) return null;
     var published = String(mf.publishDate || mf.uploadDate || '').slice(0, 10);
