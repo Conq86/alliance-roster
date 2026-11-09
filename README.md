@@ -89,7 +89,7 @@ The **Guides** tab (`?view=guides`) has one sub-tab per season, taken from `guid
 - Each season: `id` (`a-z 0-9 - _`), `label`, optional `title`, `tagline`, `updated` (`YYYY-MM-DD`), `downloads` (`{ "label", "src": "guides/..." }`, PDF/PPTX/images only), `sources` (`{ "label", "url": "https://..." }`) and `sections`.
 - A section has `id`, `heading` and any of: `intro`, `stats` (`{ value, label }`), `flow` (+ `flowLabel`), `list`, `steps` (`{ title, tag?, text }` + `stepsLabel`), `cards` (`{ title, tag?, tone?: "warn", lines }`), `table` (`{ columns, rows, highlightLast? }`) and `note`. A list/card line or note is a string or `{ "lead": "bold gold start", "text": "rest" }`. Everything renders as plain text.
 - Adding or editing a guide is a manifest edit (plus any download files in `guides/<season>/`). Commit to `main` and reload once Pages succeeds.
-- Season 3 (Dinosaur Origin) is community-sourced from fan guides (linked at the bottom of the guide), not official patch notes. Its last section lists the points that differ between sources.
+- Guides are community-sourced; have them checked for accuracy before publishing.
 
 ## Submissions & approvals
 Members submit from the **Submit** tab — no account, no Google sign-in. They pick
