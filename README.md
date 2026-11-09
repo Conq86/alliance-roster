@@ -110,9 +110,16 @@ remembered on their own device. Nothing goes public until the owner approves it.
 - **YouTube:** the 48 existing approved entries (18 MED, 30 POW Ruthless) are untouched.
   Individual submitted links go through the approval queue. The Admin script syncs the
   owner-trusted MED and POW Ruthless channels once daily (public Videos + Shorts tabs, no API
-  key; MED only from 2026-10-10 on) and publishes new uploads with their real upload
-  date. Sync deduplicates by video ID, never changes or removes entries, and fails
-  without writing anything if a channel can't be read.
+  key) around 9 AM script time. Each tab is read from the `/channel/<id>` URL, falling back
+  to the channel's `@handle` URL; either page must report the configured channel ID.
+  POW Ruthless: every new upload on its own grid is added. MED: unknown uploads listed
+  above the newest already-listed one in the same tab are added; ones below it only with a
+  real upload date on or after 2026-10-10 (no old backlog). The real upload date and length
+  come from the watch page when YouTube returns them; otherwise the entry has no `published`
+  date (it is never guessed), gets `discoveredAt`, and is placed in the tab's source order
+  just above the already-listed entries. Videos whose watch page names another owner are
+  skipped. Sync deduplicates by video ID, never changes or removes entries, notes a tab that
+  failed, and fails without writing anything if both tabs of a channel can't be read.
 
 ## Rendering
 The shared wheel uses a flat projection of its circular rotation, hides rear cards, and changes depth ordering only at card crossings (reusing the approach from PR #3). It avoids intersecting CSS 3D surfaces and permanent GPU promotion of every card. Images are loaded/decoded two at a time near the front, with dark loading placeholders. The rotation remains one turn per 110 seconds. Android-specific flashing still requires an actual phone check; DOM checks cannot verify a GPU/compositor result.

@@ -538,8 +538,8 @@ function checkLive(path) {
 // approval queue (owner-authorized). Everything else still needs approval. MED uploads
 // before 2026-10-10 were never approved, so that backlog is not imported.
 var TRUSTED_CHANNELS = [
-  { channelId: 'UCJRuTu8UfGlM40IjvAc4N9Q', creatorId: 'med', since: '2026-10-10' },
-  { channelId: 'UC-AlzeeDBHbfnrjjlpC-Gng', creatorId: 'ruthless' }
+  { channelId: 'UCJRuTu8UfGlM40IjvAc4N9Q', creatorId: 'med', since: '2026-10-10', channelUrl: 'https://www.youtube.com/@med.713' },
+  { channelId: 'UC-AlzeeDBHbfnrjjlpC-Gng', creatorId: 'ruthless', channelUrl: 'https://www.youtube.com/@powruthless' }
 ];
 
 function getChannels_() {
@@ -635,8 +635,19 @@ function ytGridItems_(content) {
 }
 
 // Newest-first uploads from one tab ('videos' or 'shorts') of exactly this channel.
-function ytChannelTab_(channelId, tab) {
-  var html = ytFetch_('https://www.youtube.com/channel/' + channelId + '/' + tab + '?hl=en&gl=US');
+// Tries the canonical /channel/<id> URL, then the @handle URL if that page is wrong or has no grid.
+// Either page must still report this channel's externalId.
+function ytChannelTab_(channelId, handleUrl, tab) {
+  try { return ytChannelTabAt_('https://www.youtube.com/channel/' + channelId, channelId, tab); }
+  catch (e) {
+    if (!/^https:\/\/www\.youtube\.com\/@[\w.-]+$/.test(handleUrl || '')) throw e;
+    try { return ytChannelTabAt_(handleUrl, channelId, tab); }
+    catch (e2) { throw new Error(e.message + '; handle URL: ' + e2.message); }
+  }
+}
+
+function ytChannelTabAt_(base, channelId, tab) {
+  var html = ytFetch_(base + '/' + tab + '?hl=en&gl=US');
   var data = ytJson_(html, 'ytInitialData');
   if (!data) throw new Error(tab + ': page data not found (' + ytPageHint_(html) + ')');
   var meta = data.metadata && data.metadata.channelMetadataRenderer;
@@ -703,7 +714,7 @@ function syncChannels_(media, known) {
     if (!group && !cfg.creator) throw new Error('media.json has no creator "' + cfg.creatorId + '" for channel ' + cfg.channelId + '. Nothing was changed.');
     var entries = [], errors = [];
     ['videos', 'shorts'].forEach(function (tab) {
-      try { entries = entries.concat(ytChannelTab_(cfg.channelId, tab)); }
+      try { entries = entries.concat(ytChannelTab_(cfg.channelId, cfg.channelUrl || (group && group.channelUrl), tab)); }
       catch (e) { errors.push(e.message); }
     });
     if (!entries.length) throw new Error('Channel ' + cfg.creatorId + ' (' + cfg.channelId + '): no usable uploads on Videos or Shorts (' + (errors.join('; ') || 'both tabs empty') + '). Nothing was changed.');
@@ -711,25 +722,43 @@ function syncChannels_(media, known) {
     return { cfg: cfg, group: group, entries: entries };
   });
   plans.forEach(function (plan) {
-    var cfg = plan.cfg, older = {};
+    var cfg = plan.cfg, older = {}, frontier = {}, passed = {}, prev = {};
+    // First already-listed ID per tab: unknown uploads above it are new since the curated list.
+    plan.entries.forEach(function (it) { if (known[it.youtubeId] && !frontier[it.format]) frontier[it.format] = it.youtubeId; });
     plan.entries.forEach(function (it) {
-      if (known[it.youtubeId] || older[it.format]) return;
+      if (known[it.youtubeId]) { passed[it.format] = true; return; }
+      if (older[it.format]) return;
+      // Watch pages often lack player data; the verified channel grid already establishes ownership.
       var meta = ytWatchMeta_(it.youtubeId);
-      if (!meta) { notes.push(it.youtubeId + ' skipped (upload date unavailable; retried next run)'); return; }
-      if (meta.channelId !== cfg.channelId) { known[it.youtubeId] = true; notes.push(it.youtubeId + ' skipped (owned by another channel)'); return; }
-      if (meta.live) return;
-      if (cfg.since && meta.published < cfg.since) { older[it.format] = true; return; } // tabs are newest first: the rest is older backlog
+      if (meta && meta.channelId !== cfg.channelId) { known[it.youtubeId] = true; notes.push(it.youtubeId + ' skipped (owned by another channel)'); return; }
+      if (meta && meta.live) return;
+      if (cfg.since) {
+        // Above the frontier: new regardless of date. Below it (or no frontier): needs a real date >= since.
+        var aboveFrontier = frontier[it.format] && !passed[it.format];
+        if (!meta && !aboveFrontier) { notes.push(it.youtubeId + ' skipped (upload date unavailable; retried next run)'); return; }
+        if (meta && !aboveFrontier && meta.published < cfg.since) { older[it.format] = true; return; } // tabs are newest first: the rest is older backlog
+      }
       if (!plan.group) {
         plan.group = { creatorId: cfg.creatorId, creator: cfg.creator, member: cfg.member || cfg.creatorId, channel: cfg.channel || '', channelUrl: cfg.channelUrl || '', items: [] };
         media.videos.push(plan.group);
       }
-      var item = { type: 'youtube', youtubeId: it.youtubeId, title: it.title || meta.title || it.youtubeId, format: it.format, published: meta.published };
-      if (meta.duration) item.duration = meta.duration;
+      var item = { type: 'youtube', youtubeId: it.youtubeId, title: it.title || (meta && meta.title) || it.youtubeId, format: it.format };
+      if (meta) item.published = meta.published; else item.discoveredAt = new Date().toISOString(); // never guess a date
+      if (meta && meta.duration) item.duration = meta.duration;
       item.channelSync = true;
-      // Insert newest first without reordering existing entries.
-      var items = plan.group.items = plan.group.items || [], at = 0;
-      while (at < items.length && String(items[at].published || '') > item.published) at++;
+      var items = plan.group.items = plan.group.items || [], at = 0, i;
+      if (item.published) {
+        // Insert newest first without reordering existing entries.
+        while (at < items.length && String(items[at].published || '') > item.published) at++;
+      } else {
+        // Undated: right after this tab's previous insert, else just before its frontier entry, else at the top.
+        for (i = 0; i < items.length; i++) {
+          if (prev[it.format] && items[i] === prev[it.format]) { at = i + 1; break; }
+          if (!prev[it.format] && items[i].youtubeId === frontier[it.format]) { at = i; break; }
+        }
+      }
       items.splice(at, 0, item);
+      prev[it.format] = item;
       known[it.youtubeId] = true;
       added.push(it.youtubeId);
     });
