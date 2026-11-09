@@ -14,7 +14,7 @@
  *   GitHub Pages deploys it. The screen reports "approved — publishing" and offers a
  *   "Check live" button that confirms the file is actually serving.
  * - Unpublish removes the listing (and the published file) later.
- * - Hourly YouTube channel sync (ordinary time trigger, not an AI run). Reads the
+ * - Daily YouTube channel sync (ordinary time trigger, not an AI run). Reads the
  *   public Videos and Shorts tabs of the owner-trusted creator channels (no API key)
  *   and publishes new uploads to media.json. Key-backed playlist sync stays optional.
  *
@@ -533,7 +533,7 @@ function checkLive(path) {
   return { ok: true, live: !problem, code: fileCode, url: fileUrl, problem: problem };
 }
 
-// ---- YouTube sync (ordinary scheduled code; runs hourly when enabled) ----
+// ---- YouTube sync (ordinary scheduled code; runs once daily when enabled) ----
 // Owner-trusted creator channels: their new uploads publish to media.json without the
 // approval queue (owner-authorized). Everything else still needs approval. MED uploads
 // before 2026-10-10 were never approved, so that backlog is not imported.
@@ -610,6 +610,30 @@ function ytUnescape_(s) {
   });
 }
 
+// Lowercase URL path of a tab's endpoint, without origin, query, hash or trailing slash.
+function ytTabPath_(r) {
+  var ep = r.endpoint || {};
+  var url = (ep.commandMetadata && ep.commandMetadata.webCommandMetadata && ep.commandMetadata.webCommandMetadata.url) ||
+    (ep.browseEndpoint && ep.browseEndpoint.canonicalBaseUrl) || '';
+  return String(url).replace(/^https?:\/\/[^\/]+/i, '').replace(/[?#].*$/, '').replace(/\/+$/, '').toLowerCase();
+}
+
+// Upload items of a selected tab's own content: richGridRenderer, or
+// sectionListRenderer > itemSectionRenderer > gridRenderer (or direct video items). Null if neither.
+function ytGridItems_(content) {
+  if (!content) return null;
+  if (content.richGridRenderer) return content.richGridRenderer.contents || [];
+  if (!content.sectionListRenderer) return null;
+  var items = null;
+  (content.sectionListRenderer.contents || []).forEach(function (s) {
+    (s.itemSectionRenderer && s.itemSectionRenderer.contents || []).forEach(function (c) {
+      if (c.gridRenderer) items = (items || []).concat(c.gridRenderer.items || []);
+      else if (c.videoRenderer || c.gridVideoRenderer || c.richItemRenderer) items = (items || []).concat([c]);
+    });
+  });
+  return items;
+}
+
 // Newest-first uploads from one tab ('videos' or 'shorts') of exactly this channel.
 function ytChannelTab_(channelId, tab) {
   var html = ytFetch_('https://www.youtube.com/channel/' + channelId + '/' + tab + '?hl=en&gl=US');
@@ -617,19 +641,32 @@ function ytChannelTab_(channelId, tab) {
   if (!data) throw new Error(tab + ': page data not found (' + ytPageHint_(html) + ')');
   var meta = data.metadata && data.metadata.channelMetadataRenderer;
   if (!meta || meta.externalId !== channelId) throw new Error(tab + ': page is not channel ' + channelId);
-  var grid = null;
-  var tabs = (data.contents && data.contents.twoColumnBrowseResultsRenderer && data.contents.twoColumnBrowseResultsRenderer.tabs) || [];
-  tabs.forEach(function (t) {
+  var browse = data.contents && (data.contents.twoColumnBrowseResultsRenderer || data.contents.singleColumnBrowseResultsRenderer);
+  var sel = null, seen = [];
+  ((browse && browse.tabs) || []).forEach(function (t) {
     var r = t.tabRenderer;
-    var url = r && r.endpoint && r.endpoint.commandMetadata && r.endpoint.commandMetadata.webCommandMetadata.url;
-    if (r && r.selected && r.content && String(url || '').slice(-(tab.length + 1)) === '/' + tab) grid = r.content.richGridRenderer;
+    if (!r || !r.selected) return;
+    var path = ytTabPath_(r);
+    seen.push('"' + String(r.title || '').slice(0, 30) + '" ' + path.slice(0, 80));
+    if (!sel && r.content && path.slice(-(tab.length + 1)) === '/' + tab) sel = r;
   });
-  if (!grid) throw new Error(tab + ': upload grid not found');
+  var items = sel && ytGridItems_(sel.content);
+  if (!items) {
+    var why = !browse ? 'contents keys [' + Object.keys(data.contents || {}).slice(0, 8).join(',') + ']'
+      : !sel ? 'selected tab(s): ' + (seen.join('; ') || 'none')
+      : 'tab "' + String(sel.title || '').slice(0, 30) + '" ' + ytTabPath_(sel).slice(0, 80) +
+        ', tab keys [' + Object.keys(sel).slice(0, 10).join(',') + '], content keys [' + Object.keys(sel.content).slice(0, 8).join(',') + ']';
+    throw new Error(tab + ': upload grid not found (' + why + ')');
+  }
   var out = [];
-  (grid.contents || []).slice(0, 50).forEach(function (x) {
-    var c = x.richItemRenderer && x.richItemRenderer.content;
+  items.slice(0, 50).forEach(function (x) {
+    var c = (x.richItemRenderer && x.richItemRenderer.content) || x;
     var id = '', title = '';
-    if (c && c.lockupViewModel && c.lockupViewModel.contentType === 'LOCKUP_CONTENT_TYPE_VIDEO') {
+    var vr = c && (c.videoRenderer || c.gridVideoRenderer);
+    if (vr) {
+      id = vr.videoId;
+      title = vr.title && (vr.title.simpleText || (vr.title.runs || []).map(function (r) { return r.text; }).join(''));
+    } else if (c && c.lockupViewModel && c.lockupViewModel.contentType === 'LOCKUP_CONTENT_TYPE_VIDEO') {
       id = c.lockupViewModel.contentId;
       var md = c.lockupViewModel.metadata && c.lockupViewModel.metadata.lockupMetadataViewModel;
       title = md && md.title && md.title.content;
@@ -764,6 +801,6 @@ function syncPlaylists(e) {
 function installSyncTrigger() {
   requireOwner_();
   ScriptApp.getProjectTriggers().forEach(function (t) { if (t.getHandlerFunction() === 'syncPlaylists') ScriptApp.deleteTrigger(t); });
-  ScriptApp.newTrigger('syncPlaylists').timeBased().everyHours(1).create();
-  return { ok: true, message: 'Hourly YouTube sync is on. New uploads from the configured channels are added to media.json automatically.' };
+  ScriptApp.newTrigger('syncPlaylists').timeBased().everyDays(1).atHour(9).create();
+  return { ok: true, message: 'Daily YouTube sync is on (runs once a day around 9 AM in the script time zone). New uploads from the configured channels are added to media.json automatically.' };
 }

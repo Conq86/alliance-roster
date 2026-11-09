@@ -56,7 +56,7 @@
     <p class="muted" id="syncInfo">Loading…</p>
     <div class="row">
       <button id="syncNow" type="button">Sync now</button>
-      <button id="syncTrigger" type="button" class="ghost">Enable hourly sync</button>
+      <button id="syncTrigger" type="button" class="ghost">Enable daily sync (9 AM)</button>
     </div>
     <p class="muted">Sync reads the public Videos and Shorts tabs of the trusted creator channels listed above (no API key) and adds new uploads to media.json automatically, with the real upload date from each video's page. Videos already listed are never changed, duplicated or removed. If a channel can't be read, sync fails and nothing changes. Playlists in Settings are also synced when a YouTube API key is set. All other submissions still go through the approval queue above.</p>
   </div>
@@ -147,7 +147,7 @@ function renderStatus() {
           return '<b>' + esc(c.creatorId) + '</b> (' + esc(c.channelId) + (c.since ? ', uploads since ' + esc(c.since) : '') + ')';
         }).join(', ') : 'none')) + '<br>' +
     (s.playlists && s.playlists.length ? s.playlists.length + ' playlist(s) configured' + (s.configured && s.configured.youtube ? '' : ' (need a YouTube API key)') + '. ' : '') +
-    (s.syncTrigger ? 'Hourly sync is <b>ON</b>.' : 'Hourly sync is <b>OFF</b>.') +
+    (s.syncTrigger ? 'Daily sync is <b>ON</b>.' : 'Daily sync is <b>OFF</b>.') +
     (last ? '<br>Last sync ' + esc(new Date(last.at).toLocaleString()) + ': ' + (last.ok ? '' : '<b>FAILED</b> — ') + esc(last.message) : '<br>Not synced yet.');
   var set = s.settings || {};
   if (set.folderId) document.getElementById('setFolder').value = set.folderId;
@@ -336,7 +336,7 @@ document.getElementById('syncNow').addEventListener('click', function () {
 document.getElementById('syncTrigger').addEventListener('click', function () {
   var btn = this; btn.disabled = true;
   call('installSyncTrigger').then(function (r) { showMsg(r.message, 'good'); refresh(); })
-    .catch(function (err) { showMsg('Could not enable hourly sync: ' + err.message, 'bad'); })
+    .catch(function (err) { showMsg('Could not enable daily sync: ' + err.message, 'bad'); })
     .finally(function () { btn.disabled = false; });
 });
 

@@ -6,7 +6,7 @@ new accounts, no recurring charges. Everything runs on the owner's Google accoun
 | Project | Folder here | Web app access | What it does |
 | --- | --- | --- | --- |
 | Submissions | `submissions/` | Execute as: Me · Who has access: **Anyone** | Accepts anonymous submissions, validates them server-side, stores originals in a private Drive folder + a tracking Sheet. Never publishes, never lists submissions. |
-| Admin | `admin/` | Execute as: Me · Who has access: **Only myself** | Private approval screen: preview, correct titles/names, approve (publishes to GitHub), reject, unpublish, hourly YouTube channel sync. Google-account sign-in is the authentication, plus an owner-email check in every function. |
+| Admin | `admin/` | Execute as: Me · Who has access: **Only myself** | Private approval screen: preview, correct titles/names, approve (publishes to GitHub), reject, unpublish, daily YouTube channel sync. Google-account sign-in is the authentication, plus an owner-email check in every function. |
 
 The two projects share one Drive folder and one Sheet. The GitHub token lives only
 in the Admin project's Script Properties — never in this repo, never in the browser.
@@ -42,8 +42,9 @@ in the Admin project's Script Properties — never in this repo, never in the br
      `[{"playlistId":"PL…","creatorId":"med","creator":"MED","member":"med","channel":"MED LAST Z","channelUrl":"https://www.youtube.com/@med.713"}]`.
    - **Storage safety limit** — default 900 MB. Publishing refuses above it (Pages
      limit is 1 GB; the site is ~280 MB now).
-8. **Hourly sync.** On the approval screen, "Enable hourly sync" (creates one hourly
-   trigger; pressing it again replaces it). "Sync now" runs it immediately.
+8. **Daily sync.** On the approval screen, "Enable daily sync (9 AM)" (creates one daily
+   trigger, around 9 AM in the Apps Script project's time zone; pressing it again
+   replaces it). "Sync now" runs it immediately.
 
 ## How it works
 
