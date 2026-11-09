@@ -101,6 +101,25 @@ function magicOk_(bytes, ext) {
   return false;
 }
 
+// Writes the decoded bytes to the private folder, then reads the Drive copy back and
+// requires the same byte length and SHA-256 as the upload. A copy that does not match
+// is trashed and the submission fails, so a pending row always points at real bytes.
+function storeVerified_(bytes, mime, storedName, expectedSize, expectedSha) {
+  var blob = Utilities.newBlob('');
+  blob.setBytes(bytes);
+  blob.setContentType(mime);
+  blob.setName(storedName);
+  if (blob.getBytes().length !== expectedSize) fail_('The file could not be prepared for saving. Nothing was saved. Please try again.');
+  var file = folder_().createFile(blob);
+  var saved = [];
+  try { saved = DriveApp.getFileById(file.getId()).getBlob().getBytes(); } catch (ignore) {}
+  if (saved.length !== expectedSize || sha256Hex_(saved) !== expectedSha) {
+    try { file.setTrashed(true); } catch (ignore) {}
+    fail_('The file could not be saved intact. Nothing was saved. Please try again.');
+  }
+  return file.getId();
+}
+
 function safeName_(name) {
   return String(name || 'file')
     .replace(/[\\/:*?"<>|]/g, '_')
@@ -137,7 +156,7 @@ function doPost(e) {
       if (!title) fail_('Enter a title.');
       var description = text_(p.description, 500);
 
-      var fileBlob = null, fileName = '', fileSize = 0, sha = '', youtubeId = '', youtubeUrl = '';
+      var bytes = null, mime = '', fileName = '', fileSize = 0, sha = '', youtubeId = '', youtubeUrl = '';
       if (type === 'youtube') {
         youtubeUrl = text_(p.youtubeUrl, 300);
         var m = YOUTUBE_RE.exec(youtubeUrl);
@@ -152,12 +171,12 @@ function doPost(e) {
         var ext = extOf_(fileName);
         var allowed = type === 'music' ? MUSIC_EXTS : ART_EXTS;
         if (!allowed[ext]) fail_(type === 'music' ? 'Music must be an MP3 or M4A file.' : 'Fan art must be a PNG, JPG or WebP file.');
-        var bytes = Utilities.base64Decode(data);
+        bytes = Utilities.base64Decode(data);
         if (!bytes.length) fail_('That file looks empty.');
         if (bytes.length > MAX_FILE_BYTES) fail_('That file is over the 25 MB limit.');
         if (!magicOk_(bytes, ext)) fail_('That file does not look like a real .' + ext + ' file.');
         // MIME comes from the validated extension, never from the client.
-        fileBlob = Utilities.newBlob(bytes, allowed[ext], fileName);
+        mime = allowed[ext];
         fileSize = bytes.length;
         sha = sha256Hex_(bytes);
       }
@@ -185,9 +204,9 @@ function doPost(e) {
 
       var storedName = '';
       var fileId = '';
-      if (fileBlob) {
+      if (bytes) {
         storedName = id + '_' + safeName_(fileName);
-        fileId = folder_().createFile(fileBlob.setName(storedName)).getId();
+        fileId = storeVerified_(bytes, mime, storedName, fileSize, sha);
       }
       var values = [];
       values[COL.id] = id;

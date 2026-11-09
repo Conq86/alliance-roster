@@ -121,6 +121,29 @@ function setRowFields_(row, patch) {
   });
 }
 
+function sha256Hex_(bytes) {
+  return Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, bytes)
+    .map(function (b) { var v = b & 0xFF; return (v < 16 ? '0' : '') + v.toString(16); }).join('');
+}
+
+// Problem with a stored/published copy versus the size and SHA-256 recorded at submission,
+// or '' when the bytes match. Empty files are never acceptable.
+function bytesProblem_(bytes, row) {
+  if (!bytes || !bytes.length) return 'the file is empty (0 bytes)';
+  var size = Number(row.fileSize) || 0;
+  if (size && bytes.length !== size) return 'the file is ' + bytes.length + ' bytes but ' + size + ' bytes were submitted';
+  if (row.sha256 && sha256Hex_(bytes) !== String(row.sha256)) return 'the file contents do not match what was submitted (SHA-256 differs)';
+  return '';
+}
+
+// Reads the private Drive original and refuses to hand back empty or mismatched bytes.
+function storedBytes_(row) {
+  var bytes = DriveApp.getFileById(row.fileId).getBlob().getBytes();
+  var problem = bytesProblem_(bytes, row);
+  if (problem) throw new Error('The stored file for this submission is damaged: ' + problem + '. Reject it and ask the member to submit again.');
+  return bytes;
+}
+
 function liveUrl_(path) {
   if (path === 'media.json') return SITE_BASE + '?view=media';
   if (path.indexOf('fanart/') === 0) return SITE_BASE + '?view=fanart';
@@ -344,13 +367,13 @@ function getPreview(id) {
   if (size > PREVIEW_MAX_BYTES) {
     return { type: row.type, driveUrl: file.getUrl(), title: row.title, gameName: row.gameName, tooBig: true, size: size };
   }
-  var blob = file.getBlob();
+  var bytes = storedBytes_(row);
   var mime = row.type === 'music'
     ? (extOf_(row.fileName) === 'm4a' ? 'audio/mp4' : 'audio/mpeg')
-    : blob.getContentType();
+    : file.getMimeType();
   return {
-    type: row.type, size: size, title: row.title, gameName: row.gameName,
-    dataUrl: 'data:' + mime + ';base64,' + Utilities.base64Encode(blob.getBytes())
+    type: row.type, size: bytes.length, title: row.title, gameName: row.gameName,
+    dataUrl: 'data:' + mime + ';base64,' + Utilities.base64Encode(bytes)
   };
 }
 
@@ -374,8 +397,7 @@ function approveSubmission(id, edits) {
     var path = '', commit = null;
 
     if (row.type === 'music' || row.type === 'fanart') {
-      var driveFile = DriveApp.getFileById(row.fileId);
-      var bytes = driveFile.getBlob().getBytes();
+      var bytes = storedBytes_(row); // never publish an empty or mismatched copy
       var ext = extOf_(row.fileName);
       var size = repoSizeMB_();
       if (size.sizeMB + bytes.length / 1048576 > size.limitMB) {
@@ -485,10 +507,26 @@ function unpublishSubmission(id) {
 
 function checkLive(path) {
   requireOwner_();
-  var url = liveUrl_(path);
-  var res = UrlFetchApp.fetch(url, { muteHttpExceptions: true, headers: { Range: 'bytes=0-0' } });
-  var code = res.getResponseCode();
-  return { ok: true, live: code === 200 || code === 206, code: code, url: url };
+  path = String(path || '');
+  if (path.indexOf('media/') !== 0 && path.indexOf('fanart/') !== 0) {
+    // media.json listing (YouTube links): the page answering is the check.
+    var url = liveUrl_(path);
+    var res = UrlFetchApp.fetch(url, { muteHttpExceptions: true, headers: { Range: 'bytes=0-0' } });
+    var code = res.getResponseCode();
+    return { ok: true, live: code === 200 || code === 206, code: code, url: url };
+  }
+  // Music / fan art: fetch the published file itself and require the submitted bytes.
+  // HTTP 200 alone is not proof — an empty or wrong file also answers 200.
+  var row = null;
+  rows_().forEach(function (r) {
+    if (String(r[COL.publishedPath]) === path && String(r[COL.status]) === 'approved') row = rowObj_(r);
+  });
+  var fileUrl = SITE_BASE + path;
+  var fileRes = UrlFetchApp.fetch(fileUrl + '?check=' + Date.now(), { muteHttpExceptions: true, followRedirects: true });
+  var fileCode = fileRes.getResponseCode();
+  if (fileCode !== 200) return { ok: true, live: false, code: fileCode, url: fileUrl };
+  var problem = bytesProblem_(fileRes.getContent(), row || {});
+  return { ok: true, live: !problem, code: fileCode, url: fileUrl, problem: problem };
 }
 
 // ---- YouTube playlist sync (ordinary scheduled code; runs once a day when enabled) ----
