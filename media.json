@@ -23,6 +23,15 @@
       "items": [
         {
           "type": "youtube",
+          "youtubeId": "04ayCNhv_1A",
+          "title": "What’s Blocking Your Next HQ? 🏰 Levels 1–35 [AR/EN] | Last Z: Survival Shooter | #lastzcreator",
+          "format": "video",
+          "published": "2026-11-09",
+          "duration": 59,
+          "channelSync": true
+        },
+        {
+          "type": "youtube",
           "youtubeId": "oKnIiNQprJI",
           "title": "oKnIiNQprJI",
           "format": "short",
