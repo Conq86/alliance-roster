@@ -23,6 +23,24 @@
       "items": [
         {
           "type": "youtube",
+          "youtubeId": "usguhy_Fm7k",
+          "title": "Last Z  | 719 Made the Same Mistake. POW Needed 9 Minutes.",
+          "format": "video",
+          "published": "2026-11-11",
+          "duration": 123,
+          "channelSync": true
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "_OeUCNTqoro",
+          "title": "وفّرت 18 ساعة ببف البناء! لا تبدأ التطوير قبله | Last Z: Survival Shooter",
+          "format": "video",
+          "published": "2026-11-11",
+          "duration": 274,
+          "channelSync": true
+        },
+        {
+          "type": "youtube",
           "youtubeId": "k4OVl997n4g",
           "title": "لا تضيّع مكافآت الموسم الثاني! 👑 Season 2 Rewards Guide | Last Z #lastzcreator",
           "format": "video",
@@ -200,6 +218,15 @@
       "channel": "POW Ruthless",
       "channelUrl": "https://www.youtube.com/@powruthless",
       "items": [
+        {
+          "type": "youtube",
+          "youtubeId": "1OQO3ktPRpk",
+          "title": "Last Z | POW vs TML | Glorywar",
+          "format": "video",
+          "published": "2026-11-11",
+          "duration": 133,
+          "channelSync": true
+        },
         {
           "type": "youtube",
           "youtubeId": "l_9uBXsJteo",
