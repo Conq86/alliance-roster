@@ -23,6 +23,15 @@
       "items": [
         {
           "type": "youtube",
+          "youtubeId": "RIQ_KZO8byo",
+          "title": "Where’d the Whales Go? 🐋 POW Team 2 vs EMPR Team 1 | Last Z: Survival Shooter",
+          "format": "video",
+          "published": "2026-11-14",
+          "duration": 229,
+          "channelSync": true
+        },
+        {
+          "type": "youtube",
           "youtubeId": "usguhy_Fm7k",
           "title": "Last Z  | 719 Made the Same Mistake. POW Needed 9 Minutes.",
           "format": "video",
