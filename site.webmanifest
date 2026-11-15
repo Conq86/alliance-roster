@@ -5,8 +5,8 @@
   "start_url": ".",
   "scope": ".",
   "display": "standalone",
-  "background_color": "#160b2e",
-  "theme_color": "#160b2e",
+  "background_color": "#05070c",
+  "theme_color": "#0a0e16",
   "icons": [
     {
       "src": "icons/pow-713-192.png",

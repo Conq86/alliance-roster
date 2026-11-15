@@ -88,7 +88,7 @@ The **Guides** tab (`?view=guides`) has one sub-tab per season, taken from `guid
 
 - A season with no `sections` shows "No Season N guide yet", so future seasons can be listed before their guide is written.
 - Each season: `id` (`a-z 0-9 - _`), `label`, optional `title`, `tagline`, `updated` (`YYYY-MM-DD`), `downloads` (`{ "label", "src": "guides/..." }`, PDF/PPTX/images only), `sources` (`{ "label", "url": "https://..." }`) and `sections`.
-- A section has `id`, `heading` and any of: `intro`, `stats` (`{ value, label }`), `flow` (+ `flowLabel`), `list`, `steps` (`{ title, tag?, text }` + `stepsLabel`), `cards` (`{ title, tag?, tone?: "warn", lines }`), `table` (`{ columns, rows, highlightLast? }`) and `note`. A list/card line or note is a string or `{ "lead": "bold gold start", "text": "rest" }`. Everything renders as plain text.
+- A section has `id`, `heading` and any of: `intro`, `stats` (`{ value, label }`), `flow` (+ `flowLabel`), `list`, `steps` (`{ title, tag?, text }` + `stepsLabel`), `cards` (`{ title, tag?, tone?: "warn", lines }`), `table` (`{ columns, rows, highlightLast? }`) and `note`. A list/card line or note is a string or `{ "lead": "bold lime start", "text": "rest" }`. Everything renders as plain text.
 - Adding or editing a guide is a manifest edit (plus any download files in `guides/<season>/`). Commit to `main` and reload once Pages succeeds.
 - Guides are community-sourced; have them checked for accuracy before publishing.
 - A season can also have an illustrated `book` (a page-by-page reader): `{ "label", "pdf", "pdfLabel", "width", "height", "pages": [{ "title", "chapter", "image", "thumb" }] }`, with files under `guides/<season>/`. Pages lazy-load; a contents grid, a sticky previous/jump/next bar and `&page=N` deep links handle navigation, and each page opens full size in a new tab for zooming. When a season has both a `book` and `sections`, readers switch between **Warbook** and **Text guide** (`&mode=text`).
@@ -155,6 +155,9 @@ remembered on their own device. Nothing goes public until the owner approves it.
   just above the already-listed entries. Videos whose watch page names another owner are
   skipped. Sync deduplicates by video ID, never changes or removes entries, notes a tab that
   failed, and fails without writing anything if both tabs of a channel can't be read.
+
+## Visual theme
+The site shares the look of the public Last Z Tools site while keeping the POW 713 identity: near-black `#05070c` background, navy-charcoal `#0a0e16` panels, lime `#84cc16` / `#a3e635` accents, white and slate text, thin borders and modest rectangular corners. Errors and warnings keep their own red/coral colors. Fonts come from Google Fonts with `display=swap` and system fallbacks: Inter (body and tabs), Russo One (the POW 713 title and large display headings) and JetBrains Mono (small technical labels). The palette and font stacks are the custom properties at the top of `showcase.css`; `index.html` (`theme-color`) and `site.webmanifest` use the same dark colors. No assets are copied from the tools site, and member artwork, badges and media are unchanged.
 
 ## Rendering
 The shared wheel uses a flat projection of its circular rotation, hides rear cards, and changes depth ordering only at card crossings (reusing the approach from PR #3). It avoids intersecting CSS 3D surfaces and permanent GPU promotion of every card. Images are loaded/decoded two at a time near the front, with dark loading placeholders. The rotation remains one turn per 110 seconds. Android-specific flashing still requires an actual phone check; DOM checks cannot verify a GPU/compositor result.
