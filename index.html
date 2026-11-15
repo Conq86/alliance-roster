@@ -25,6 +25,7 @@
     <button id="mediaTab" type="button" aria-pressed="false">Music &amp; Videos</button>
     <button id="fanArtTab" type="button" aria-pressed="false">Fan Art</button>
     <button id="guidesTab" type="button" aria-pressed="false">Guides</button>
+    <button id="toolsTab" type="button" aria-pressed="false">Tools &amp; Trackers</button>
     <button id="submitTab" type="button" aria-pressed="false">Submit</button>
   </nav>
   <div class="stage">
@@ -354,6 +355,23 @@
     <p id="guidesStatus" class="media-empty" role="status" hidden></p>
     <div id="guideBody"></div>
   </section>
+  <section id="toolsHub" class="tools-hub" aria-labelledby="toolsHeading" hidden>
+    <h2 id="toolsHeading">TOOLS &amp; TRACKERS</h2>
+    <div class="tools-card">
+      <p class="tools-credit">Built for the alliance by <strong>POW xD3V3LOP3Rx</strong></p>
+      <h3 class="tools-title">Plan ahead. Track your progress.</h3>
+      <p class="tools-desc">Map out your research, building upgrades, heroes and vehicles, then keep track of your progress as you grow, all in one place.</p>
+      <ul class="tools-list" aria-label="What you can do">
+        <li>Research planning</li>
+        <li>Building upgrades</li>
+        <li>Hero planning</li>
+        <li>Vehicle planning</li>
+        <li>Progress tracking</li>
+      </ul>
+      <a id="toolsOpen" class="tools-open" href="https://lastztools.xd3v3lop3rx.dev/" target="_blank" rel="noopener noreferrer" aria-describedby="toolsHint">Open Full Screen <span class="tools-open-icon" aria-hidden="true">&#8599;</span></a>
+      <p id="toolsHint" class="tools-hint">Opens in a new tab. POW 713 stays open here, so you can switch back any time.</p>
+    </div>
+  </section>
   <section id="submitHub" class="submit-hub" aria-labelledby="submitHeading" hidden>
     <h2 id="submitHeading">SUBMIT</h2>
     <p class="submit-intro">Share your music, fan art or a YouTube video with the alliance. Everything is reviewed by the owner first — nothing goes public until it is approved.</p>
@@ -405,6 +423,7 @@
 <script src="media.js"></script>
 <script src="fanart.js"></script>
 <script src="guides.js"></script>
+<script src="tools.js"></script>
 <script src="submit.js"></script>
 <script src="gallery.js"></script>
 </body>

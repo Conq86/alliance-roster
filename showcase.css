@@ -49,7 +49,7 @@ header p::after {
 
 /* ---- Sticky view tabs ---- */
 .showcase-tabs {
-  display: flex; justify-content: center; align-items: center; gap: 10px;
+  display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px;
   position: sticky; top: 0; width: 100%; z-index: 100; padding: 10px 12px;
   background: linear-gradient(180deg, #1d1038, var(--ink));
   border-bottom: 1px solid rgba(255, 190, 110, .22);
@@ -77,7 +77,7 @@ header p::after {
   border: 1px solid rgba(255, 190, 110, .28); background: var(--raised); box-shadow: var(--lift);
   transition: color .2s var(--ease), border-color .2s var(--ease), background .2s var(--ease), box-shadow .2s var(--ease), transform .15s var(--ease);
 }
-.showcase-tabs button { font-weight: 700; min-height: 46px; }
+.showcase-tabs button { font-weight: 700; min-height: 46px; text-align: center; }
 .member-list button { font-size: 14px; padding: 0 15px; }
 #resumeBtn, .member-list button.active,
 .media-subtabs button[aria-pressed="true"], .media-chip[aria-pressed="true"] {
@@ -162,20 +162,20 @@ header p::after {
 }
 
 /* ---- Directory panel ---- */
-.directory, .media-hub, .submit-hub, .fanart-hub, .guides-hub {
+.directory, .media-hub, .submit-hub, .fanart-hub, .guides-hub, .tools-hub {
   width: min(1060px, 94vw); margin: 4px auto 14px; z-index: 2; padding: 20px 20px 22px;
   border: 1px solid transparent; border-radius: 22px;
   background: linear-gradient(155deg, #26163f, #140a28) padding-box, var(--edge) border-box;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06), 0 1px 2px rgba(0, 0, 0, .4), 0 24px 48px -24px rgba(0, 0, 0, .9);
 }
-.directory h2, .media-hub h2, .submit-hub h2, .fanart-hub h2, .guides-hub h2 {
+.directory h2, .media-hub h2, .submit-hub h2, .fanart-hub h2, .guides-hub h2, .tools-hub h2 {
   display: flex; align-items: center; gap: 14px; margin-bottom: 16px;
   font-size: 14px; letter-spacing: .22em; font-weight: 700; color: #ffe2b4;
 }
 .directory h2::before, .directory h2::after, .media-hub h2::before, .media-hub h2::after,
 .submit-hub h2::before, .submit-hub h2::after, .fanart-hub h2::before, .fanart-hub h2::after,
-.guides-hub h2::before, .guides-hub h2::after { content: ''; flex: 1; height: 1px; background: var(--rule); }
-.directory h2::before, .media-hub h2::before, .submit-hub h2::before, .fanart-hub h2::before, .guides-hub h2::before { transform: scaleX(-1); }
+.guides-hub h2::before, .guides-hub h2::after, .tools-hub h2::before, .tools-hub h2::after { content: ''; flex: 1; height: 1px; background: var(--rule); }
+.directory h2::before, .media-hub h2::before, .submit-hub h2::before, .fanart-hub h2::before, .guides-hub h2::before, .tools-hub h2::before { transform: scaleX(-1); }
 .dir-controls { display: flex; gap: 10px; justify-content: center; align-items: center; flex-wrap: wrap; margin-bottom: 18px; }
 .dir-controls input {
   min-height: 48px; min-width: min(300px, 78vw); padding: 0 18px;
@@ -195,7 +195,7 @@ header p::after {
 }
 
 /* ---- Music & Videos hub (own class names; nothing here matches the wheel's .card) ---- */
-.media-hub, .submit-hub, .fanart-hub, .guides-hub { margin-top: 18px; }
+.media-hub, .submit-hub, .fanart-hub, .guides-hub, .tools-hub { margin-top: 18px; }
 .media-subtabs {
   display: flex; gap: 6px; width: fit-content; max-width: 100%; margin: 0 auto 18px; padding: 5px;
   border: 1px solid rgba(255, 190, 110, .22); border-radius: 999px; background: var(--field);
@@ -503,6 +503,39 @@ header p::after {
 }
 @media (prefers-reduced-motion: reduce) { .wb-thumb, .wb-contents-toggle::after { transition: none; } }
 
+/* ---- Tools & Trackers landing (static launch card; the tools open in their own tab) ---- */
+.tools-card {
+  max-width: 620px; margin: 0 auto; padding: 26px 22px 22px; text-align: center;
+  border: 1px solid transparent; border-radius: 20px;
+  background: radial-gradient(90% 70% at 50% 0%, rgba(255, 154, 61, .16), transparent 70%) padding-box,
+    linear-gradient(160deg, #2a1a45, #170d2c) padding-box, var(--edge) border-box;
+  box-shadow: var(--lift);
+}
+.tools-credit { font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); overflow-wrap: anywhere; }
+.tools-credit strong { color: var(--gold); }
+.tools-title { margin-top: 10px; font-size: clamp(22px, 5vw, 32px); font-weight: 800; line-height: 1.2; letter-spacing: .02em; color: #fff; }
+.tools-desc { max-width: 520px; margin: 12px auto 0; line-height: 1.55; color: var(--muted); }
+.tools-list { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 18px 0 22px; }
+.tools-list li {
+  padding: 6px 12px; font-size: 13px; font-weight: 600; color: #ffe2b4;
+  border: 1px solid rgba(255, 190, 110, .3); border-radius: 999px; background: var(--field);
+}
+.tools-open {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 52px; min-width: min(280px, 100%); padding: 0 28px; border-radius: 999px;
+  font-family: inherit; font-size: 17px; font-weight: 800; letter-spacing: .03em; text-decoration: none;
+  color: var(--on-gold); border: 1px solid rgba(255, 236, 200, .55); background: var(--primary); touch-action: manipulation;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5), 0 6px 18px -6px rgba(255, 154, 61, .6), 0 10px 26px -10px rgba(124, 58, 237, .55);
+  transition: border-color .2s var(--ease), box-shadow .2s var(--ease), transform .15s var(--ease);
+}
+.tools-open-icon { font-size: 19px; line-height: 1; }
+@media (hover: hover) {
+  .tools-open:hover { border-color: #fff4dc; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .6), 0 6px 22px -4px rgba(255, 154, 61, .75), 0 10px 26px -10px rgba(124, 58, 237, .6); }
+}
+.tools-open:active { transform: translateY(1px); box-shadow: inset 0 2px 7px rgba(80, 30, 0, .4), 0 2px 8px -4px rgba(255, 154, 61, .5); }
+.tools-open:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+.tools-hint { margin-top: 12px; font-size: 13px; line-height: 1.5; color: var(--muted); }
+
 /* ---- Footer ---- */
 footer {
   margin: 0 16px 20px; padding: 10px 18px; z-index: 2; text-align: center;
@@ -513,6 +546,13 @@ footer {
 }
 .hint-swipe { display: none; }
 
+@media (max-width: 900px) {
+  /* Seven top tabs: two rows (four + three); the sticky bar is taller, so offset what sticks below it. */
+  .showcase-tabs button { flex: 1 1 calc(25% - 10px); max-width: none; }
+  .wb-bar { top: 124px; }
+  .wb-page { scroll-margin-top: 196px; }
+  .guide-section { scroll-margin-top: 136px; }
+}
 @media (max-width: 760px) {
   .stage { min-height: 520px; touch-action: pan-y; }
   .glow { display: none; }
@@ -521,7 +561,8 @@ footer {
   header { padding: 22px 14px 10px; }
   .directory { padding: 16px 12px 18px; border-radius: 18px; }
   footer { border-radius: 18px; }
-  .media-hub, .submit-hub, .fanart-hub, .guides-hub { padding: 16px 12px 18px; border-radius: 18px; }
+  .media-hub, .submit-hub, .fanart-hub, .guides-hub, .tools-hub { padding: 16px 12px 18px; border-radius: 18px; }
+  .tools-card { padding: 22px 14px 18px; }
   .guide-section { padding: 16px 12px; }
   .guide-jump { flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; padding: 2px 2px 8px; scrollbar-width: thin; }
   .guide-jump .media-chip { flex: none; }
@@ -529,15 +570,18 @@ footer {
   .guide-seasons button { min-width: 0; }
 }
 @media (max-width: 560px) {
-  /* Six top tabs: two rows of three so every label fits its button. */
-  .showcase-tabs { flex-wrap: wrap; }
-  .showcase-tabs button { flex: 1 1 calc(33.333% - 8px); max-width: none; }
-  .guide-section { scroll-margin-top: 136px; }
+  .showcase-tabs button { padding: 0 8px; font-size: 14px; letter-spacing: 0; line-height: 1.15; }
   .media-panel { padding: 14px 12px; }
 }
-@media (max-width: 420px) {
+@media (max-width: 480px) {
+  /* Phones: three rows (three + three + one full-width) so every label fits its button. */
   .showcase-tabs { gap: 6px; padding: 8px; }
-  .showcase-tabs button { padding: 0 8px; font-size: 13px; letter-spacing: 0; line-height: 1.15; text-align: center; }
+  .showcase-tabs button { flex: 1 1 calc(33.333% - 6px); font-size: 13px; }
+  .wb-bar { top: 168px; }
+  .wb-page { scroll-margin-top: 240px; }
+  .guide-section { scroll-margin-top: 180px; }
+}
+@media (max-width: 420px) {
   .media-subtabs button { min-width: 96px; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -549,7 +593,7 @@ footer {
   .showcase-tabs button, .member-list button, #viewArt, #resumeBtn,
   .media-hub, .media-panel, .media-tile, .media-empty, .media-subtabs button, .media-chip, .player-controls button, .media-link, .track,
   .submit-hub, .fanart-hub, .fanart-card, .submit-status, #submitBtn, #fanArtClose,
-  .guides-hub, .guide-section, .guide-stat, .guide-card, .guide-step, .guide-note, .guide-table th, .guide-table td,
+  .guides-hub, .tools-hub, .tools-card, .tools-list li, .tools-open, .guide-section, .guide-stat, .guide-card, .guide-step, .guide-note, .guide-table th, .guide-table td,
   .wb-contents, .wb-thumb, .wb-bar, .wb-select, .wb-open { border-color: CanvasText; }
   .card.active, .member-list button.active, .showcase-tabs button[aria-pressed="true"],
   .media-subtabs button[aria-pressed="true"], .media-chip[aria-pressed="true"], .track[aria-current="true"] { border-color: Highlight; outline: 2px solid Highlight; }

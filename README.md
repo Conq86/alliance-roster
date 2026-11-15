@@ -5,10 +5,11 @@ Alliance character roster: full-body character art for all ~100 members, plus th
 ## Layout
 - `characters/` — one file per member, named after the member (e.g. `characters/scatcat.png`). Every edit is a new commit, so the full revision history of each character is kept here.
 - `badges/` — original member-created PNG badges. Use the same filename as the member's character: `badges/scatcat.png`, `badges/lion.png` for ŁIØN, `badges/baqian.png` for 仈仟, or `badges/ace-yen.png` for Ace ¥.
-- `index.html` — a shared 3D carousel with **Characters** and **Badges** tabs. Both use the same rotating wheel, member directory, search, hover pause, and name-jump controls. Direct-link to badges with `?view=badges`. A third **Music & Videos** tab (`?view=media`) replaces the wheel and directory while it is open; the wheel pauses and resumes where it left off. **Fan Art** (`?view=fanart`), **Guides** (`?view=guides`) and **Submit** (`?view=submit`) tabs work the same way. Switching between these hub tabs hides the previous one (and stops any playing media).
+- `index.html` — a shared 3D carousel with **Characters** and **Badges** tabs. Both use the same rotating wheel, member directory, search, hover pause, and name-jump controls. Direct-link to badges with `?view=badges`. A third **Music & Videos** tab (`?view=media`) replaces the wheel and directory while it is open; the wheel pauses and resumes where it left off. **Fan Art** (`?view=fanart`), **Guides** (`?view=guides`), **Tools & Trackers** (`?view=tools`) and **Submit** (`?view=submit`) tabs work the same way. Switching between these hub tabs hides the previous one (and stops any playing media).
 - `media.json` and `media/`: the Music & Videos list and the approved member MP3/M4A/MP4 files it points to (see below). `media.js` renders it.
 - `fanart.json` and `fanart/`: the approved fan art list and files. `fanart.js` renders the gallery.
 - `guides.json`, `guides.js` and `guides/`: the Season Guides tab (tips and walkthroughs per season) and its downloadable decks.
+- `tools.js`: the Tools & Trackers tab, a static launch card for POW xD3V3LOP3Rx's tools site (see Tools & Trackers).
 - `submit.js`: the member submission form (posts to the Apps Script backend; see Submissions & approvals).
 - `apps-script/`: the Google Apps Script backend — public submissions endpoint + private owner approval screen. See `apps-script/README.md` for deployment.
 
@@ -83,7 +84,7 @@ Each artist's Google Drive folder (DaWG's and KelGris's are separate) is an **in
 4. Commit to `main`. The Pages build deploys it. Reload `?view=media` once Pages succeeds.
 
 ## Season Guides
-The **Guides** tab (`?view=guides`) has one sub-tab per season, taken from `guides.json` in listed order. Link straight to a season with `?view=guides&season=s3`; without `season`, the manifest's `default` opens. Phones show the six top tabs as two rows of three.
+The **Guides** tab (`?view=guides`) has one sub-tab per season, taken from `guides.json` in listed order. Link straight to a season with `?view=guides&season=s3`; without `season`, the manifest's `default` opens.
 
 - A season with no `sections` shows "No Season N guide yet", so future seasons can be listed before their guide is written.
 - Each season: `id` (`a-z 0-9 - _`), `label`, optional `title`, `tagline`, `updated` (`YYYY-MM-DD`), `downloads` (`{ "label", "src": "guides/..." }`, PDF/PPTX/images only), `sources` (`{ "label", "url": "https://..." }`) and `sections`.
@@ -92,6 +93,25 @@ The **Guides** tab (`?view=guides`) has one sub-tab per season, taken from `guid
 - Guides are community-sourced; have them checked for accuracy before publishing.
 - A season can also have an illustrated `book` (a page-by-page reader): `{ "label", "pdf", "pdfLabel", "width", "height", "pages": [{ "title", "chapter", "image", "thumb" }] }`, with files under `guides/<season>/`. Pages lazy-load; a contents grid, a sticky previous/jump/next bar and `&page=N` deep links handle navigation, and each page opens full size in a new tab for zooming. When a season has both a `book` and `sections`, readers switch between **Warbook** and **Text guide** (`&mode=text`).
 - Season 3's warbook (`guides/season-3/warbook/`: 37 page images at 1280×1920, 37 thumbnails and the 6 MB PDF) is the owner's ChatGPT-made "Cinematic Warbook" pack, published unchanged. The PDF is byte-identical to the Drive original.
+
+## Top tabs on small screens
+There are seven top tabs (Characters, Badges, Music & Videos, Fan Art, Guides, Tools & Trackers, Submit). Wide screens show one row. At 900px and below they show as two rows (four + three). At 480px and below (e.g. 320/375/390px phones) they show as three rows (three + three, with Submit full width). Long labels wrap inside their button, and every tab is at least 46px tall. The Guides warbook's sticky bar and jump offsets follow the taller tab bar at each size.
+
+## Tools & Trackers
+The **Tools & Trackers** tab (`?view=tools`) is a landing card for POW xD3V3LOP3Rx's public tools site, https://lastztools.xd3v3lop3rx.dev/ (research, building, hero and vehicle planning, plus progress tracking). **Open Full Screen** opens that exact address in a new tab (`target="_blank" rel="noopener noreferrer"`), so POW 713 stays open. The card is static markup in `index.html` with no loading state. The page requests nothing from the tools site until a member clicks the link.
+
+**Why it isn't embedded.** The tools site's HTML response currently sends both `Content-Security-Policy: … frame-ancestors 'none'` and `X-Frame-Options: DENY`. Either header alone stops browsers from showing it in an iframe. Do not proxy, mirror or work around this. Keep the launch card until the site owner changes the headers.
+
+**Exact change for the tools site's developer** (public tools site only; nothing on any private site):
+1. In the existing `Content-Security-Policy` **response header**, change only the `frame-ancestors` directive to `frame-ancestors 'self' https://conq86.github.io`. Keep every other CSP directive as it is. It must be a response header. `frame-ancestors` is ignored in a `<meta http-equiv>` tag.
+2. Remove `X-Frame-Options: DENY` from the response. Do not replace it with `SAMEORIGIN`, which still blocks a different origin. `ALLOW-FROM` is obsolete and modern browsers ignore it.
+3. Apply this to the tools site's public HTML responses only. Do not change headers on any other or private site.
+
+Notes:
+- Browsers check `frame-ancestors` against every ancestor frame, not just the direct parent. Each origin in the chain must be listed.
+- `frame-ancestors` matches origins only. `https://conq86.github.io` allows every page on that origin, not just `/alliance-roster/`. A path can't be restricted this way.
+- The response headers show a Cloudflare front end. The actual origin server, framework and hosting behind it are unknown. Do not assume Cloudflare Pages. The developer should change the headers wherever they are actually set: origin server, framework config, or a Cloudflare/proxy rule (a proxy rule may be adding or overriding them). Then purge the Cloudflare cache so stale headers aren't served.
+- After that, check the live response headers. Then test a real iframe of https://lastztools.xd3v3lop3rx.dev/ in a browser from the live https://conq86.github.io/alliance-roster/ page. Only add an iframe here once that test passes; don't assume it works. Even with an iframe, keep **Open Full Screen** as the reliable path.
 
 ## Submissions & approvals
 Members submit from the **Submit** tab — no account, no Google sign-in. They pick
