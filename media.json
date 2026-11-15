@@ -23,6 +23,24 @@
       "items": [
         {
           "type": "youtube",
+          "youtubeId": "TlqZ22b7Gc4",
+          "title": "ٌPOW VS RNA - Mr. Boo Hit My HQ… | Last Z: Survival Shooter",
+          "format": "video",
+          "published": "2026-11-15",
+          "duration": 116,
+          "channelSync": true
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "7XrhP3cp02k",
+          "title": "NEW FEATURE ? CAN WE SWAP HQs?!",
+          "format": "video",
+          "published": "2026-11-14",
+          "duration": 29,
+          "channelSync": true
+        },
+        {
+          "type": "youtube",
           "youtubeId": "RIQ_KZO8byo",
           "title": "Where’d the Whales Go? 🐋 POW Team 2 vs EMPR Team 1 | Last Z: Survival Shooter",
           "format": "video",
