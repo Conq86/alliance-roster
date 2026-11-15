@@ -503,7 +503,7 @@ header p::after {
 }
 @media (prefers-reduced-motion: reduce) { .wb-thumb, .wb-contents-toggle::after { transition: none; } }
 
-/* ---- Tools & Trackers landing (static launch card; the tools open in their own tab) ---- */
+/* ---- Tools & Trackers landing (static launch card; the tools open in the same tab) ---- */
 .tools-card {
   max-width: 620px; margin: 0 auto; padding: 26px 22px 22px; text-align: center;
   border: 1px solid transparent; border-radius: 20px;
