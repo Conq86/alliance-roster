@@ -14,7 +14,47 @@
       "label": "Season 3",
       "title": "Dinosaur Origin",
       "tagline": "The POW 713 Alliance Warbook: 37 pages covering every event, every priority, and how we get ahead.",
-      "updated": "2026-11-09",
+      "updated": "2026-11-16",
+      "graphic": {
+        "id": "volcano-battles",
+        "heading": "Volcano Battles",
+        "src": "guides/season-3/volcano/volcano-battles.png",
+        "alt": "POW 713 Season 3 Volcano Battles: building scores, enemy defeats, energy mines and four battle priorities. Full text follows under Read the walkthrough.",
+        "sections": [
+          {
+            "heading": "Hold key buildings",
+            "intro": "Points per second while held. Coordinate with your alliance to hold or retake the Volcano and major buildings; the Energy Tower, Lava Furnace and Radiation Warehouse also provide camp buffs.",
+            "table": {
+              "columns": ["Building", "Camp / sec", "Personal / sec"],
+              "rows": [
+                ["Volcano (center)", "~150", "~100"],
+                ["Energy Tower", "~80", "~60"],
+                ["Lava Furnace", "~80", "~60"],
+                ["Radiation Warehouse", "~80", "~60"],
+                ["Lava Pools", "~60", "~40"]
+              ]
+            }
+          },
+          {
+            "heading": "Keep scoring",
+            "cards": [
+              {"title": "Enemy defeats", "lines": ["120 personal points per 10,000 enemy power defeated. Heavy PvP can add burst points."]},
+              {"title": "Energy mines", "lines": ["Personal points per second: Advanced ~20, Medium ~10, Basic ~5.", "Keep scoring when buildings are heavily contested."]}
+            ]
+          },
+          {
+            "heading": "Battle walkthrough",
+            "steps": [
+              {"title": "Coordinate with your alliance", "text": "Focus the Volcano and major buildings."},
+              {"title": "Use every march", "text": "Reinforce, re-attack and mine."},
+              {"title": "Fight around objectives", "text": "Similar to SVS capital: hold buildings while fighting alongside."},
+              {"title": "Stay active for the full hour", "text": "Time held + power defeated build your score."}
+            ],
+            "list": ["~2,000 personal points minimum to qualify for ranking rewards.", "Priority: hold big buildings > mine + kill > random fighting."],
+            "note": "Alliance briefing: values are approximate; check in-game event rules."
+          }
+        ]
+      },
       "sources": [
         {
           "label": "LastZ.GG Season 3 guide",

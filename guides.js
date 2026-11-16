@@ -290,6 +290,31 @@
     if (foot) wrap.append(foot);
   }
 
+  function renderGraphic(graphic, seasonId) {
+    var src = fileSrc(graphic && graphic.src), heading = text(graphic && graphic.heading, 120);
+    if (!src || !heading || !/\.(png|jpe?g|webp)$/i.test(src)) return null;
+    var box = el('section', 'guide-section guide-graphic');
+    var id = slug(graphic.id);
+    if (id) box.id = id;
+    box.append(el('h3', 'guide-heading', heading));
+    box.append(el('p', 'guide-intro', 'Season 3 battle walkthrough · Open the graphic full size to zoom, or read the text below.'));
+    var link = el('a', 'guide-graphic-image');
+    link.href = src; link.setAttribute('aria-label', 'Open ' + heading + ' graphic full size');
+    var img = el('img');
+    img.src = src; img.alt = text(graphic.alt, 400) || heading;
+    img.width = 1024; img.height = 1536; img.loading = 'lazy'; img.decoding = 'async';
+    link.append(img); box.append(link);
+    var actions = el('div', 'media-actions');
+    var full = el('a', 'media-link', 'Open full size'); full.href = src;
+    var download = el('a', 'media-link', 'Download graphic'); download.href = src; download.download = '';
+    actions.append(full, download); box.append(actions);
+    var details = el('details', 'guide-graphic-text');
+    details.append(el('summary', null, 'Read the walkthrough'));
+    arr(graphic.sections).forEach(function (s) { var section = renderSection(s, seasonId); if (section) details.append(section); });
+    box.append(details);
+    return box;
+  }
+
   function render(season) {
     body.replaceChildren();
     var sections = arr(season.sections).map(function (s) { return renderSection(s, season.id); }).filter(Boolean);
@@ -312,6 +337,8 @@
     });
     if (downloads.childElementCount) intro.append(downloads);
     body.append(intro);
+    var graphic = renderGraphic(season.graphic, season.id);
+    if (graphic) body.append(graphic);
 
     var view = el('div');
     var mode = hasBook && sections.length && new URLSearchParams(location.search).get('mode') === 'text' ? 'text' : (hasBook ? 'book' : 'text');
@@ -339,6 +366,9 @@
     }
     body.append(view);
     draw();
+    if (graphic && location.hash === '#' + graphic.id) {
+      requestAnimationFrame(function () { if (active) graphic.scrollIntoView({ block: 'start' }); });
+    }
   }
 
   function setUrl(id) {
@@ -362,7 +392,7 @@
       var id = slug(s && s.id), name = text(s && s.label, 30);
       if (!id || !name || seen[id]) { console.warn('guides.json: skipped seasons[' + i + '] (needs a unique id and label)'); return null; }
       seen[id] = true;
-      return { id: id, label: name, title: s.title, tagline: s.tagline, updated: s.updated, downloads: s.downloads, sections: s.sections, sources: s.sources, book: s.book && typeof s.book === 'object' ? s.book : null };
+      return { id: id, label: name, title: s.title, tagline: s.tagline, updated: s.updated, downloads: s.downloads, sections: s.sections, sources: s.sources, graphic: s.graphic, book: s.book && typeof s.book === 'object' ? s.book : null };
     }).filter(Boolean);
     fallback = slug(data && data.default);
     picker.replaceChildren();

@@ -379,6 +379,12 @@ header p::after {
 }
 .guide-section + .guide-section { margin-top: 14px; }
 .guide-section > * + * { margin-top: 14px; }
+.guide-graphic { margin-bottom: 24px; }
+.guide-graphic-image { display: block; max-width: 850px; margin-left: auto; margin-right: auto; }
+.guide-graphic-image img { display: block; width: 100%; height: auto; border-radius: 8px; }
+.guide-graphic-text summary { cursor: pointer; padding: 12px 0; font-weight: 700; }
+.guide-graphic-text summary:focus-visible, .guide-graphic-image:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.guide-graphic-text .guide-section { margin-top: 14px; }
 .guide-heading { font-size: 20px; font-weight: 800; letter-spacing: .04em; line-height: 1.25; color: #fff; }
 .guide-heading::after { content: ''; display: block; width: 72px; height: 2px; margin-top: 8px; border-radius: 2px; background: var(--rule); }
 .guide-intro { line-height: 1.55; color: var(--muted); }

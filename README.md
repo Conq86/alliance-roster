@@ -84,6 +84,10 @@ Each artist's Google Drive folder (DaWG's and KelGris's are separate) is an **in
 4. Commit to `main`. The Pages build deploys it. Reload `?view=media` once Pages succeeds.
 
 ## Season Guides
+Season 3 includes a **Volcano Battles** graphic above the original warbook, visible in both reading modes. Share `?view=guides&season=s3#volcano-battles`. Members can open it full size, download it, or expand its text walkthrough. The cinematic graphic lives in `guides/season-3/volcano/volcano-battles.png`; its approximate scoring figures are the owner's alliance briefing. The original warbook is unchanged.
+
+Optional season `graphic`: `{ id, heading, src, alt, sections }`, with a guide image path and existing section schema for the accessible text equivalent. Images load lazily when Guides is opened.
+
 The **Guides** tab (`?view=guides`) has one sub-tab per season, taken from `guides.json` in listed order. Link straight to a season with `?view=guides&season=s3`; without `season`, the manifest's `default` opens.
 
 - A season with no `sections` shows "No Season N guide yet", so future seasons can be listed before their guide is written.
