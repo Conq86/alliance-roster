@@ -23,6 +23,15 @@
       "items": [
         {
           "type": "youtube",
+          "youtubeId": "xBrgdL_C87U",
+          "title": "Last Z Comic | Don’t Blink, Blue! Ark’s Champion Duel Comeback",
+          "format": "video",
+          "published": "2026-11-15",
+          "duration": 48,
+          "channelSync": true
+        },
+        {
+          "type": "youtube",
           "youtubeId": "TlqZ22b7Gc4",
           "title": "ٌPOW VS RNA - Mr. Boo Hit My HQ… | Last Z: Survival Shooter",
           "format": "video",
