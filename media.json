@@ -23,6 +23,24 @@
       "items": [
         {
           "type": "youtube",
+          "youtubeId": "LiOxHImI--g",
+          "title": "3 أخطاء تمنّيت أحد يعلّمني عنها في متجر الجواهر(روبي) | Last Z: Survival Shooter",
+          "format": "video",
+          "published": "2026-11-16",
+          "duration": 159,
+          "channelSync": true
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "rSf_YDI9EhQ",
+          "title": "MrBOO (500M) Hit My 244M HQ… Did It Hold? | Last Z: Survival Shooter",
+          "format": "video",
+          "published": "2026-11-16",
+          "duration": 41,
+          "channelSync": true
+        },
+        {
+          "type": "youtube",
           "youtubeId": "xBrgdL_C87U",
           "title": "Last Z Comic | Don’t Blink, Blue! Ark’s Champion Duel Comeback",
           "format": "video",
@@ -254,6 +272,15 @@
       "channel": "POW Ruthless",
       "channelUrl": "https://www.youtube.com/@powruthless",
       "items": [
+        {
+          "type": "youtube",
+          "youtubeId": "UkqAko_OefI",
+          "title": "The Ultimate Trial | Last Z | 713",
+          "format": "video",
+          "published": "2026-11-17",
+          "duration": 29,
+          "channelSync": true
+        },
         {
           "type": "youtube",
           "youtubeId": "1OQO3ktPRpk",
