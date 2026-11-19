@@ -274,6 +274,15 @@
       "items": [
         {
           "type": "youtube",
+          "youtubeId": "yU1E7fPKMjE",
+          "title": "Volcano wars | Hard Mode | 713 Last z",
+          "format": "video",
+          "published": "2026-11-19",
+          "duration": 95,
+          "channelSync": true
+        },
+        {
+          "type": "youtube",
           "youtubeId": "UkqAko_OefI",
           "title": "The Ultimate Trial | Last Z | 713",
           "format": "video",
