@@ -274,6 +274,24 @@
       "items": [
         {
           "type": "youtube",
+          "youtubeId": "3YTmLLWTMKY",
+          "title": "705 👀 | Last Z | Be Ready",
+          "format": "video",
+          "published": "2026-11-23",
+          "duration": 26,
+          "channelSync": true
+        },
+        {
+          "type": "youtube",
+          "youtubeId": "3xCfCF9Jd5I",
+          "title": "We tried Last Z's hardest challenge | Volcano War 1 Vs 3",
+          "format": "video",
+          "published": "2026-11-22",
+          "duration": 609,
+          "channelSync": true
+        },
+        {
+          "type": "youtube",
           "youtubeId": "yU1E7fPKMjE",
           "title": "Volcano wars | Hard Mode | 713 Last z",
           "format": "video",
