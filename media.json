@@ -23,6 +23,15 @@
       "items": [
         {
           "type": "youtube",
+          "youtubeId": "0NVAYcBgeOw",
+          "title": "متجر الديك الرومي لا تبيع برخيص!  حدث مجاني ومكافآت تستاهل | Last Z: Survival Shooter",
+          "format": "video",
+          "published": "2026-11-24",
+          "duration": 188,
+          "channelSync": true
+        },
+        {
+          "type": "youtube",
           "youtubeId": "edUvN1K2pbE",
           "title": "Last Z: Survival Shooter  | Thanksgiving Comic  Will MED Sell His Turkeys for 999?",
           "format": "video",
