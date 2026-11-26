@@ -23,6 +23,15 @@
       "items": [
         {
           "type": "youtube",
+          "youtubeId": "lqAXAGAfT8o",
+          "title": "IN MEMORY OF WOLF | ONE OF US | Last Z: Survival Shooter",
+          "format": "video",
+          "published": "2026-11-26",
+          "duration": 265,
+          "channelSync": true
+        },
+        {
+          "type": "youtube",
           "youtubeId": "0NVAYcBgeOw",
           "title": "متجر الديك الرومي لا تبيع برخيص!  حدث مجاني ومكافآت تستاهل | Last Z: Survival Shooter",
           "format": "video",
